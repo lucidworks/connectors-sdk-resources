@@ -10,12 +10,12 @@ Tl;dr
 1. Clone the repo:
 ```bash
 git clone https://github.com/lucidworks/connectors-sdk-resources.git
-cd connectors-sdk-resources/plugins/java-connectors/
+cd connectors-sdk-resources/plugins/java/connectors/
 ./gradlew assemblePlugins -PfusionHome=/opt/fusion/4.0.1 -PfusionVersion=4.0.1 
 
 ```
 
-2. This will produce one zip file, named `random-connector-{version}.zip`, located in the `build/plugins` directory. Ready to be uploaded directly to Fusion
+2. This will produce one zip file, named `random-connector-{version}.zip`, located in the `build/plugins` directory. Ready to be uploaded directly to Fusion.
 
 ## Building
 
