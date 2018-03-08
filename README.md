@@ -1,4 +1,4 @@
-# Connectors SDK Resources
+# Public Connectors SDK Resources
 
 List of the SDK resources:
 
