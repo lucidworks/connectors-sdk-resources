@@ -2,6 +2,21 @@
 
 This Connector generates a configurable number of Documents, all with random titles and body fields.
 
+## Quick start
+
+Tl;dr
+* The quick start assumes that Fusion is installed on the `/opt` path and its version is `4.0.1` 
+
+1. Clone the repo:
+```bash
+git clone https://github.com/lucidworks/connectors-sdk-resources.git
+cd connectors-sdk-resources/plugins/java-connectors/
+./gradlew assemblePlugins -PfusionHome=/opt/fusion/4.0.1 -PfusionVersion=4.0.1 
+
+```
+
+2. This will produce one zip file, named `random-connector-{version}.zip`, located in the `build/plugins` directory. Ready to be uploaded directly to Fusion
+
 ## Building
 
 **Important**
@@ -12,6 +27,8 @@ The _fusionHome_ property is the full path of your local Fusion installation. Th
 
 For example `/opt/fusion/4.0.1`
 
+The _fusionHome_ is needed to import the code to an IDE.
+
 ### Random Content Plugin
 
 Build the plugin zip:
@@ -20,7 +37,7 @@ Build the plugin zip:
 ./gradlew clean assemblePlugin
 ```
 
-This will produce one zip file, named `random-content-connector-{version}.zip`, located in the `build/plugins` directory.
+This will produce one zip file, named `random-connector-{version}.zip`, located in the `build/plugins` directory.
 
 At this point, the generated zip could be uploaded directly to Fusion, but follow the steps below to run as a remote plugin.
 
