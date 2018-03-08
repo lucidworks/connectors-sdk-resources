@@ -1,1 +1,1 @@
-# Connectors SDK Resources
+# Public Connectors SDK Resources
