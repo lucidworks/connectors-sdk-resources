@@ -1,0 +1,56 @@
+subprojects {
+
+  apply plugin: 'java'
+  apply plugin: 'idea'
+
+  sourceCompatibility = 1.8
+
+  // Folder where the plugins are built
+  ext.pluginsDir = "${rootProject.buildDir}/plugins"
+
+  configurations {
+    provided
+    compile.extendsFrom(provided)
+  }
+
+  repositories {
+    mavenCentral()
+    mavenLocal()
+  }
+
+  dependencies {
+    provided(fileTree(dir: "${fusionHome}/apps/connectors/connectors-rpc/libs", include: '*.jar'))
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+  }
+
+  jar {
+    baseName = "${project.name}"
+  }
+
+  task plugin(type: Jar) {
+    baseName = "${project.name}"
+    manifest {
+      attributes 'Plugin-Class': "${pluginClass}",
+          'Plugin-Type': "connector",
+          'Plugin-Id': "${pluginId}",
+          'Plugin-Fusion-Version': "${fusionVersion}",
+          'Plugin-Version': "${version}",
+          'Plugin-Provider': "${pluginProvider}"
+    }
+    into('lib') {
+      from configurations.compile - configurations.provided
+      // Copy the plugin
+      from jar
+    }
+    extension('zip')
+  }
+
+  task assemblePlugin(type: Copy) {
+    from plugin
+    into pluginsDir
+  }
+}
+
+task assemblePlugins(type: Copy) {
+  dependsOn subprojects.assemblePlugin
+}
