@@ -4,6 +4,7 @@ import com.lucidworks.fusion.connector.plugin.api.fetcher.Fetcher;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.context.FetchContext;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.context.StartContext;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.context.StopContext;
+import com.lucidworks.fusion.connector.plugin.util.ImapUtil;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
@@ -53,29 +54,10 @@ public class ImapFetcher implements Fetcher {
       folder.open(Folder.READ_ONLY);
     }
     catch (MessagingException e) {
-      e.printStackTrace();
+      logger.error("Failed to open IMAP connection.", e);
     }
     return StartResult.DEFAULT;
   }
-
-  @Override
-  public StopResult stop(StopContext stopContext) {
-    if (folder != null && folder.isOpen()) {
-      try {
-        folder.close(true);
-        if (store != null) {
-          store.close();
-        }
-      } catch (MessagingException e) {
-        // TODO: emit error
-        e.printStackTrace();
-      }
-    }
-
-    return StopResult.DEFAULT;
-  }
-
-
 
   @Override
   public FetchResult fetch(FetchContext fetchContext) {
@@ -94,7 +76,7 @@ public class ImapFetcher implements Fetcher {
         data.put("cc", cc);
         data.put("date", message.getReceivedDate().toInstant().toEpochMilli());
         data.put("subject", message.getSubject());
-        data.put("body", getText(message));
+        data.put("body", ImapUtil.getText(message));
 
         for(Map.Entry<String, Object> entry: data.entrySet()) {
           if(entry.getValue() == null) data.remove(entry.getKey());
@@ -103,15 +85,29 @@ public class ImapFetcher implements Fetcher {
         fetchContext.emitDocument(data);
       }
 
-    } catch (MessagingException e) {
-      // TODO: emit error
-      e.printStackTrace();
-    } catch (IOException e) {
-      // TODO: emit error
-      e.printStackTrace();
+    } catch (MessagingException | IOException e) {
+      logger.error("Failed to parse message.", e);
+      fetchContext.emitError("Failed to parse message");
     }
 
     return fetchContext.newResult();
+  }
+
+  @Override
+  public StopResult stop(StopContext stopContext) {
+    if (folder != null && folder.isOpen()) {
+      try {
+        folder.close(true);
+        if (store != null) {
+          store.close();
+        }
+      }
+      catch (MessagingException e) {
+        logger.error("Failed to close IMAP connection.", e);
+      }
+    }
+
+    return StopResult.DEFAULT;
   }
 
   private List<String> toStrings(Address[] addresses) {
@@ -126,47 +122,4 @@ public class ImapFetcher implements Fetcher {
     return addrs;
   }
 
-//  private boolean textIsHtml = false;
-
-  /**
-   * Return the primary text content of the message.
-   */
-  private String getText(Part p) throws
-      MessagingException, IOException {
-    if (p.isMimeType("text/*")) {
-      String s = (String)p.getContent();
-      //textIsHtml = p.isMimeType("text/html");
-      return s;
-    }
-
-    if (p.isMimeType("multipart/alternative")) {
-      // prefer html text over plain text
-      Multipart mp = (Multipart)p.getContent();
-      String text = null;
-      for (int i = 0; i < mp.getCount(); i++) {
-        Part bp = mp.getBodyPart(i);
-        if (bp.isMimeType("text/plain")) {
-          if (text == null)
-            text = getText(bp);
-          continue;
-        } else if (bp.isMimeType("text/html")) {
-          String s = getText(bp);
-          if (s != null)
-            return s;
-        } else {
-          return getText(bp);
-        }
-      }
-      return text;
-    } else if (p.isMimeType("multipart/*")) {
-      Multipart mp = (Multipart)p.getContent();
-      for (int i = 0; i < mp.getCount(); i++) {
-        String s = getText(mp.getBodyPart(i));
-        if (s != null)
-          return s;
-      }
-    }
-
-    return null;
-  }
 }
