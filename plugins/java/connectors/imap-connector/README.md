@@ -4,7 +4,7 @@ This connector downloads email messages from an IMAP server.
 
 ## Building
 
-Build the plugin zip:
+Follow [these steps](../README.md) to set `fusionHome` and `fusionVersion` in the Gradle properties file. Then, build the plugin zip:
 
 ```bash
 ./gradlew clean assemblePlugin

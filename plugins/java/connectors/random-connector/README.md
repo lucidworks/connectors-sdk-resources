@@ -4,7 +4,7 @@ This Connector generates a configurable number of Documents, all with random tit
 
 ## Building
 
-Build the plugin zip:
+Follow [these steps](../README.md) to set `fusionHome` and `fusionVersion` in the Gradle properties file. Then, build the plugin zip:
 
 ```bash
 ./gradlew clean assemblePlugin
