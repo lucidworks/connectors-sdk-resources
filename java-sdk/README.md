@@ -46,10 +46,6 @@ The build utility used for packaging up a Connector depends on this file and con
 including its name, version and the version of Fusion it can connect to.
 Have a look at the example [here](connectors/random-connector/gradle.properties).
 
-#### settings.gradle
-This file is optional, but makes it possible to set shared variables that can be reused in your gradle build file.
-Our example Connector shows a simple [use case](connectors/random-connector/settings.gradle).
-
 #### src/main/java
 This is where Java code lives. This location can be changed, but we'll stick with the Gradle default.
 

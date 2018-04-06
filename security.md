@@ -122,8 +122,6 @@ Now that we have the certs, we set them in the properties.
 
 **Example without TLS auth and no private key passwords****:**
 
-**Server**
-
 ```
 -Dcom.lucidworks.apollo.app.hostname=myhost
 -Dcom.lucidworks.fusion.tls.server.certChain=./sslcerts/server.crt
