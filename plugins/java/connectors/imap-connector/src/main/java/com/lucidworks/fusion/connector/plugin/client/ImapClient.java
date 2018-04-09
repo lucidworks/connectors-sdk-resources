@@ -116,7 +116,7 @@ public class ImapClient {
 
     if(addresses != null) {
       for (Address address : addresses) {
-        addrs.add(address.toString());
+        addrs.add(address.toString().replaceAll("\"", ""));
       }
     }
 

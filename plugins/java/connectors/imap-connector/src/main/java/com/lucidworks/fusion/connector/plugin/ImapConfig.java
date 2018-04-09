@@ -49,7 +49,7 @@ public interface ImapConfig extends ConnectorConfig<ImapConfig.Properties> {
         title = "Password",
         description = "The password",
         required = true,
-        order = 2
+        order = 2,
         hints = {UIHints.SECRET}
     )
     @StringSchema
