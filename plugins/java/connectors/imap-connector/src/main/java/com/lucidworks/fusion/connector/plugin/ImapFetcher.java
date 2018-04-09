@@ -4,54 +4,45 @@ import com.lucidworks.fusion.connector.plugin.api.fetcher.Fetcher;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.context.FetchContext;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.context.StartContext;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.context.StopContext;
-import com.lucidworks.fusion.connector.plugin.util.ImapUtil;
+import com.lucidworks.fusion.connector.plugin.client.Email;
+import com.lucidworks.fusion.connector.plugin.client.ImapClient;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
-import javax.mail.*;
+import javax.mail.MessagingException;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class ImapFetcher implements Fetcher {
   private final Logger logger;
   private final ImapConfig config;
 
-  private Store store;
-  private Folder folder;
+  private ImapClient imapClient;
+  private String folderName;
 
   @Inject
   public ImapFetcher(
       Logger logger,
-      ImapConfig config
+      ImapConfig config,
+      ImapClient imapClient
   ) {
     this.logger = logger;
     this.config = config;
+    this.imapClient = imapClient;
   }
 
   @Override
   public StartResult start(StartContext startContext) {
-    String provider;
-    if(config.getProperties().getSSL()) {
-      provider = "imaps";
-    }
-    else {
-      provider = "imap";
-    }
-
-    Properties props = new Properties();
-    props.setProperty("mail.store.protocol", provider);
-
     String host = config.getProperties().getHost();
     String username = config.getProperties().getUsername();
     String password = config.getProperties().getPassword();
+    boolean ssl = config.getProperties().getSsl();
+    this.folderName = config.getProperties().getFolder();
 
     try {
-      Session session = Session.getDefaultInstance(props, null);
-      store = session.getStore(provider);
-      store.connect(host, username, password);
-      folder = store.getFolder("Inbox");
-      folder.open(Folder.READ_ONLY);
+      this.imapClient.connect(host, username, password, ssl);
     }
     catch (MessagingException e) {
       logger.error("Failed to open IMAP connection.", e);
@@ -62,21 +53,18 @@ public class ImapFetcher implements Fetcher {
   @Override
   public FetchResult fetch(FetchContext fetchContext) {
     try {
-      for (Message message : folder.getMessages()) {
+      for (Email message : imapClient.getUnreadMessages(this.folderName)) {
         Map<String, Object> data = new HashMap<>();
 
-        List<String> from = toStrings(message.getFrom());
-        List<String> replyTo = toStrings(message.getReplyTo());
-        List<String> to = toStrings(message.getRecipients(Message.RecipientType.TO));
-        List<String> cc = toStrings(message.getRecipients(Message.RecipientType.CC));
 
-        data.put("from", from);
-        data.put("reply_to", replyTo);
-        data.put("to", to);
-        data.put("cc", cc);
-        data.put("date", message.getReceivedDate().toInstant().toEpochMilli());
+        data.put("id", message.getId());
+        data.put("from", message.getFrom());
+        data.put("reply_to", message.getReplyTo());
+        data.put("to", message.getTo());
+        data.put("cc", message.getCc());
+        data.put("date", message.getDate().toInstant().toEpochMilli());
         data.put("subject", message.getSubject());
-        data.put("body", ImapUtil.getText(message));
+        data.put("body", message.getBody());
 
         for(Map.Entry<String, Object> entry: data.entrySet()) {
           if(entry.getValue() == null) data.remove(entry.getKey());
@@ -95,31 +83,13 @@ public class ImapFetcher implements Fetcher {
 
   @Override
   public StopResult stop(StopContext stopContext) {
-    if (folder != null && folder.isOpen()) {
-      try {
-        folder.close(true);
-        if (store != null) {
-          store.close();
-        }
-      }
-      catch (MessagingException e) {
-        logger.error("Failed to close IMAP connection.", e);
-      }
+    try {
+      this.imapClient.disconnect();
+    }
+    catch (MessagingException e) {
+      logger.error("Failed to close IMAP connection.", e);
     }
 
     return StopResult.DEFAULT;
   }
-
-  private List<String> toStrings(Address[] addresses) {
-    List<String> addrs = new ArrayList<String>();
-
-    if(addresses != null) {
-      for (Address address : addresses) {
-        addrs.add(address.toString());
-      }
-    }
-
-    return addrs;
-  }
-
 }

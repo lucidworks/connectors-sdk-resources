@@ -49,7 +49,7 @@ public interface ImapConfig extends ConnectorConfig<ImapConfig.Properties> {
         title = "Password",
         description = "The password",
         required = true,
-        order = 2,
+        order = 2
         hints = {UIHints.SECRET}
     )
     @StringSchema
@@ -57,13 +57,21 @@ public interface ImapConfig extends ConnectorConfig<ImapConfig.Properties> {
 
     @Property(
         title = "SSL",
-        description = "SSL flag",
+        description = "Connect securely using SSL",
         required = true,
         order = 3
     )
     @BooleanSchema
-    public boolean getSSL();
+    public boolean getSsl();
 
+    @Property(
+        title = "Folder",
+        description = "The folder to retrieve messages from",
+        required = true,
+        order = 4
+    )
+    @StringSchema(defaultValue = "Inbox")
+    public String getFolder();
   }
 
 }
