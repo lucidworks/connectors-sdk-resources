@@ -2,7 +2,6 @@ package com.lucidworks.fusion.connector.plugin;
 
 import com.lucidworks.fusion.connector.plugin.api.fetcher.Fetcher;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.context.FetchContext;
-import com.lucidworks.fusion.connector.plugin.api.fetcher.context.StartContext;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.context.StopContext;
 import com.lucidworks.fusion.connector.plugin.client.Email;
 import com.lucidworks.fusion.connector.plugin.client.ImapClient;
@@ -20,7 +19,6 @@ public class ImapFetcher implements Fetcher {
   private final ImapConfig config;
 
   private ImapClient imapClient;
-  private String folderName;
 
   @Inject
   public ImapFetcher(
@@ -34,26 +32,9 @@ public class ImapFetcher implements Fetcher {
   }
 
   @Override
-  public StartResult start(StartContext startContext) {
-    String host = config.getProperties().getHost();
-    String username = config.getProperties().getUsername();
-    String password = config.getProperties().getPassword();
-    boolean ssl = config.getProperties().getSsl();
-    this.folderName = config.getProperties().getFolder();
-
-    try {
-      this.imapClient.connect(host, username, password, ssl);
-    }
-    catch (MessagingException e) {
-      logger.error("Failed to open IMAP connection.", e);
-    }
-    return StartResult.DEFAULT;
-  }
-
-  @Override
   public FetchResult fetch(FetchContext fetchContext) {
     try {
-      for (Email message : imapClient.getUnreadMessages(this.folderName)) {
+      for (Email message : imapClient.getUnreadMessages(this.config.getProperties().getFolder())) {
         Map<String, Object> data = new HashMap<>();
 
 

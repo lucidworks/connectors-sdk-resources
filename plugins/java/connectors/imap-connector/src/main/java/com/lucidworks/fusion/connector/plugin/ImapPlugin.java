@@ -19,7 +19,7 @@ public class ImapPlugin extends ConnectorPluginModule {
     AbstractModule module = new AbstractModule() {
       @Override
       protected void configure() {
-        bind(ImapClient.class).toInstance(new ImapClient());
+        bind(ImapClient.class).asEagerSingleton();
       }
     };
     return builder(ImapConfig.class)

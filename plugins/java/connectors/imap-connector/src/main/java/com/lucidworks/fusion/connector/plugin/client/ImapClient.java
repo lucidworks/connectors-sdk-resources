@@ -1,5 +1,9 @@
 package com.lucidworks.fusion.connector.plugin.client;
 
+import com.lucidworks.fusion.connector.plugin.ImapConfig;
+import org.apache.logging.log4j.Logger;
+
+import javax.inject.Inject;
 import javax.mail.*;
 import javax.mail.search.FlagTerm;
 import java.io.IOException;
@@ -11,11 +15,28 @@ import java.util.UUID;
 public class ImapClient {
   private Store store;
 
-  public ImapClient() {
-  }
+  @Inject
+  public ImapClient(ImapConfig config, Logger logger) throws MessagingException {
+    // extract properties
+    String host = config.getProperties().getHost();
+    String username = config.getProperties().getUsername();
+    String password = config.getProperties().getPassword();
+    boolean ssl = config.getProperties().getSsl();
 
-  public ImapClient(String host, String username, String password, boolean ssl) throws MessagingException {
-    connect(host, username, password, ssl);
+    String provider;
+    if (ssl) {
+      provider = "imaps";
+    } else {
+      provider = "imap";
+    }
+
+    Properties props = new Properties();
+    props.setProperty("mail.store.protocol", provider);
+
+    // connect to imap server
+    Session session = Session.getDefaultInstance(props, null);
+    store = session.getStore(provider);
+    store.connect(host, username, password);
   }
 
   public List<Email> getMessages(String folderName) throws MessagingException, IOException {
@@ -51,22 +72,6 @@ public class ImapClient {
     folder.close(false);
 
     return emails;
-  }
-
-  public void connect(String host, String username, String password, boolean ssl) throws MessagingException {
-    String provider;
-    if (ssl) {
-      provider = "imaps";
-    } else {
-      provider = "imap";
-    }
-
-    Properties props = new Properties();
-    props.setProperty("mail.store.protocol", provider);
-
-    Session session = Session.getDefaultInstance(props, null);
-    store = session.getStore(provider);
-    store.connect(host, username, password);
   }
 
   public void disconnect() throws MessagingException {
@@ -124,6 +129,7 @@ public class ImapClient {
   }
 
   private String getMessageText(Part p) throws MessagingException, IOException {
+    if(p == null) return null;
     if (p.isMimeType("text/*")) {
       return (String) p.getContent();
     }
