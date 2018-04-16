@@ -1,3 +1,4 @@
 theme: jekyll-theme-minimal
 title: Lucidworks Connectors SDK Resources
 description: Documentation, quickstart guides and examples.
+breadcrumbs: true
