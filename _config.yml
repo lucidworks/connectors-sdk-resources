@@ -1,4 +1,6 @@
-theme: jekyll-theme-minimal
+# theme: jekyll-theme-minimal
 title: Lucidworks Connectors SDK Resources
 description: Documentation, quickstart guides and examples.
+
+remote_theme: "mmistakes/minimal-mistakes"
 breadcrumbs: true
