@@ -6,7 +6,7 @@ Some of the resources include documentation and getting started guides, as well 
 
 For developing a **Java SDK based Connector**, checkout the [README](./java-sdk/README.md).
 
-Information on the current set of **example Java plugins** can be found [here](./plugins/java/connectors/README.md).
+Information on the current set of **example Java plugins** can be found [here](./java-sdk/connectors/README.md).
 
 ## Fusion 4 Connectors Overview
 
