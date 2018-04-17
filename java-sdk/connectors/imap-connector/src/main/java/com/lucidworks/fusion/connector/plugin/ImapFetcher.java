@@ -39,7 +39,7 @@ public class ImapFetcher implements Fetcher {
         Map<String, Object> data = new HashMap<>();
 
 
-        data.put("id", message.getId());
+        data.put(ID_FIELD, message.getId());
         data.put(FROM_FIELD, message.getFrom());
         data.put(REPLY_TO_FIELD, message.getReplyTo());
         data.put(TO_FIELD, message.getTo());
