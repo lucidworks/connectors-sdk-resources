@@ -49,7 +49,9 @@ public class ImapFetcher implements Fetcher {
         data.put(BODY_FIELD, message.getBody());
 
         for(Map.Entry<String, Object> entry: data.entrySet()) {
-          if(entry.getValue() == null) data.remove(entry.getKey());
+          if(entry.getValue() == null) {
+            data.remove(entry.getKey())
+          };
         }
 
         fetchContext.emitDocument(data);
