@@ -12,6 +12,7 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import static com.lucidworks.fusion.connector.plugin.ImapConstants.*;
 
 
 public class ImapFetcher implements Fetcher {
@@ -39,13 +40,13 @@ public class ImapFetcher implements Fetcher {
 
 
         data.put("id", message.getId());
-        data.put("from", message.getFrom());
-        data.put("reply_to", message.getReplyTo());
-        data.put("to", message.getTo());
-        data.put("cc", message.getCc());
-        data.put("date", message.getDate().toInstant().toEpochMilli());
-        data.put("subject", message.getSubject());
-        data.put("body", message.getBody());
+        data.put(FROM_FIELD, message.getFrom());
+        data.put(REPLY_TO_FIELD, message.getReplyTo());
+        data.put(TO_FIELD, message.getTo());
+        data.put(CC_FIELD, message.getCc());
+        data.put(DATE_FIELD, message.getDate().toInstant().toEpochMilli());
+        data.put(SUBJECT_FIELD, message.getSubject());
+        data.put(BODY_FIELD, message.getBody());
 
         for(Map.Entry<String, Object> entry: data.entrySet()) {
           if(entry.getValue() == null) data.remove(entry.getKey());
@@ -55,8 +56,9 @@ public class ImapFetcher implements Fetcher {
       }
 
     } catch (MessagingException | IOException e) {
-      logger.error("Failed to parse message.", e);
-      fetchContext.emitError("Failed to parse message");
+      String message = "Failed to parse message.";
+      logger.error(message, e);
+      fetchContext.emitError(message);
     }
 
     return fetchContext.newResult();
