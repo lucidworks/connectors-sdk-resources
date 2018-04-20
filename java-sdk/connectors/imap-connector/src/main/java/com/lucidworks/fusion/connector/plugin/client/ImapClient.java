@@ -1,78 +1,57 @@
 package com.lucidworks.fusion.connector.plugin.client;
 
-import com.lucidworks.fusion.connector.plugin.ImapConfig;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
-import javax.mail.*;
+import javax.mail.Address;
+import javax.mail.Flags;
+import javax.mail.Folder;
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.Multipart;
+import javax.mail.Part;
 import javax.mail.search.FlagTerm;
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class ImapClient {
-  private Store store;
+  private ImapStore<Folder> store;
   private Logger logger;
 
   @Inject
-  public ImapClient(ImapConfig config, Logger logger) throws MessagingException {
+  public ImapClient(ImapStore store, Logger logger) throws MailException {
     this.logger = logger;
+    this.store = store;
 
-    // extract properties
-    String host = config.getProperties().getHost();
-    String username = config.getProperties().getUsername();
-    String password = config.getProperties().getPassword();
-    boolean ssl = config.getProperties().getSsl();
+    store.connect();
+  }
 
-    String provider;
-    if (ssl) {
-      provider = "imaps";
-    } else {
-      provider = "imap";
+  public List<Email> getUnreadMessages(String folderName) throws MailException {
+    Folder folder = store.getFolder(folderName);
+
+    try {
+      folder.open(Folder.READ_ONLY);
+
+      Message[] messages = folder.search(
+          new FlagTerm(new Flags(Flags.Flag.SEEN), false));
+
+      List<Email> emails = Arrays.stream(messages)
+          .map(this::toEmail)
+          .filter(Objects::nonNull)
+          .collect(Collectors.toList());
+
+      folder.close(false);
+
+      return emails;
     }
-
-    Properties props = new Properties();
-    props.setProperty("mail.store.protocol", provider);
-
-    // connect to imap server
-    Session session = Session.getDefaultInstance(props, null);
-    store = session.getStore(provider);
-    store.connect(host, username, password);
-  }
-
-  public List<Email> getMessages(String folderName) throws MessagingException, IOException {
-    validConnection();
-
-    Folder folder = store.getFolder(folderName);
-    folder.open(Folder.READ_ONLY);
-    List<Email> emails = Arrays.stream(folder.getMessages())
-        .map(this::toEmail)
-        .filter(Objects::nonNull)
-        .collect(Collectors.toList());
-
-
-    folder.close(false);
-
-    return emails;
-  }
-
-  public List<Email> getUnreadMessages(String folderName) throws MessagingException, IOException {
-    validConnection();
-
-    Folder folder = store.getFolder(folderName);
-    folder.open(Folder.READ_ONLY);
-
-    Message[] messages = folder.search(
-        new FlagTerm(new Flags(Flags.Flag.SEEN), false));
-
-    List<Email> emails = Arrays.stream(messages)
-        .map(this::toEmail)
-        .filter(Objects::nonNull)
-        .collect(Collectors.toList());
-
-    folder.close(false);
-
-    return emails;
+    catch(MessagingException e) {
+      throw new MailException(e);
+    }
   }
 
   public void disconnect() throws MessagingException {
@@ -98,29 +77,22 @@ public class ImapClient {
         id = UUID.randomUUID().toString();
       }
 
-      Email email = new Email();
-      email.setId(id);
-      email.setFrom(from);
-      email.setReplyTo(replyTo);
-      email.setTo(to);
-      email.setCc(cc);
-      email.setDate(message.getReceivedDate());
-      email.setSubject(message.getSubject());
-      email.setBody(getMessageText(message));
+      return new Email(
+          id,
+          from,
+          replyTo,
+          to,
+          cc,
+          message.getReceivedDate(),
+          message.getSubject(),
+          getMessageText(message)
+      );
 
-      return email;
     } catch (MessagingException | IOException e) {
       logger.error("Failed to convert message to email.", e);
       return null;
     }
   }
-
-  private void validConnection() throws MessagingException {
-    if (this.store == null || !this.store.isConnected()) {
-      throw new MessagingException("You must connect to the IMAP server before attempting to retrieve messages.");
-    }
-  }
-
 
   private List<String> addressToString(Address[] addresses) {
     List<String> addrs = new ArrayList<>();

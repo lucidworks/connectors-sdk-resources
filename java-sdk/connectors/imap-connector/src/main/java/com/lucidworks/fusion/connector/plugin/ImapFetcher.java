@@ -5,6 +5,7 @@ import com.lucidworks.fusion.connector.plugin.api.fetcher.context.FetchContext;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.context.StopContext;
 import com.lucidworks.fusion.connector.plugin.client.Email;
 import com.lucidworks.fusion.connector.plugin.client.ImapClient;
+import com.lucidworks.fusion.connector.plugin.client.MailException;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
@@ -12,7 +13,15 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import static com.lucidworks.fusion.connector.plugin.ImapConstants.*;
+
+import static com.lucidworks.fusion.connector.plugin.ImapConstants.BODY_FIELD;
+import static com.lucidworks.fusion.connector.plugin.ImapConstants.CC_FIELD;
+import static com.lucidworks.fusion.connector.plugin.ImapConstants.DATE_FIELD;
+import static com.lucidworks.fusion.connector.plugin.ImapConstants.FROM_FIELD;
+import static com.lucidworks.fusion.connector.plugin.ImapConstants.ID_FIELD;
+import static com.lucidworks.fusion.connector.plugin.ImapConstants.REPLY_TO_FIELD;
+import static com.lucidworks.fusion.connector.plugin.ImapConstants.SUBJECT_FIELD;
+import static com.lucidworks.fusion.connector.plugin.ImapConstants.TO_FIELD;
 
 
 public class ImapFetcher implements Fetcher {
@@ -50,14 +59,14 @@ public class ImapFetcher implements Fetcher {
 
         for(Map.Entry<String, Object> entry: data.entrySet()) {
           if(entry.getValue() == null) {
-            data.remove(entry.getKey())
+            data.remove(entry.getKey());
           };
         }
 
         fetchContext.emitDocument(data);
       }
 
-    } catch (MessagingException | IOException e) {
+    } catch (MailException e) {
       String message = "Failed to parse message.";
       logger.error(message, e);
       fetchContext.emitError(message);

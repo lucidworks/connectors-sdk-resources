@@ -21,6 +21,7 @@ subprojects {
   dependencies {
     provided(fileTree(dir: "${fusionHome}/apps/connectors/connectors-rpc/libs", include: '*.jar'))
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.18.0'
   }
 
   jar {
