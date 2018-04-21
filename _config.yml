@@ -1,7 +1,3 @@
-theme: jekyll-theme-minimal
+#theme: jekyll-theme-minimal
 title: Lucidworks Connectors SDK Resources
 description: Documentation, quickstart guides and examples.
-
-# example of how to use a remote theme...
-# https://mmistakes.github.io/minimal-mistakes/docs/quick-start-guide/
-# remote_theme: "mmistakes/minimal-mistakes"

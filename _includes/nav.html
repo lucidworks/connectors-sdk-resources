@@ -1,0 +1,54 @@
+{% assign navurl = page.url | remove: 'index.html' %}
+<b>VERSIONS</b>
+<ul>
+	{% for item in include.nav %}
+	<li>
+		<a href="{{ item.url }}">
+			{% if item.url == navurl %}
+			<b>{{ item.text }}</b>
+			{% else %}
+			{{ item.text }}
+			{% endif %}
+			{% if item.url contains "/releases/" %}
+			{% assign releases_versions = "v4.0.1|v4.0.2|v4.0.3" | split: "|" %}
+			<ul>
+				<!-- Instead of iterate a variable releases_version, it should use site.github.releases-->
+				<!--{% for releases_versions in site.github.releases %}-->
+				<!--<li ><a href="/releases/{{release.tag_name}}">version {{releases_versions.tag_name}}</a></li>-->
+				<!--{% endfor %}-->
+
+				{% for item_version in releases_versions %}
+				<li><a href="#">***{{item_version}}
+					<ul>
+						{% for page in site.pages %}
+						{% if page.url contains item_version %}
+						<li>
+							<a href="{{site.github.baseurl}}{{ page.url }}">*****{{ page.title }}</a>
+						</li>
+						{% endif %}
+						{% endfor %}
+					</ul>
+				</a></li>
+				{% endfor %}
+			</ul>
+
+			{% elsif item.url contains "/develop/" %}
+			<ul>
+				{% for page in site.pages %}
+
+				{% if page.url contains item.url %}
+				<li>
+					<a href="{{site.github.baseurl}}{{ page.url }}">*** {{ page.title }}</a>
+				</li>
+				{% endif %}
+				{% endfor %}
+			</ul>
+			{% endif %}
+
+		</a>
+	</li>
+	{% if item.subitems and navurl contains item.url %}
+	{% include nav.html nav=item.subitems %}
+	{% endif %}
+	{% endfor %}
+</ul>
