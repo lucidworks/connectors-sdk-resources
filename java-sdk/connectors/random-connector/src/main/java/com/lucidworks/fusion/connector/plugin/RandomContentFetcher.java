@@ -35,7 +35,7 @@ public class RandomContentFetcher implements Fetcher {
 
   @Override
   public PreFetchResult preFetch(PreFetchContext preFetchContext) {
-    IntStream.range(0, randomContentConfig.getProperties().getTotalNumDocs()).asLongStream().forEach(i -> {
+    IntStream.range(0, randomContentConfig.properties().totalNumDocs()).asLongStream().forEach(i -> {
       logger.info("Emitting candidate -> number {}", i);
       Map<String, Object> data = Collections.singletonMap("number", i);
       preFetchContext.emitCandidate(
