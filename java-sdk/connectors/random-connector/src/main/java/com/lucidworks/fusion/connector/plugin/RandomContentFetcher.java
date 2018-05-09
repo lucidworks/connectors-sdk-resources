@@ -54,7 +54,7 @@ public class RandomContentFetcher implements Fetcher {
     FetchInput input = fetchContext.getFetchInput();
     logger.info("Received FetchInput -> {}", input);
     String hostname = getHostname();
-    long num = getNumber(input);
+    long num = (Long) input.getMetadata().get("number");
     String headline = generator.makeSentence(true);
     int numSentences = getRandomNumberInRange(10, 255);
     String txt = generator.makeText(numSentences);
@@ -74,17 +74,6 @@ public class RandomContentFetcher implements Fetcher {
       throw new IllegalArgumentException("max must be greater than min");
     }
     return rnd.nextInt((max - min) + 1) + min;
-  }
-
-  private long getNumber(FetchInput input) {
-    Object num = input.getMetadata().get("number");
-    if (num instanceof Long) {
-      return (Long) num;
-    } else if (num instanceof Integer) {
-      return (Integer) num;
-    } else {
-      throw new RuntimeException(String.format("Invalid value for number: %s", num));
-    }
   }
 
   private String getHostname() {
