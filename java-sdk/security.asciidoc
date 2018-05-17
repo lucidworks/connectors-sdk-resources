@@ -1,13 +1,13 @@
-# Java SDK Connector SSL Support
+= Java SDK Connector SSL Support
 
-Please see the main [SSL README](../security.md) for general instructions on how to configur SSL/TLS support for Fusion.
+See the main link:./java-sdk/security.html[SSL README] for general instructions on how to configure SSL/TLS support for Fusion.
 
-## Java Plugin Client
+== Java Plugin Client
 The information here is specific to running a Java SDK plugin outside of Fusion.
 
-The [plugin-client](plugin-client.md) supports several variations of SSL/TLS auth. The examples below show the relevant Java properties.
+The link:plugin-client.md[plugin-client] supports several variations of SSL/TLS auth. The examples below show the relevant Java properties.
 
-**Example with Mutual TLS auth and private key passwords:**
+**Example with Mutual TLS auth and private key passwords**
 
 ```
 -Dcom.lucidworks.apollo.app.hostname=myhost

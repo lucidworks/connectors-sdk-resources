@@ -1,17 +1,17 @@
 = Public Connectors SDK Resources
 
 The link:https://github.com/lucidworks/connectors-sdk-resources[connectors SDK public Github repository] provides resources to help developers build their own
-link:https://lucidworks.com/products/fusion-server/[Fusion] 4 SDK Connectors.
+link:https://lucidworks.com/products/fusion-server/[Fusion] SDK Connectors.
 Some of the resources include documentation and getting started guides, as well as example Connectors.
 
-For developing a **Java SDK based Connector**, checkout the link:./java-sdk/README.html[README].
+For developing a Java SDK based Connector, check out the link:./java-sdk/README.html[README].
 
 Information on the current set of **example Java plugins** can be found link:./java-sdk/connectors/README.html[here].
 
 == Fusion 4 Connectors Overview
 
-The new Connectors architecture is designed to be scalable. Depending on the Connector, jobs can now be scaled by adding new instances of just the Connector.
-The fetching process for these new types also supports distributed fetching, so that many instances can contribute to the same job.
+The Connectors architecture in Fusion 4 and later is designed to be scalable. Depending on the Connector, jobs can be scaled by adding instances of just the Connector.
+The fetching process for these types also supports distributed fetching, so that many instances can contribute to the same job.
 
 Connectors can be hosted within Fusion, or can run remotely. In the hosted case, these Connectors are cluster aware.
 This means that when a new instance of Fusion starts up, the Connectors on other Fusion nodes become aware of the new Connectors, and vice versa.
@@ -31,12 +31,12 @@ The Java SDK brings a new set of components for making it simple to build a Conn
 The link:./java-sdk/README.html[Java SDK] includes a set of base classes and interfaces. It also provides the Gradle build utilities for packaging up a Connector, and a Connector client application that can run your Connector remotely.
 
 Many of the base features needed for a Connector are provided by Fusion itself.
-When a Connector first connects to Fusion, it sends along its name/type, schema and other metadata.
+When a Connector first connects to Fusion, it sends along its name, type, schema, and other metadata.
 This connection then stays open, and the two systems can communicate bi-directionally as needed.
 
 This makes it possible for Fusion to manage configuration data, the job state, scheduling, and encryption for example. The Fusion Admin UI also takes care of the view/presentation, by making use of the Connector's schema.
 
-This client-based approach decouples Connectors from Fusion which allows hot deployment of connectors through a simple connect call.
+This client-based approach decouples Connectors from Fusion, which allows hot deployment of connectors through a simple connect call.
 
 == Security
 Fusion Connectors support SSL/TLS. See the link:security.html[security README] for setup.

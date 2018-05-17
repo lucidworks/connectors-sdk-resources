@@ -1,8 +1,8 @@
-# Fusion gRPC TLS Setup
+= Fusion gRPC TLS Setup
 
-This guide will set you up so that you have everything you need to set up TLS between your Connectors-rpc server(s) and Connector JVM(s).
+This guide helps you set up TLS between your Connectors-rpc server and Connector JVM.
 
-## Install OpenSSL binaries for your operating system
+== Install OpenSSL binaries for your operating system
 
 gRPC makes TLS more efficient by using native openssl binaries while doing SSL. So you must install OpenSSL for your operating system.
 
@@ -15,13 +15,13 @@ gRPC makes TLS more efficient by using native openssl binaries while doing SSL. 
 `sudo yum install openssl`
 
 **Windows:**
+.
+# Install [https://slproweb.com/download/Win64OpenSSL-1_1_0g.exe](https://slproweb.com/download/Win64OpenSSL-1_1_0g.exe)
+# Add the installed binaries to your path.
 
-* Install [https://slproweb.com/download/Win64OpenSSL-1_1_0g.exe](https://slproweb.com/download/Win64OpenSSL-1_1_0g.exe)
-* Add the installed binaries to your path.
+== Set up the Certificates
 
-## Set up the Certificates
-
-### Linux setup:
+=== Linux setup
 
 Create a new folder, open a terminal, cd to that folder then run this bash script:
 
@@ -60,7 +60,7 @@ openssl pkcs8 -topk8 -nocrypt -in client.key -out client.pem
 openssl pkcs8 -topk8 -nocrypt -in server.key -out server.pem
 ```
 
-### Windows Setup:
+=== Windows Setup
 
 To the default location: **C:\OpenSSL-Win64**
 
@@ -105,11 +105,11 @@ REM Generates server.pem which is the privateKeyFile for the Server
 openssl pkcs8 -topk8 -nocrypt -in server.key -out server.pem</td>
 ```
 
-## Specify connectors-rpc system properties to provide the certs
+== Specify connectors-rpc system properties to provide the certs
 
 Now that we have the certs, we set them in the properties.
 
-**Example with Mutual TLS auth and private key passwords:**
+**Example with Mutual TLS auth and private key passwords**
 
 ```
 -Dcom.lucidworks.apollo.app.hostname=myhost
