@@ -15,8 +15,8 @@ The gRPC framework makes TLS more efficient by using native openssl binaries whi
 `sudo yum install openssl`
 
 **Windows:**
-.
-# Install [https://slproweb.com/download/Win64OpenSSL-1_1_0g.exe](https://slproweb.com/download/Win64OpenSSL-1_1_0g.exe)
+
+# Install link:https://slproweb.com/download/Win64OpenSSL-1_1_0g.exe[https://slproweb.com/download/Win64OpenSSL-1_1_0g.exe].
 # Add the installed binaries to your path.
 
 == Set up the certificates
