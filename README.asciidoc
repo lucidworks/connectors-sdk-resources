@@ -6,7 +6,7 @@ Some of the resources include documentation and getting started guides, as well 
 
 For developing a Java SDK based connector, check out the link:./java-sdk/README.html[README].
 
-Information on the current set of **example Java plugins** can be found link:./java-sdk/connectors/README.html[here].
+Information on the current set of example Java plugins can be found link:./java-sdk/connectors/README.html[in the Java SDK overview].
 
 == Fusion 4 Connectors Overview
 
@@ -26,7 +26,7 @@ upload the exact same artifact (a zip file) into Fusion, so Fusion can host it f
 
 == Java SDK
 
-The Java SDK brings a new set of components for making it simple to build a connector in Java. Whether the plugin is a true crawler or a simple iterative fetcher,
+The Java SDK provides components for making it simple to build a connector in Java. Whether the plugin is a true crawler or a simple iterative fetcher,
 the SDK supports both.
 
 The link:./java-sdk/README.html[Java SDK] includes a set of base classes and interfaces. It also provides the Gradle build utilities for packaging up a connector,
