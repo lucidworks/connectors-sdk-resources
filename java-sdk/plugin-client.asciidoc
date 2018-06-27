@@ -1,8 +1,8 @@
-# Fusion Connector Plugin Client
+== Fusion Connector Plugin Client
 
 This project provides a wrapper for our Fusion Java plugin-sdk so that our plugins don't need to directly talk with gRPC code. Instead, they can use high level interfaces and base classes, like Connector and Fetcher etc.
 
-This project also provides a standalone "runner" that can host a plugin that was built from the Fusion Java Connector SDK. It does this by loading the plugin zip file, then calling on the wrapper to provide the gRPC interactions. 
+This project also provides a standalone "runner" that can host a plugin that was built from the Fusion Java Connector SDK. It does this by loading the plugin zip file, then calling on the wrapper to provide the gRPC interactions.
 
 ## Java SDK / gRPC Wrapper
 

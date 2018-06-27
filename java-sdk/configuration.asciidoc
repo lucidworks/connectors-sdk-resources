@@ -1,4 +1,4 @@
-# Connector Java SDK Configuration
+== Connector Java SDK Configuration
 
 In order to build a valid Connector configuration, you must:
 * Define an interface
@@ -65,11 +65,11 @@ Here's a simple example:
 
 ```java
 interface MyConfig extends Model {
-  
+
   @Property
   @StringSchema(minLength=1)
   String getId();
-  
+
 }
 ```
 
