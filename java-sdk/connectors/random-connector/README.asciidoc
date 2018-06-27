@@ -1,4 +1,4 @@
-# Random Content Connector
+== Random Content Connector
 
 This connector generates a configurable number of documents, all with random titles and body fields.
 
