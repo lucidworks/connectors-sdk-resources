@@ -6,14 +6,14 @@ Connectors can be created by implementing some of the classes described in this 
 
 Connectors can be deployed directly within a Fusion cluster or outside Fusion as a remote client.
 To deploy a Connector into Fusion, upload the build artifact (as a zip file) to the Fusion Blob API.
-To deploy remotely, you can use the link:./plugin-client.md[Connector client utility].
+To deploy remotely, you can use the link:plugin-client.asciidoc[Connector client utility].
 
 === Examples
 The example Connectors are a great place to start understanding how to build a Java SDK Connector.
-Have a look at the link:connectors/README.md[README].
+Have a look at the link:connectors/README.asciidoc[README].
 
 === Security
-Read more on how to set up a secure environment for Java SDK Connectors link:./security.md[here].
+Read more on how to set up a secure environment for Java SDK Connectors link:security.asciidoc[here].
 
 == Java SDK Framework Overview
 Only a few components must be implemented to compile and build a functioning plugin.
@@ -22,7 +22,7 @@ project directory layout, followed by details on the components.
 
 === Project Layout
 This documentation and examples use Gradle for building Connectors. Other build tools can be used instead.
-Check out the link:https://docs.gradle.org/current/userguide/tutorial_java_projects.html[Gradle quickstart] for Java Projects.
+Check out the https://docs.gradle.org/current/userguide/tutorial_java_projects.html[Gradle quickstart^] for Java Projects.
 
 The minimal project layout is as follows:
 
@@ -39,12 +39,12 @@ The minimal project layout is as follows:
 
 ==== build.gradle
 This is a typical Gradle build file. A few important settings are required. You can have a look
-at an example link:connectors/build.gradle[here].
+at an example https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/build.gradle[here^].
 
 ==== gradle.properties
 The build utility used for packaging up a Connector depends on this file and contains required metadata about the Connector,
 including its name, version, and the version of Fusion it can connect to.
-Have a look at the example link:connectors/random-connector/gradle.properties[here].
+Have a look at the example https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/random-connector/gradle.properties[here^].
 
 ==== src/main/java
 This is where Java code lives by default. This location can be changed, but in this documentation we use the Gradle default.
@@ -56,7 +56,7 @@ The current set of subcomponents include the `Fetcher`, validation, security fil
 You can think of the `Plugin` class as the component that glues everything together for an implementation.
 
 You can see an example
-link:connectors/random-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentPlugin.java[here].
+https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/random-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentPlugin.java[here^].
 Notice that each subcomponent can have a set of unique dependencies, or several subcomponents can share dependencies.
 
 === The Configuration
@@ -65,9 +65,9 @@ and `@Property` annotations, you can dynamically generate a type-safe configurat
 Similarly, you can generate a Fusion-compatible JSON schema by implementing `Model`.
 
 You can see an example of a configuration implementation
-link:connectors/random-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentConfig.java[here].
+https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/random-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentConfig.java[here^].
 
-More detailed information on the configuration and schema capabilities can be found link:configuration.md[here].
+More detailed information on the configuration and schema capabilities can be found link:configuration.asciidoc[here].
 
 === The Fetcher
 The `Fetcher` is where most of the work is done for any Connector.
@@ -121,7 +121,7 @@ For each phase, the `preFetch`, `fetch`, and `postFetch` methods are called. By 
 the "default" phase.
 
 See the example
-link:connectors/random-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentFetcher.java[here].
+https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/random-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentFetcher.java[here^].
 
 <a name="message-definitions"></a>
 ==== Message Type Definitions
@@ -131,7 +131,7 @@ A `Candidate` is metadata emitted from a `Fetcher` that represents a resource to
 Once this message is received by the controller service, it is persisted, then added to a fetch queue.
 When this item is then dequeued, a Connector instance within the cluster is selected, and the message is sent as a `FetchInput`.
 The `FetchInput` is received in the `fetch()` method of the Connector.
-At this point, the Connector normally emits a [`Content`](#message-definitions.content) or [`Document`](#message-definitions.document) message, which is then indexed into Fusion.
+At this point, the Connector normally emits a link:#message-definitions.content[`Content`] or link:#message-definitions.document[`Document`] message, which is then indexed into Fusion.
 
 The general flow of how Candidates are processed is the key to enabling distributed fetching within the Connectors framework.
 
@@ -169,7 +169,7 @@ Errors are recorded in the data store, but are not sent to the associated `Index
 
 == Developing a Connector
 
-The simplest way to get started developing a Connector is to review the link:connectors/random-connector[examples].
+The simplest way to get started developing a Connector is to review the https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/random-connector[examples^].
 
 === Dependencies
 At a minimum, all plugins require the Connector SDK dependency.
@@ -188,8 +188,7 @@ A general guideline to follow when determining if something should be injected o
 1. Is it desirable to have multiple implementations of the component?
 2. Is the component a 3rd party library that has either difficult to control side-effects?
 
-The Connectors use the Guice framework for dependency injection: https://github.com/google/guice and can be directly used
-when defining a Connector Plugin.
+The Connectors use the https://github.com/google/guice[Guice^] framework for dependency injection and can be directly used when defining a Connector Plugin.
 
 ==== Maven
 The Fusion Connectors SDK is currently not published to any public Maven repositories.

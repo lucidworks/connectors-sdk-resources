@@ -1,12 +1,12 @@
 = Public Connectors SDK Resources
 
-The link:https://github.com/lucidworks/connectors-sdk-resources[connectors SDK public Github repository] provides resources to help developers build their own
-link:https://lucidworks.com/products/fusion-server/[Fusion] SDK connectors.
+The https://github.com/lucidworks/connectors-sdk-resources[connectors SDK public Github repository^] provides resources to help developers build their own
+https://lucidworks.com/products/fusion-server/[Fusion^] SDK connectors.
 Some of the resources include documentation and getting started guides, as well as example connectors.
 
-For developing a Java SDK based connector, check out the link:./java-sdk/README.html[README].
+For developing a Java SDK based connector, check out the link:java-sdk/README.asciidoc[README].
 
-Information on the current set of example Java plugins can be found link:./java-sdk/connectors/README.html[in the Java SDK overview].
+Information on the current set of example Java plugins can be found link:java-sdk/connectors/README.asciidoc[in the Java SDK overview].
 
 == Fusion 4 Connectors Overview
 
@@ -44,7 +44,7 @@ This client-based approach decouples connectors from Fusion, which allows hot de
 Fusion connectors support SSL/TLS. See the link:security.html[security README] for setup.
 
 === gRPC
-The underlying client/server technology used by these connectors is a fast and efficient framework from Google called link:https://grpc.io/[gRPC].
+The underlying client/server technology used by these connectors is a fast and efficient framework from Google called https://grpc.io/[gRPC^].
 The gRPC framework provides flexibility in the way services and their methods are defined. Other benefits of this framework include:
 
 * HTTP/2 based transport
@@ -57,4 +57,4 @@ The data persisted by the connectors framework is distributed across the Fusion 
 If a node goes down during a crawl, the data store remains intact and usable. Connector implementations do not need to be concerned with this layer, because it is all handled by Fusion.
 
 
-Copyright 2018 link:https://lucidworks.com[Lucidworks]
+Copyright 2018 https://lucidworks.com[Lucidworks^]
