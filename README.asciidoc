@@ -6,7 +6,7 @@ Some of the resources include documentation and getting started guides, as well 
 
 For developing a Java SDK based connector, check out the link:java-sdk/README.asciidoc[README].
 
-Information on the current set of example Java plugins can be found link:java-sdk/connectors/README.asciidoc[in the Java SDK overview].
+include::https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/README.md[]
 
 == Fusion 4 Connectors Overview
 
