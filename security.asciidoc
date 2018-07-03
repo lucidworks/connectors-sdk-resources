@@ -1,6 +1,6 @@
 = Fusion gRPC TLS setup
 
-This guide helps you set up TLS between your Connectors-rpc server and Connector JVM.
+This guide helps you set up transport layer security (TLS) between your Connectors-rpc server and Connector JVM.
 
 == Install OpenSSL binaries for your operating system
 
@@ -16,8 +16,8 @@ The gRPC framework makes TLS more efficient by using native openssl binaries whi
 
 **Windows:**
 
-# Install https://slproweb.com/download/Win64OpenSSL-1_1_0g.exe[https://slproweb.com/download/Win64OpenSSL-1_1_0g.exe^].
-# Add the installed binaries to your path.
+. Install https://slproweb.com/download/Win64OpenSSL-1_1_0g.exe[https://slproweb.com/download/Win64OpenSSL-1_1_0g.exe^].
+. Add the installed binaries to your path.
 
 == Set up the certificates
 
@@ -26,7 +26,7 @@ The gRPC framework makes TLS more efficient by using native openssl binaries whi
 Create a new folder, open a terminal, cd to the new folder, then run this bash script:
 
 ```
-# Changes these CNs to match your hosts in your environment if needed.
+# Change these CNs to match your hosts in your environment if needed.
 SERVER_CN=myhost
 CLIENT_CN=myhost # Used when doing mutual TLS
 
@@ -71,7 +71,7 @@ Create a new directory, open a cmd shell, cd to that directory, and run this bat
 @echo off
 set OPENSSL_CONF=c:\OpenSSL-Win64\bin\openssl.cfg
 
-# Changes these CN's to match your hosts in your environment if needed.
+# Change these CNs to match your hosts in your environment if needed.
 set SERVER_CN=myhost
 set CLIENT_CN=myhost # Used when doing mutual TLS
 
