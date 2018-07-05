@@ -6,7 +6,8 @@ Some of the resources include documentation and getting started guides, as well 
 
 For developing a Java SDK based connector, check out the link:java-sdk/README.asciidoc[README].
 
-The repository includes https://github.com/lucidworks/connectors-sdk-resources/tree/master/java-sdk/connectors[a Gradle project^] which wraps each https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/settings.gradle[known plugin^] with a common set of tasks and dependencies.
+The repository includes https://github.com/lucidworks/connectors-sdk-resources/tree/master/java-sdk/connectors[a Gradle project^],
+which wraps each https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/settings.gradle[known plugin^] with a common set of tasks and dependencies.
 
 See the example link:java-sdk/connectors/random-connector/README.asciidoc[Random Content Connector] for instructions on how to build, deploy and run.
 

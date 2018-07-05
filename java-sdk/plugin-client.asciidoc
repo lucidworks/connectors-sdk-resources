@@ -14,7 +14,7 @@ layer, without having to make changes to the Java plugin implementation.
 ## Standalone Connector Plugin Application
 
 The second goal of the plugin-client, is to allow Java SDK plugins to run remotely.
-The instructions for deploying a Connector using this method are provided below.
+The instructions for deploying a connector using this method are provided below.
 
 ### Building the UberJar
 
@@ -31,7 +31,7 @@ fusion-connectors/grpc/connector-plugin-client/build/libs/connector-plugin-clien
 ```
 ### Starting the Host
 
-To start the host app, a Fusion-SDK based Connector, built into the standard packaging format as a `.zip` file is required. This `zip` must contain only 1 Connector plugin.
+To start the host app, a Fusion SDK-based connector, built into the standard packaging format as a `.zip` file is required. This `zip` must contain only one connector plugin.
 
 Here's an example of how to start up using the web connector:
 
