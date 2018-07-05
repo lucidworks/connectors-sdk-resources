@@ -31,7 +31,7 @@ upload the exact same artifact (a zip file) into Fusion, so Fusion can host it f
 The Java SDK provides components for making it simple to build a connector in Java. Whether the plugin is a true crawler or a simple iterative fetcher,
 the SDK supports both.
 
-The link:./java-sdk/README.html[Java SDK] includes a set of base classes and interfaces. It also provides the Gradle build utilities for packaging up a connector,
+The link:./java-sdk/README.asciidoc[Java SDK] includes a set of base classes and interfaces. It also provides the Gradle build utilities for packaging up a connector,
 and a connector client application that can run your connector remotely.
 
 Many of the base features needed for a connector are provided by Fusion itself. When a connector first connects to Fusion, it sends along its name, type, schema,
@@ -43,7 +43,7 @@ The Fusion Admin UI also takes care of the view or presentation, by making use o
 This client-based approach decouples connectors from Fusion, which allows hot deployment of connectors through a simple connect call.
 
 == Security
-Fusion connectors support SSL/TLS. See the link:security.html[security README] for setup.
+Fusion connectors support SSL/TLS. See the link:security.asciidoc[security README] for setup.
 
 === gRPC
 The underlying client/server technology used by these connectors is a fast and efficient framework from Google called https://grpc.io/[gRPC^].
