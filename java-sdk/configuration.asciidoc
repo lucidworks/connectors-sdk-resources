@@ -1,13 +1,13 @@
 == Connector Java SDK Configuration
 
-In order to build a valid connector configuration, you must:
-* Define an interface
-* Extend `ConnectorConfig`
-* Apply a few annotations
-* Define connector "getter" methods + annotations
+To build a valid connector configuration, you must:
+. Define an interface
+. Extend `ConnectorConfig`
+. Apply a few annotations
+. Define connector "getter" methods and annotations
 
 All methods that are annotated with `@Property` and start with "get" are considered to be configuration properties.
-For example, `@Property() String getName();` would result in a String property called `name`.
+For example, `@Property() String getName();` results in a String property called `name`.
 This property would then be present in the generated schema.
 
 Here is an example of the most basic configuration, along with required annotations and a sample "getter" method:
@@ -46,13 +46,13 @@ public interface MyConfig extends ConnectorConfig<MyConfig.Properties> {
 
 The metadata defined by `@RootSchema` is used by Fusion when showing the list of available connectors.
 The `ConnectorConfig` base interface represents common, top-level settings required by all connectors.
-The type parameter of the `ConnectorConfig` class indicates the interface to use for custom properties.
+The `type` parameter of the `ConnectorConfig` class indicates the interface to use for custom properties.
 
-Once a connector configuration has been defined, it can be associated with the ConnectorPlugin class.
+Once a connector configuration has been defined, it can be associated with the `ConnectorPlugin` class.
 From that point, the framework takes care of providing the configuration instances to your connector.
-It also takes care of generating the schema, and sending it along to Fusion when it connects to Fusion.
+It also generates the schema, and sends it along to Fusion when it connects to Fusion.
 
-## Additiona Info on com.lucidworks.schema
+## Additional Info on com.lucidworks.schema
 The `com.lucidworks.schema` project (included in the connectors SDK) aims to make the process of creating JSON Schemas simple.
 It also provides utilities for building type safe POJOs from schema definitions.
 
@@ -61,8 +61,8 @@ Once your interface has been built, you can generate an `ObjectType` instance, w
 By then combining that schema object with a `Map<String,Object>`, you can create instances of your interface to use as configuration objects.
 
 The configuration objects are based on `java.lang.reflect.Proxy`, which is what is returned by the `ModelGenerator`.
-Most method calls to these Proxy instances result method call to the underlying `Map<String,Object>`.
-For example, if the interface defined a `getId` method, a runtime call would result in call to the `Map<String,Object>`: `data.get("id")`.
+Most method calls to these proxy instances result in method calls to the underlying `Map<String,Object>`.
+For example, if the interface defines a `getId` method, then a runtime call results in a call to the `Map<String,Object>`: `data.get("id")`.
 
 A few special cases exist as well. `toString` is proxied directly to the `Map<String,Object>`. `getClass` returns the class of the interface provided to `ModelGenerator#generate()`. `_data` returns the underlying `Map<String,Object>` object.
 If the method starts with `set`, the arguments are captured and sent to the underlying map via `put()`.
