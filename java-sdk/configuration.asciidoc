@@ -1,10 +1,11 @@
 == Connector Java SDK Configuration
 
 To build a valid connector configuration, you must:
-. Define an interface
-. Extend `ConnectorConfig`
-. Apply a few annotations
-. Define connector "getter" methods and annotations
+
+* Define an interface.
+* Extend `ConnectorConfig`.
+* Apply a few annotations.
+* Define connector "getter" methods and annotations.
 
 All methods that are annotated with `@Property` and start with "get" are considered to be configuration properties.
 For example, `@Property() String getName();` results in a String property called `name`.
@@ -65,10 +66,11 @@ Most method calls to these proxy instances result in method calls to the underly
 For example, if the interface defines a `getId` method, then a runtime call results in a call to the `Map<String,Object>`: `data.get("id")`.
 
 A few special cases exist:
-. `toString` is proxied directly to the `Map<String,Object>`.
-. `getClass` returns the class of the interface provided to `ModelGenerator#generate()`.
-. `_data` returns the underlying `Map<String,Object>` object.
-. If the method starts with `set`, the arguments are captured and sent to the underlying map via `put()`.
+
+* `toString` is proxied directly to the `Map<String,Object>`.
+* `getClass` returns the class of the interface provided to `ModelGenerator#generate()`.
+* `_data` returns the underlying `Map<String,Object>` object.
+* If the method starts with `set`, the arguments are captured and sent to the underlying map via `put()`.
 
 Here is a simple example:
 
