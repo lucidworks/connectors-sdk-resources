@@ -52,22 +52,25 @@ Once a connector configuration has been defined, it can be associated with the `
 From that point, the framework takes care of providing the configuration instances to your connector.
 It also generates the schema, and sends it along to Fusion when it connects to Fusion.
 
-## Additional Info on com.lucidworks.schema
-The `com.lucidworks.schema` project (included in the connectors SDK) aims to make the process of creating JSON Schemas simple.
-It also provides utilities for building type safe POJOs from schema definitions.
+=== About com.lucidworks.schema
+The `com.lucidworks.schema` project (included in the connectors SDK) aims to simplify the process of creating JSON Schemas.
+It also provides utilities for building type-safe POJOs from schema definitions.
 
-The basic idea here is that you create an interface that extends `Model`, add property getters and then a few annotations.
+The basic idea here is that you create an interface that extends `Model`, add property getters, and then add a few annotations.
 Once your interface has been built, you can generate an `ObjectType` instance, which is the object that contains all of the JSON schema metadata.
 By then combining that schema object with a `Map<String,Object>`, you can create instances of your interface to use as configuration objects.
 
-The configuration objects are based on `java.lang.reflect.Proxy`, which is what is returned by the `ModelGenerator`.
+The configuration objects are based on `java.lang.reflect.Proxy`, which is what the `ModelGenerator` returns.
 Most method calls to these proxy instances result in method calls to the underlying `Map<String,Object>`.
 For example, if the interface defines a `getId` method, then a runtime call results in a call to the `Map<String,Object>`: `data.get("id")`.
 
-A few special cases exist as well. `toString` is proxied directly to the `Map<String,Object>`. `getClass` returns the class of the interface provided to `ModelGenerator#generate()`. `_data` returns the underlying `Map<String,Object>` object.
-If the method starts with `set`, the arguments are captured and sent to the underlying map via `put()`.
+A few special cases exist:
+. `toString` is proxied directly to the `Map<String,Object>`.
+. `getClass` returns the class of the interface provided to `ModelGenerator#generate()`.
+. `_data` returns the underlying `Map<String,Object>` object.
+. If the method starts with `set`, the arguments are captured and sent to the underlying map via `put()`.
 
-Here's a simple example:
+Here is a simple example:
 
 ```java
 interface MyConfig extends Model {
