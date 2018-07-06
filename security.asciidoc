@@ -2,19 +2,19 @@
 
 This guide helps you set up transport layer security (TLS) between your Connectors-rpc server and Connector JVM.
 
-== Install OpenSSL binaries for your operating system
+== Install OpenSSL binaries
 
-The gRPC framework makes TLS more efficient by using native openssl binaries while doing SSL. So you must install OpenSSL for your operating system.
+The gRPC framework makes TLS more efficient by using native openssl binaries while doing SSL. To take advantage of this efficiency, install OpenSSL for your operating system.
 
-**Ubuntu/Debian:**
+=== Install OpenSSL on Ubuntu or Debian
 
 `sudo apt-get install openssl`
 
-**CentOS/Redhat/Amazon EC2:**
+=== Install OpenSSL on CentOS, Redhat Linux, or Amazon EC2
 
 `sudo yum install openssl`
 
-**Windows:**
+=== Install OpenSSL on Windows
 
 . Install https://slproweb.com/download/Win64OpenSSL-1_1_0g.exe[https://slproweb.com/download/Win64OpenSSL-1_1_0g.exe^].
 . Add the installed binaries to your path.
@@ -33,14 +33,14 @@ CLIENT_CN=myhost # Used when doing mutual TLS
 echo Generate CA key:
 openssl genrsa -passout pass:1111 -des3 -out ca.key 4096
 echo Generate CA certificate:
-# Generates ca.crt, which is the trustCertCollectionFile
+# Generates ca.crt, the trustCertCollectionFile
 openssl req -passin pass:1111 -new -x509 -days 365 -key ca.key -out ca.crt -subj "/CN=${SERVER_CN}"
 echo Generate server key:
 openssl genrsa -passout pass:1111 -des3 -out server.key 4096
 echo Generate server signing request:
 openssl req -passin pass:1111 -new -key server.key -out server.csr -subj "/CN=${SERVER_CN}"
 echo Self-signed server certificate:
-# Generates server.crt, which is the certChainFile for the server
+# Generates server.crt, the certChainFile for the server
 openssl x509 -req -passin pass:1111 -days 365 -in server.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out server.crt
 echo Remove passphrase from server key:
 openssl rsa -passin pass:1111 -in server.key -out server.key
@@ -49,20 +49,20 @@ openssl genrsa -passout pass:1111 -des3 -out client.key 4096
 echo Generate client signing request:
 openssl req -passin pass:1111 -new -key client.key -out client.csr -subj "/CN=${CLIENT_CN}"
 echo Self-signed client certificate:
-# Generates client.crt, which is the clientCertChainFile for the client (need for mutual TLS only)
+# Generates client.crt, the clientCertChainFile for the client (needed for mutual TLS only)
 openssl x509 -passin pass:1111 -req -days 365 -in client.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out client.crt
 echo Remove passphrase from client key:
 openssl rsa -passin pass:1111 -in client.key -out client.key
 echo Converting the private keys to X.509:
-# Generates client.pem, which is the clientPrivateKeyFile for the Client (needed for mutual TLS only)
+# Generates client.pem, the clientPrivateKeyFile for the Client (needed for mutual TLS only)
 openssl pkcs8 -topk8 -nocrypt -in client.key -out client.pem
-# Generates server.pem, which is the privateKeyFile for the Server
+# Generates server.pem, the privateKeyFile for the Server
 openssl pkcs8 -topk8 -nocrypt -in server.key -out server.pem
 ```
 
 === Windows setup
 
-To the default location: **C:\OpenSSL-Win64**
+The default installation directory is *C:\OpenSSL-Win64*
 
 Create a new directory, open a cmd shell, cd to that directory, and run this batch:
 
@@ -78,14 +78,14 @@ set CLIENT_CN=myhost # Used when doing mutual TLS
 echo Generate CA key:
 openssl genrsa -passout pass:1111 -des3 -out ca.key 4096
 echo Generate CA certificate:
-# Generates ca.crt, which is the trustCertCollectionFile
+# Generates ca.crt, the trustCertCollectionFile
 openssl req -passin pass:1111 -new -x509 -days 365 -key ca.key -out ca.crt -subj "/CN=%SERVER_CN%"
 echo Generate server key:
 openssl genrsa -passout pass:1111 -des3 -out server.key 4096
 echo Generate server signing request:
 openssl req -passin pass:1111 -new -key server.key -out server.csr -subj "/CN=${SERVER_CN}"
 echo Self-signed server certificate:
-# Generates server.crt, which is the certChainFile for the server
+# Generates server.crt, the certChainFile for the server
 openssl x509 -req -passin pass:1111 -days 365 -in server.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out server.crt
 echo Remove passphrase from server key:
 openssl rsa -passin pass:1111 -in server.key -out server.key
@@ -94,22 +94,22 @@ openssl genrsa -passout pass:1111 -des3 -out client.key 4096
 echo Generate client signing request:
 openssl req -passin pass:1111 -new -key client.key -out client.csr -subj "/CN=%CLIENT_CN%"
 echo Self-signed client certificate:
-# Generates client.crt, which is the clientCertChainFile for the client (need for mutual TLS only)
+# Generates client.crt, the clientCertChainFile for the client (need for mutual TLS only)
 openssl x509 -passin pass:1111 -req -days 365 -in client.csr -CA ca.crt -CAkey ca.key -set_serial 01 -out client.crt
 echo Remove passphrase from client key:
 openssl rsa -passin pass:1111 -in client.key -out client.key
 echo Converting the private keys to X.509:
-# Generates client.pem, which is the clientPrivateKeyFile for the Client (needed for mutual TLS only)
+# Generates client.pem, the clientPrivateKeyFile for the Client (needed for mutual TLS only)
 openssl pkcs8 -topk8 -nocrypt -in client.key -out client.pem
-# Generates server.pem, which is the privateKeyFile for the Server
+# Generates server.pem, the privateKeyFile for the Server
 openssl pkcs8 -topk8 -nocrypt -in server.key -out server.pem</td>
 ```
 
 == Specify connectors-rpc system properties to provide the certs
 
-Now that we have the certs, we set them in the properties.
+Now that we have the certs, we set them in the system properties.
 
-**Example with Mutual TLS auth and private key passwords**
+=== Example with mutual TLS auth and private key passwords
 
 ```
 -Dcom.lucidworks.apollo.app.hostname=myhost
@@ -120,7 +120,7 @@ Now that we have the certs, we set them in the properties.
 -Dcom.lucidworks.fusion.tls.requireMutualAuth=false
 ```
 
-**Example without TLS auth and no private key passwords****:**
+=== Example without TLS auth and no private key passwords
 
 ```
 -Dcom.lucidworks.apollo.app.hostname=myhost
