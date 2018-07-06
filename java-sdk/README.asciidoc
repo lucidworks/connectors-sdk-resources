@@ -10,7 +10,7 @@ To deploy remotely, you can use the link:plugin-client.asciidoc[Connector client
 
 === Examples
 The example connectors are a great place to start understanding how to build a Java SDK Connector.
-Have a look at the link:connectors/README.asciidoc[README].
+Have a look at the link:connectors/README.asciidoc[example connectors documentation].
 
 === Security
 Read more on how to set up a secure environment for Java SDK connectors link:security.asciidoc[here].
