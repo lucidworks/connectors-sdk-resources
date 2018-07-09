@@ -10,7 +10,7 @@ To deploy remotely, you can use the
 ifdef::env-github[]
 link:plugin-client.asciidoc[Connector client utility].
 endif::[]
-ifdef::env-browser[]
+ifndef::env-github[]
 link:/fusion-server/{version}/search-development/getting-data-in/connectors/sdk/java-sdk/java-connector-dev.html#plugin-client[Connector client utility].
 endif::[]
 
@@ -23,7 +23,7 @@ Read more on how to set up a secure environment for Java SDK connectors
 ifdef::env-github[]
 link:security.asciidoc[here].
 endif::[]
-ifdef::env-browser[]
+ifndef::env-github[]
 link:/fusion-server/{version}/search-development/getting-data-in/connectors/sdk/java-sdk/java-connector-dev.html#security[here].
 endif::[]
 
@@ -83,7 +83,7 @@ More detailed information on the configuration and schema capabilities can be fo
 ifdef::env-github[]
 link:configuration.asciidoc[here].
 endif::[]
-ifdef::env-browser[]
+ifndef::env-github[]
 link:/fusion-server/{version}/search-development/getting-data-in/connectors/sdk/java-sdk/java-connector-dev.html#configuration[here].
 endif::[]
 

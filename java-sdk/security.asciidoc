@@ -4,7 +4,7 @@ See the main
 ifdef::env-github[]
 link:../security.asciidoc[custom connector security overview] 
 endif::[]
-ifdef::env-browser[]
+ifndef::env-github[]
 link:/fusion-server/{version}/search-development/getting-data-in/connectors/sdk/java-sdk/java-connector-dev.html#security[custom connector security overview] 
 endif::[]
 for instructions on how to configure SSL/TLS support for a Fusion custom connector.
@@ -16,7 +16,7 @@ The
 ifdef::env-github[]
 link:plugin-client.asciidoc[plugin-client]
 endif::[]
-ifdef::env-browser[]
+ifndef::env-github[]
 link:/fusion-server/{version}/search-development/getting-data-in/connectors/sdk/java-sdk/java-connector-dev.html#plugin-client[plugin-client]
 endif::[]
 supports several variations of SSL/TLS auth. The examples below show the relevant Java properties.
