@@ -141,7 +141,7 @@ the `default` phase.
 See the example
 https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/random-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentFetcher.java[here^].
 
-<a name="message-definitions"></a>
+[[message-definitions]]
 ==== Message Type Definitions
 
 ===== Candidate
