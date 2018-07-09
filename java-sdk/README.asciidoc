@@ -156,13 +156,13 @@ The general flow of how Candidates are processed is the key to enabling distribu
 ===== FetchInput
 The `FetchInput` represents an item to be fetched. Example values of `FetchInput` are a file path, a URL, or a SQL statement. `FetchInputs` are passed to the fetch() method of a Fetcher and are derived from `Candidate` metadata.
 
-<a name="message-definitions.document"></a>
+[[message-definitions.document]]
 ===== Document
 A `Document` is a value that is emitted from a connector and represents structured content.
 Once the controller service receives a `Document` message, its metadata is persisted in the crawl-db
 and then sent to the associated `IndexPipeline`.
 
-<a name="message-definitions.content"></a>
+[[message-definitions.content]]
 ===== Content
 A `Content` message represents raw content that must be parsed in order to be indexed into Fusion. They are analogous to InputStreams, and their bytes are streamed to Fusion.
 `Content` types are actually composed of three different subtypes:
