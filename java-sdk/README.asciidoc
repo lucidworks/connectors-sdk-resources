@@ -6,14 +6,26 @@ Connectors can be created by implementing some of the classes described in this 
 
 Connectors can be deployed directly within a Fusion cluster or outside Fusion as a remote client.
 To deploy a connector into Fusion, upload the build artifact (as a zip file) to the Fusion blob API.
-To deploy remotely, you can use the link:plugin-client.asciidoc[Connector client utility].
+To deploy remotely, you can use the 
+ifdef::env-github[]
+link:plugin-client.asciidoc[Connector client utility].
+endif::[]
+ifdef::env-browser[]
+link:/fusion-server/{version}/search-development/getting-data-in/connectors/sdk/java-sdk/java-connector-dev.html#plugin-client[Connector client utility].
+endif::[]
 
 === Examples
 The example connectors are a great place to start understanding how to build a Java SDK Connector.
-Have a look at the link:connectors/README.asciidoc[example connectors documentation].
+Have a look at the https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/README.md[example connectors documentation^].
 
 === Security
-Read more on how to set up a secure environment for Java SDK connectors link:security.asciidoc[here].
+Read more on how to set up a secure environment for Java SDK connectors 
+ifdef::env-github[]
+link:security.asciidoc[here].
+endif::[]
+ifdef::env-browser[]
+link:/fusion-server/{version}/search-development/getting-data-in/connectors/sdk/java-sdk/java-connector-dev.html#security[here].
+endif::[]
 
 == Java SDK Framework Overview
 Only a few components must be implemented to compile and build a functioning plugin.
@@ -67,7 +79,13 @@ Similarly, you can generate a Fusion-compatible JSON schema by implementing `Mod
 You can see an example of a configuration implementation
 https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/random-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentConfig.java[here^].
 
-More detailed information on the configuration and schema capabilities can be found link:configuration.asciidoc[here].
+More detailed information on the configuration and schema capabilities can be found 
+ifdef::env-github[]
+link:configuration.asciidoc[here].
+endif::[]
+ifdef::env-browser[]
+link:/fusion-server/{version}/search-development/getting-data-in/connectors/sdk/java-sdk/java-connector-dev.html#configuration[here].
+endif::[]
 
 === The Fetcher
 The `Fetcher` is where most of the work is done for any connector.
