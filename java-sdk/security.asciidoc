@@ -5,7 +5,7 @@ ifdef::env-github[]
 link:../security.asciidoc[custom connector security overview] 
 endif::[]
 ifndef::env-github[]
-link:/fusion-server/{version}/search-development/getting-data-in/connectors/sdk/java-sdk/java-connector-dev.html#security[custom connector security overview] 
+link:/fusion-server/{version}/search-development/getting-data-in/connectors/sdk/connectors-security.html[custom connector security overview] 
 endif::[]
 for instructions on how to configure SSL/TLS support for a Fusion custom connector.
 
