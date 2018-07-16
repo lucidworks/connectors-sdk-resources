@@ -1,7 +1,7 @@
 = Fusion gRPC TLS setup
 
 This guide helps you set up transport layer security (TLS) between your Connectors-rpc server and Fusion SDK connector plugin running a JVM.
-It is recommended to use this in a production environment.
+This is recommended in a production environment.
 
 == Install OpenSSL binaries
 
@@ -17,14 +17,14 @@ The gRPC framework makes TLS more efficient by using native openssl binaries whi
 
 === Install OpenSSL on Windows
 
-. Install OpenSSL, for example from https://slproweb.com/[https://slproweb.com/^].
+. Install OpenSSL, for example from https://slproweb.com/[https://slproweb.com/products/Win32OpenSSL.html^].
 . Add the installed binaries to your path.
 
 == Set up the certificates
 In a production environment, use an SSL certificate from a trusted certificate authority.
 For testing purposes, you can use a self-signed certificate. Generate a self-signed certificate with the following steps.
 
-Once you have the SSL certificates in the server.key and server.pem files, continue to the link:#Specify connectors-rpc system properties step.
+Once you have the SSL certificates in the server.key and server.pem files, continue to the link:#Specify-connectors-rpc-system-properties[Specify rpc-system properties] step.
 
 
 === Linux setup
@@ -110,7 +110,7 @@ openssl pkcs8 -topk8 -nocrypt -in client.key -out client.pem
 # Generates server.pem, the privateKeyFile for the Server
 openssl pkcs8 -topk8 -nocrypt -in server.key -out server.pem</td>
 ```
-
+[#Specify-connectors-rpc-system-properties]
 == Specify connectors-rpc system properties to provide the certs
 
 Now that we have the certs, we set them in the system properties.
