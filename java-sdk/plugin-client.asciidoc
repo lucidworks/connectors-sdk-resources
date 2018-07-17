@@ -15,22 +15,19 @@ layer, without having to make changes to the Java plugin implementation.
 
 === Standalone Connector Plugin Application
 
-The second goal of the plugin-client, is to allow Java SDK plugins to run remotely.
+The second goal of the plugin-client is to allow Java SDK plugins to run remotely.
 The instructions for deploying a connector using this method are provided below.
 
-==== Building the UberJar
+==== Locating the UberJar
 
-To build the uber-jar, run:
-
-```
-./gradlew :fusion-connectors:grpc:connector-plugin-client:shadowJar
-```
-
-The uberjar is built and placed in this location:
+The uberjar is located in this location in the Fusion file system:
 
 ```
-fusion-connectors/grpc/connector-plugin-client/build/libs/connector-plugin-client-4.0.0-SNAPSHOT-uberjar.jar
+$FUSION_HOME/apps/connectors/connectors-rpc/client/connector-plugin-client-<version>-uberjar.jar
 ```
+
+where `$FUSION_HOME` is your Fusion installation directory and `<version>` is your Fusion version number.
+
 ==== Starting the Host
 
 To start the host app, you need a Fusion SDK-based connector, built into the standard packaging format as a `.zip` file. This `zip` must contain only one connector plugin.
@@ -38,11 +35,11 @@ To start the host app, you need a Fusion SDK-based connector, built into the sta
 Here is an example of how to start up using the web connector:
 
 ```
-java -jar fusion-connectors/grpc/connector-plugin-client/build/libs/connector-plugin-client-4.0.0-SNAPSHOT-uberjar.jar fusion-connectors/build/plugins/connector-web-4.0.0-SNAPSHOT.zip
+java -jar $FUSION_HOME/apps/connectors/connectors-rpc/client/connector-plugin-client-<version>-uberjar.jar fusion-connectors/build/plugins/connector-web-4.0.0-SNAPSHOT.zip
 ```
 
 To run the client with remote debugging enabled:
 
 ```
-java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5010 -jar fusion-connectors/grpc/connector-plugin-client/build/libs/connector-plugin-client-4.0.0-SNAPSHOT-uberjar.jar fusion-connectors/build/plugins/connector-web-4.0.0-SNAPSHOT.zip
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5010 -jar $FUSION_HOME/apps/connectors/connectors-rpc/client/connector-plugin-client-<version>-uberjar.jar fusion-connectors/build/plugins/connector-web-4.0.0-SNAPSHOT.zip
 ```

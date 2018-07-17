@@ -43,7 +43,7 @@ At this point, the generated zip could be uploaded directly to Fusion, but follo
 
 ## Start
 
-Connect to Fusion plugin by using the client jar + the plugin zip:
+Connect to Fusion plugin by using the client jar plus the plugin zip:
 
 ```bash
 java  -jar ${fusionHome}/apps/connectors/connectors-rpc/client/connector-plugin-client-${fusionVersion}-uberjar.jar build/plugins/random-content-connector-{version}.zip
