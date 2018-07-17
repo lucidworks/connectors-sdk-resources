@@ -26,7 +26,7 @@ public class RandomContentPlugin extends ConnectorPluginModule {
       }
     };
     return builder(RandomContentConfig.class)
-        .withFetcher(RandomContentFetcher.class, nonGenModule)
-        .build();
+      .withFetcher("content", RandomContentFetcher.class, nonGenModule)
+      .build();
   }
 }

@@ -33,8 +33,7 @@ subprojects {
       attributes 'Plugin-Class': "${pluginClass}",
           'Plugin-Type': "connector",
           'Plugin-Id': "${pluginId}",
-          'Plugin-Fusion-Version': "${fusionVersion}",
-          'Plugin-Version': "${version}",
+          'Plugin-Version': "${fusionVersion}",
           'Plugin-Provider': "${pluginProvider}"
     }
     into('lib') {
