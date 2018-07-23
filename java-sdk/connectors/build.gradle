@@ -28,7 +28,7 @@ subprojects {
   }
 
   task plugin(type: Jar) {
-    baseName = "${project.name}"
+    archiveName = "${project.name}" + ".zip"
     manifest {
       attributes 'Plugin-Class': "${pluginClass}",
           'Plugin-Type': "connector",
