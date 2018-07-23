@@ -25,5 +25,5 @@ if [ -z "$TARGET_PATH" ] || [ ! -d "$TARGET_PATH" ]; then
     exit 1
 fi
 
-cp build/plugins/random-connector-0.1.1.zip "$TARGET_PATH"
+cp build/plugins/random-connector.zip "$TARGET_PATH"
 
