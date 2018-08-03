@@ -28,13 +28,12 @@ subprojects {
   }
 
   task plugin(type: Jar) {
-    baseName = "${project.name}"
+    archiveName = "${project.name}" + ".zip"
     manifest {
       attributes 'Plugin-Class': "${pluginClass}",
           'Plugin-Type': "connector",
           'Plugin-Id': "${pluginId}",
-          'Plugin-Fusion-Version': "${fusionVersion}",
-          'Plugin-Version': "${version}",
+          'Plugin-Version': "${fusionVersion}",
           'Plugin-Provider': "${pluginProvider}"
     }
     into('lib') {
