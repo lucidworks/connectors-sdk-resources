@@ -51,7 +51,7 @@ subprojects {
 
   task deploy(type: Exec, dependsOn: ["assemblePlugin"]) {
     commandLine "curl", "-X", "PUT", "-H", "content-type:application/zip",
-            "http://${fusionApiTarget}/api/v1/blobs/lucidworks.sdk.${project.name}-${version}.zip?resourceType=plugin:connector",
+            "http://${fusionApiTarget}/api/v1/blobs/lucidworks.sdk.${project.name}.zip?resourceType=plugin:connector",
             "--data-binary",
             "@${pluginsDir}/${plugin.outputs.files.singleFile.getName()}"
     doLast {
