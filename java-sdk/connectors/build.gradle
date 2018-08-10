@@ -48,6 +48,37 @@ subprojects {
     from plugin
     into pluginsDir
   }
+
+  task deploy(type: Exec, dependsOn: ["assemblePlugin"]) {
+    commandLine "curl", "-X", "PUT", "-H", "content-type:application/zip",
+            "http://${fusionApiTarget}/api/v1/blobs/lucidworks.sdk.${project.name}.zip?resourceType=plugin:connector",
+            "--data-binary",
+            "@${pluginsDir}/${plugin.outputs.files.singleFile.getName()}"
+    doLast {
+      logger.info("Curl result: ${standardOutput.toString().trim()}")
+    }
+  }
+
+  task connect(type: Exec, dependsOn: ["assemblePlugin"]) {
+    def clientJar = "${fusionHome}/apps/connectors/connectors-rpc/client/connector-plugin-client-${fusionVersion}-uberjar.jar"
+    def argsList = []
+    argsList << "java"
+    argsList << "-Dcom.lucidworks.fusion.plugin.hosts=${fusionRpcTarget}"
+    argsList << "-Dcom.lucidworks.fusion.plugin.stop.port=${stopPort}"
+    if (project.hasProperty("debug")) {
+      argsList << "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5010"
+    }
+    argsList << "-jar"
+    argsList << clientJar
+    argsList << "${project.buildDir}/libs/${project.name}.zip"
+
+    commandLine argsList
+
+    doFirst {
+      println "   -- Using client-jar ${clientJar}"
+      println "   -- Connecting plugin ${project.buildDir}/libs/${project.name}.zip to ${fusionRpcTarget}"
+    }
+  }
 }
 
 task assemblePlugins(type: Copy) {
