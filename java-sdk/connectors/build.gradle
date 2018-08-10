@@ -70,7 +70,7 @@ subprojects {
     }
     argsList << "-jar"
     argsList << clientJar
-    argsList << "${project.buildDir}/libs/${project.name}-${version}.zip"
+    argsList << "${project.buildDir}/libs/${project.name}.zip"
 
     commandLine argsList
 
