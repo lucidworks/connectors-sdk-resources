@@ -76,7 +76,7 @@ subprojects {
 
     doFirst {
       println "   -- Using client-jar ${clientJar}"
-      println "   -- Connecting plugin ${project.buildDir}/libs/${project.name}-${version}.zip to ${fusionRpcTarget}"
+      println "   -- Connecting plugin ${project.buildDir}/libs/${project.name}.zip to ${fusionRpcTarget}"
     }
   }
 }
