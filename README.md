@@ -17,7 +17,8 @@ Connectors can be hosted within Fusion, or can run remotely. In the hosted case,
 In the remote case, Connectors become clients of Fusion. These clients run a very lightweight process and communicate to Fusion using an efficient messaging format. This option makes it possible to put the Connector wherever the data lives. In some cases, this might be required for performance or security/access reasons.
 
 The communication of messages between Fusion and a remote Connector or hosted Connector are identical; Fusion sees them as the same kind of Connector. This means you can implement a Connector locally, connect to a remote Fusion for initial testing, and when done, upload the exact same artifact (a zip file) into Fusion, so Fusion can host it for you. The ability to run the Connector remotely makes the development process much quicker.
-Java SDK
+
+### Java SDK
 
 The Java SDK brings a new set of components for making it simple to build a Connector in Java. Whether the plugin is a true crawler, or a simple iterative fetcher, the SDK supports both.
 
