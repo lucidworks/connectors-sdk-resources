@@ -25,6 +25,8 @@ import java.util.stream.IntStream;
 
 public class RandomContentFetcher implements ContentFetcher {
 
+  private final static String ERROR_ID = "no-number-this-should-fail";
+
   private static final Random rnd = new Random();
   private static final Logger logger = LogManager.getLogger(RandomContentFetcher.class);
   private final RandomContentConfig randomContentConfig;
@@ -49,7 +51,7 @@ public class RandomContentFetcher implements ContentFetcher {
     // Simulating an error item here... because we're emitting an item without a "number",
     // the fetch() call will attempt to convert the number into a long and throw an exception.
     // The item should be recorded as an error in the ConnectorJobStatus.
-    preFetchContext.emitCandidate(MessageHelper.candidate("no-number-this-should-fail").build());
+    preFetchContext.emitCandidate(MessageHelper.candidate(ERROR_ID).build());
     return preFetchContext.newResult();
   }
 
@@ -58,19 +60,29 @@ public class RandomContentFetcher implements ContentFetcher {
     FetchInput input = fetchContext.getFetchInput();
     logger.info("Received FetchInput -> {}", input);
     String hostname = getHostname();
-    long num = (Long) input.getMetadata().get("number");
-    String headline = generator.makeSentence(true);
-    int numSentences = getRandomNumberInRange(10, 255);
-    String txt = generator.makeText(numSentences);
-    logger.info("Emitting Document -> number {}", num);
 
-    Map<String, Object> fields = new HashMap();
-    fields.put("number_i", num);
-    fields.put("timestamp_l", Instant.now().toEpochMilli());
-    fields.put("headline_s", headline);
-    fields.put("hostname_s", hostname);
-    fields.put("text_t", txt);
-    fetchContext.emitDocument(fields);
+    try {
+      long num = (Long) input.getMetadata().get("number");
+
+      String headline = generator.makeSentence(true);
+      int numSentences = getRandomNumberInRange(10, 255);
+      String txt = generator.makeText(numSentences);
+      logger.info("Emitting Document -> number {}", num);
+
+      Map<String, Object> fields = new HashMap();
+      fields.put("number_i", num);
+      fields.put("timestamp_l", Instant.now().toEpochMilli());
+      fields.put("headline_s", headline);
+      fields.put("hostname_s", hostname);
+      fields.put("text_t", txt);
+      fetchContext.emitDocument(fields);
+    } catch (NullPointerException npe) {
+      if (ERROR_ID.equals(input.getId())) {
+        logger.info("The following error is expected, as means to demonstrate how errors are emitted");
+      } else {
+        throw npe;
+      }
+    }
     return fetchContext.newResult();
   }
 
