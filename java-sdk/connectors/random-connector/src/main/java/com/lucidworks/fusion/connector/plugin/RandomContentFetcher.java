@@ -79,9 +79,9 @@ public class RandomContentFetcher implements ContentFetcher {
     } catch (NullPointerException npe) {
       if (ERROR_ID.equals(input.getId())) {
         logger.info("The following error is expected, as means to demonstrate how errors are emitted");
-      } else {
-        throw npe;
       }
+
+      throw npe;
     }
     return fetchContext.newResult();
   }
