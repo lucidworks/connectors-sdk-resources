@@ -13,7 +13,7 @@ See the link:java-sdk/connectors/random-connector/README.asciidoc[Random Content
 
 == Fusion 4 Connectors Overview
 
-The connectors architecture in Fusion 4 and later is designed to be scalable. Depending on the connector, jobs can be scaled by adding instances of just the connector.
+The new connectors architecture in Fusion 4 and later is designed to be scalable. Depending on the connector, jobs can be scaled by adding instances of just the connector.
 The fetching process for these types also supports distributed fetching, so that many instances can contribute to the same job.
 
 Connectors can be hosted within Fusion, or can run remotely. In the hosted case, these connectors are cluster aware.
