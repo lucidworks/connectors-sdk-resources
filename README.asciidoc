@@ -20,7 +20,7 @@ Connectors can be hosted within Fusion, or can run remotely. In the hosted case,
 This means that when a new instance of Fusion starts up, the connectors on other Fusion nodes become aware of the new connectors, and vice versa.
 This simplifies scaling connectors jobs.
 
-In the remote case, connectors become clients of Fusion. These clients run a lightweight process and communicate to Fusion using an efficient messaging format.
+In the remote case, connectors become clients of Fusion. These clients run a lightweight process and communicate to Fusion using an efficient messaging protocol.
 This option makes it possible to put the connector wherever the data lives. In some cases, this might be required for performance or security and access reasons.
 
 The communication of messages between Fusion and a remote connector or hosted connector are identical; Fusion sees them as the same kind of connector.
