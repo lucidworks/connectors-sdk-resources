@@ -1,0 +1,45 @@
+== Fusion Connector Plugin Client
+
+The Fusion connector plugin client provides a wrapper for the Fusion Java plugin-sdk so that plugins do not need to directly talk with gRPC code.
+Instead, they can use high-level interfaces and base classes, like Connector and Fetcher.
+
+The plugin client also provides a standalone "runner" that can host a plugin that was built from the Fusion Java Connector SDK.
+It does this by loading the plugin zip file, then calling on the wrapper to provide the gRPC interactions.
+
+=== Java SDK / gRPC Wrapper
+
+One of the primary goals of the plugin-client is to isolate plugin code from the underlying framework details.
+Specifically, the underlying message formats (protocol buffers) and native gRPC code.
+This makes it possible to make some changes to the base support
+layer, without having to make changes to the Java plugin implementation.
+
+=== Standalone Connector Plugin Application
+
+The second goal of the plugin-client is to allow Java SDK plugins to run remotely.
+The instructions for deploying a connector using this method are provided below.
+
+==== Locating the UberJar
+
+The uberjar is located in this location in the Fusion file system:
+
+```
+$FUSION_HOME/apps/connectors/connectors-rpc/client/connector-plugin-client-<version>-uberjar.jar
+```
+
+where `$FUSION_HOME` is your Fusion installation directory and `<version>` is your Fusion version number.
+
+==== Starting the Host
+
+To start the host app, you need a Fusion SDK-based connector, built into the standard packaging format as a `.zip` file. This `zip` must contain only one connector plugin.
+
+Here is an example of how to start up using the web connector:
+
+```
+java -jar $FUSION_HOME/apps/connectors/connectors-rpc/client/connector-plugin-client-<version>-uberjar.jar fusion-connectors/build/plugins/connector-web-4.0.0-SNAPSHOT.zip
+```
+
+To run the client with remote debugging enabled:
+
+```
+java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5010 -jar $FUSION_HOME/apps/connectors/connectors-rpc/client/connector-plugin-client-<version>-uberjar.jar fusion-connectors/build/plugins/connector-web-4.0.0-SNAPSHOT.zip
+```
