@@ -34,7 +34,8 @@ subprojects {
           'Plugin-Type': "connector",
           'Plugin-Id': "${pluginId}",
           'Plugin-Version': "${fusionVersion}",
-          'Plugin-Provider': "${pluginProvider}"
+          'Plugin-Provider': "${pluginProvider}",
+          'Plugin-Connectors-SDK-Version': '1.0.1'
     }
     into('lib') {
       from configurations.compile - configurations.provided
