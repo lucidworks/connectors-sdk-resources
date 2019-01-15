@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+# Note: script usedin Fusion side to test the example repo. TODO: delete in future versions
+
 GIT_BRANCH=$1
 FUSION_HOME=$2
 FUSION_VERSION=$3
@@ -26,4 +28,3 @@ if [ -z "$TARGET_PATH" ] || [ ! -d "$TARGET_PATH" ]; then
 fi
 
 cp build/plugins/random-connector.zip "$TARGET_PATH"
-

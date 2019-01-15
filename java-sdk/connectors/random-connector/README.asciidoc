@@ -4,13 +4,13 @@ This connector generates a configurable number of documents, all with random tit
 
 ## Quick start
 
-NOTE: This quick start assumes that Fusion is installed on the `/opt` path and its version is `4.0.1`
+NOTE: This quick start assumes that Fusion is installed on the `/opt` path and its version is `4.2.0`
 
 1. Clone the repo:
 ```
 git clone https://github.com/lucidworks/connectors-sdk-resources.git
 cd connectors-sdk-resources/java-sdk/connectors/
-./gradlew assemblePlugins -PfusionHome=/opt/fusion/4.0.1 -PfusionVersion=4.0.1
+./gradlew assemblePlugins -PfusionHome=/opt/fusion/4.2.0 -PfusionVersion=4.2.0
 ```
 
 2. This produces one zip file, named `random-connector-{version}.zip`, located in the `build/plugins` directory.
@@ -20,11 +20,11 @@ This artifact is now ready to be uploaded directly to Fusion as a connector plug
 
 **Important**
 
-Change the _fusionHome_ property in the https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/gradle.properties[`gradle.properties` file^].
+As a first step, change the _fusionHome_ property in the https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/gradle.properties[`gradle.properties` file^].
 
 The _fusionHome_ property is the full path of your local Fusion installation. The path should include Fusion's version.
 
-For example `/opt/fusion/4.0.1`
+For example `/opt/fusion/4.2.0`
 
 The _fusionHome_ is needed to import the code to an IDE.
 

@@ -60,4 +60,4 @@ The data persisted by the connectors framework is distributed across the Fusion 
 If a node goes down during a crawl, the data store remains intact and usable. Connector implementations do not need to be concerned with this layer, because it is all handled by Fusion.
 
 
-Copyright 2018 https://lucidworks.com[Lucidworks^]
+Copyright 2019 https://lucidworks.com[Lucidworks^]

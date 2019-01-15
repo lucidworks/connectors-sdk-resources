@@ -17,7 +17,7 @@ The gRPC framework makes TLS more efficient by using native openssl binaries whi
 
 === Install OpenSSL on Windows
 
-. Install OpenSSL, for example from https://slproweb.com/[https://slproweb.com/products/Win32OpenSSL.html^].
+. Install OpenSSL, for example from https://slproweb.com/products/Win32OpenSSL.html[https://slproweb.com/^].
 . Add the installed binaries to your path.
 
 == Set up the certificates
