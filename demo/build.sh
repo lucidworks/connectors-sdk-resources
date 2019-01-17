@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# Note: script usedin Fusion side to test the example repo. TODO: delete in future versions
+# Note: script used in Fusion to test the example repo. TODO: delete in future versions
 
 GIT_BRANCH=$1
 FUSION_HOME=$2
