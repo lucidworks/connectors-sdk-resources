@@ -1,8 +1,8 @@
 package com.lucidworks.fusion.connector.plugin;
 
 import com.lucidworks.fusion.connector.plugin.api.config.ConnectorConfig;
-import com.lucidworks.fusion.connector.plugin.api.config.FetcherProperties;
-import com.lucidworks.fusion.schema.SchemaAnnotations.IntegerSchema;
+import com.lucidworks.fusion.connector.plugin.api.config.ConnectorPluginProperties;
+import com.lucidworks.fusion.schema.SchemaAnnotations.NumberSchema;
 import com.lucidworks.fusion.schema.SchemaAnnotations.Property;
 import com.lucidworks.fusion.schema.SchemaAnnotations.RootSchema;
 
@@ -18,20 +18,18 @@ public interface RandomContentConfig extends ConnectorConfig<RandomContentConfig
       title = "Properties",
       required = true
   )
-  public Properties getProperties();
+  Properties properties();
 
   /**
    * Connector specific settings
    */
-  interface Properties extends FetcherProperties {
+  interface Properties extends ConnectorPluginProperties {
 
     @Property(
         title = "Total",
         description = "Total number of docs to generate"
     )
-    @IntegerSchema(defaultValue = 1000)
-    public Integer getTotalNumDocs();
-
+    @NumberSchema(defaultValue = 1000)
+    Integer totalNumDocs();
   }
-
 }

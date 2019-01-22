@@ -1,0 +1,63 @@
+= Public Connectors SDK Resources
+
+The https://github.com/lucidworks/connectors-sdk-resources[connectors SDK public Github repository^] provides resources to help developers build their own
+https://lucidworks.com/products/fusion-server/[Fusion^] SDK connectors.
+Some of the resources include documentation and getting started guides, as well as example connectors.
+
+For developing a Java SDK based connector, check out the link:java-sdk/README.asciidoc[Java SDK README].
+
+The repository includes https://github.com/lucidworks/connectors-sdk-resources/tree/master/java-sdk/connectors[a Gradle project^],
+which wraps each https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/settings.gradle[known plugin^] with a common set of tasks and dependencies.
+
+See the link:java-sdk/connectors/random-connector/README.asciidoc[Random Content Connector] example for instructions on how to build, deploy and run.
+
+== Fusion 4 Connectors Overview
+
+The connectors architecture in Fusion 4 and later is designed to be scalable. Depending on the connector, jobs can be scaled by adding instances of just the connector.
+The fetching process for these types also supports distributed fetching, so that many instances can contribute to the same job.
+
+Connectors can be hosted within Fusion, or can run remotely. In the hosted case, these connectors are cluster aware.
+This means that when a new instance of Fusion starts up, the connectors on other Fusion nodes become aware of the new connectors, and vice versa.
+This simplifies scaling connectors jobs.
+
+In the remote case, connectors become clients of Fusion. These clients run a lightweight process and communicate to Fusion using an efficient messaging format.
+This option makes it possible to put the connector wherever the data lives. In some cases, this might be required for performance or security and access reasons.
+
+The communication of messages between Fusion and a remote connector or hosted connector are identical; Fusion sees them as the same kind of connector.
+This means you can implement a connector locally, connect to a remote Fusion for initial testing, and when done,
+upload the exact same artifact (a zip file) into Fusion, so Fusion can host it for you. The ability to run the connector remotely makes the development process much quicker.
+
+== Java SDK
+
+The Java SDK provides components for making it simple to build a connector in Java. Whether the plugin is a true crawler or a simple iterative fetcher,
+the SDK supports both.
+
+The link:./java-sdk/README.asciidoc[Java SDK] includes a set of base classes and interfaces. It also provides the Gradle build utilities for packaging up a connector,
+and a connector client application that can run your connector remotely.
+
+Many of the base features needed for a connector are provided by Fusion itself. When a connector first connects to Fusion, it sends along its name, type, schema,
+and other metadata. This connection then stays open, and the two systems can communicate bi-directionally as needed.
+
+This makes it possible for Fusion to manage configuration data, the job state, scheduling, and encryption for example.
+The Fusion Admin UI also takes care of the view or presentation, by making use of the connector's schema.
+
+This client-based approach decouples connectors from Fusion, which allows hot deployment of connectors through a simple connect call.
+
+== Security
+Fusion connectors support SSL/TLS. See the link:security.asciidoc[security README] for setup.
+
+=== gRPC
+The underlying client/server technology used by these connectors is a fast and efficient framework from Google called https://grpc.io/[gRPC^].
+The gRPC framework provides flexibility in the way services and their methods are defined. Other benefits of this framework include:
+
+* HTTP/2 based transport
+* Provides an efficient serialization format for data handling (protocol buffers)
+* Allows bi-directional/multiplexed streams
+* Flow control, also known as back pressure
+
+== Distributed Data Store
+The data persisted by the connectors framework is distributed across the Fusion cluster. Each node holds its primary partition of the data, as well as backups of other partitions.
+If a node goes down during a crawl, the data store remains intact and usable. Connector implementations do not need to be concerned with this layer, because it is all handled by Fusion.
+
+
+Copyright 2018 https://lucidworks.com[Lucidworks^]
