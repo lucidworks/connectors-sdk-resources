@@ -2,7 +2,6 @@ package com.lucidworks.fusion.connector.plugin.client;
 
 import com.google.common.collect.ImmutableMap;
 import com.lucidworks.fusion.connector.plugin.ImapConfig;
-import com.lucidworks.fusion.connector.plugin.ImapConfigValidator;
 import com.lucidworks.fusion.schema.ModelGenerator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -15,18 +14,16 @@ import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.search.FlagTerm;
-
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
 
 public class ImapClientTest {
   private final static Logger logger = LogManager.getLogger(ImapClientTest.class);

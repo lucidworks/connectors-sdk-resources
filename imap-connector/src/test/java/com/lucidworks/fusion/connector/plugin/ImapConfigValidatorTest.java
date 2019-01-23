@@ -2,19 +2,19 @@ package com.lucidworks.fusion.connector.plugin;
 
 import com.google.common.collect.ImmutableMap;
 import com.lucidworks.fusion.connector.plugin.api.validation.ValidationContext;
-import com.lucidworks.fusion.connector.plugin.api.validation.ValidationResult;
+import com.lucidworks.fusion.connector.plugin.api.validation.result.ConnectorConfigValidationResult;
 import com.lucidworks.fusion.schema.ModelGenerator;
 import com.lucidworks.fusion.schema.SchemaGenerator;
-import com.lucidworks.fusion.schema.SchemaValidator;
 import com.lucidworks.fusion.schema.ValidationError;
 import com.lucidworks.fusion.schema.types.ObjectType;
+import com.lucidworks.fusion.schema.validator.SchemaValidator;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 
@@ -48,11 +48,14 @@ public class ImapConfigValidatorTest {
     ValidationContext context = ValidationContext.validationContextRun();
 
     ImapConfigValidator validator = new ImapConfigValidator(config);
-    ValidationResult validationResult = validator.validateConfig(context);
-    List<ValidationError> errors = validationResult.getErrors();
+    ConnectorConfigValidationResult validationResult = validator.validateConfig(context);
+
+    Set<ValidationError> errors = validationResult.getErrors();
     assertEquals(1, errors.size());
-    assertEquals("host", errors.get(0).getField());
-    assertEquals("Invalid host provided.", errors.get(0).getError());
+
+    ValidationError firstError = errors.iterator().next();
+    assertEquals("host", firstError.getField());
+    assertEquals("Invalid host provided.", firstError.getMessage());
     assertEquals(0, validationResult.getWarnings().size());
 
   }
@@ -65,7 +68,7 @@ public class ImapConfigValidatorTest {
 
     ValidationContext context = ValidationContext.validationContextCreate();
     ImapConfigValidator validator = new ImapConfigValidator(config);
-    ValidationResult validationResult = validator.validateConfig(context);
+    ConnectorConfigValidationResult validationResult = validator.validateConfig(context);
 
     assertEquals(1, validationResult.getErrors().size());
   }

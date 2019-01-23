@@ -1,11 +1,12 @@
 package com.lucidworks.fusion.connector.plugin;
 
 import com.lucidworks.fusion.connector.plugin.api.config.ConnectorConfig;
-import com.lucidworks.fusion.connector.plugin.api.config.FetcherProperties;
+import com.lucidworks.fusion.connector.plugin.api.config.ConnectorPluginProperties;
 import com.lucidworks.fusion.schema.SchemaAnnotations.BooleanSchema;
 import com.lucidworks.fusion.schema.SchemaAnnotations.Property;
 import com.lucidworks.fusion.schema.SchemaAnnotations.RootSchema;
 import com.lucidworks.fusion.schema.SchemaAnnotations.StringSchema;
+
 import com.lucidworks.fusion.schema.UIHints;
 
 @RootSchema(
@@ -20,12 +21,12 @@ public interface ImapConfig extends ConnectorConfig<ImapConfig.Properties> {
       title = "Properties",
       required = true
   )
-  public Properties getProperties();
+  Properties properties();
 
   /**
    * Connector specific settings
    */
-  interface Properties extends FetcherProperties {
+  interface Properties extends ConnectorPluginProperties {
 
     @Property(
         title = "Host",
@@ -34,7 +35,7 @@ public interface ImapConfig extends ConnectorConfig<ImapConfig.Properties> {
         order = 0
     )
     @StringSchema
-    public String getHost();
+    String host();
 
     @Property(
         title = "Username",
@@ -43,7 +44,7 @@ public interface ImapConfig extends ConnectorConfig<ImapConfig.Properties> {
         order = 1
     )
     @StringSchema
-    public String getUsername();
+    String username();
 
     @Property(
         title = "Password",
@@ -53,7 +54,7 @@ public interface ImapConfig extends ConnectorConfig<ImapConfig.Properties> {
         hints = {UIHints.SECRET}
     )
     @StringSchema
-    public String getPassword();
+    String password();
 
     @Property(
         title = "SSL",
@@ -62,7 +63,7 @@ public interface ImapConfig extends ConnectorConfig<ImapConfig.Properties> {
         order = 3
     )
     @BooleanSchema
-    public boolean getSsl();
+    boolean ssl();
 
     @Property(
         title = "Folder",
@@ -71,7 +72,7 @@ public interface ImapConfig extends ConnectorConfig<ImapConfig.Properties> {
         order = 4
     )
     @StringSchema(defaultValue = "Inbox")
-    public String getFolder();
+    String folder();
   }
 
 }

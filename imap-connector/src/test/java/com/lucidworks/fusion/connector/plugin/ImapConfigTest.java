@@ -5,7 +5,6 @@ import com.lucidworks.fusion.schema.ModelGenerator;
 import com.lucidworks.fusion.schema.SchemaGenerator;
 import com.lucidworks.fusion.schema.types.AnyType;
 import com.lucidworks.fusion.schema.types.ObjectType;
-import org.codehaus.jackson.JsonProcessingException;
 import org.junit.Test;
 
 import java.util.Map;
@@ -13,8 +12,9 @@ import java.util.Map;
 import static org.junit.Assert.*;
 
 public class ImapConfigTest {
+
   @Test
-  public void testSchemaProperties() throws JsonProcessingException {
+  public void testSchemaProperties() {
     ObjectType schema = SchemaGenerator.generate(ImapConfig.class);
     assertTrue(schema.getProperties().containsKey("properties"));
     AnyType properties = schema.getProperties().get("properties");
@@ -55,12 +55,11 @@ public class ImapConfigTest {
 
   @Test
   public void testConfigProperties() {
-    String host = "imap.hostname.com";
-    String username = "jdoe";
-    String password = "topsecret";
-    boolean ssl = false;
-    String folder = "Inbox";
-
+    final String host = "imap.hostname.com";
+    final String username = "jdoe";
+    final String password = "topsecret";
+    final boolean ssl = false;
+    final String folder = "Inbox";
 
     Map<String, Object> data = ImmutableMap.<String, Object>builder()
         .put("properties", ImmutableMap.<String, Object>builder()
@@ -74,20 +73,18 @@ public class ImapConfigTest {
     ImapConfig config = ModelGenerator.generate(ImapConfig.class, data);
     assertEquals(
         host,
-        config.getProperties().getHost());
+        config.properties().host());
     assertEquals(
         username,
-        config.getProperties().getUsername());
+        config.properties().username());
     assertEquals(
         password,
-        config.getProperties().getPassword());
+        config.properties().password());
     assertEquals(
         ssl,
-        config.getProperties().getSsl());
+        config.properties().ssl());
     assertEquals(
         folder,
-        config.getProperties().getFolder());
-
-
+        config.properties().folder());
   }
 }

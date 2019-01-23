@@ -1,16 +1,16 @@
 package com.lucidworks.fusion.connector.plugin;
 
-import com.lucidworks.fusion.connector.plugin.api.fetcher.Fetcher;
-import com.lucidworks.fusion.connector.plugin.api.fetcher.context.FetchContext;
-import com.lucidworks.fusion.connector.plugin.api.fetcher.context.StopContext;
+import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
+import com.lucidworks.fusion.connector.plugin.api.fetcher.result.StopResult;
+import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
 import com.lucidworks.fusion.connector.plugin.client.Email;
 import com.lucidworks.fusion.connector.plugin.client.ImapClient;
 import com.lucidworks.fusion.connector.plugin.client.MailException;
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
 import javax.mail.MessagingException;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,19 +24,19 @@ import static com.lucidworks.fusion.connector.plugin.ImapConstants.SUBJECT_FIELD
 import static com.lucidworks.fusion.connector.plugin.ImapConstants.TO_FIELD;
 
 
-public class ImapFetcher implements Fetcher {
-  private final Logger logger;
+
+public class ImapFetcher implements ContentFetcher {
+  private static final Logger logger = LogManager.getLogger(ImapFetcher.class);
+
   private final ImapConfig config;
 
   private ImapClient imapClient;
 
   @Inject
   public ImapFetcher(
-      Logger logger,
       ImapConfig config,
       ImapClient imapClient
   ) {
-    this.logger = logger;
     this.config = config;
     this.imapClient = imapClient;
   }
@@ -44,7 +44,7 @@ public class ImapFetcher implements Fetcher {
   @Override
   public FetchResult fetch(FetchContext fetchContext) {
     try {
-      for (Email message : imapClient.getUnreadMessages(this.config.getProperties().getFolder())) {
+      for (Email message : imapClient.getUnreadMessages(this.config.properties().folder())) {
         Map<String, Object> data = new HashMap<>();
 
 
@@ -76,14 +76,14 @@ public class ImapFetcher implements Fetcher {
   }
 
   @Override
-  public StopResult stop(StopContext stopContext) {
+  public StopResult stop(StopContext context) {
+
     try {
       this.imapClient.disconnect();
-    }
-    catch (MessagingException e) {
+    } catch (MessagingException e) {
       logger.error("Failed to close IMAP connection.", e);
     }
 
-    return StopResult.DEFAULT;
+    return context.newResult();
   }
 }

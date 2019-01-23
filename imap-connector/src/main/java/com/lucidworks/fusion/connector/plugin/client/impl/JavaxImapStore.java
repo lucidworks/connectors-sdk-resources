@@ -22,7 +22,7 @@ public class JavaxImapStore implements ImapStore<Folder> {
     this.config = config;
 
     // build session and store
-    boolean ssl = config.getProperties().getSsl();
+    boolean ssl = config.properties().ssl();
 
     String provider;
     if (ssl) {
@@ -42,9 +42,9 @@ public class JavaxImapStore implements ImapStore<Folder> {
   @Override
   public void connect() throws MailException {
     // extract properties
-    String host = config.getProperties().getHost();
-    String username = config.getProperties().getUsername();
-    String password = config.getProperties().getPassword();
+    String host = config.properties().host();
+    String username = config.properties().username();
+    String password = config.properties().password();
 
     try {
       this.delegate.connect(host, username, password);
