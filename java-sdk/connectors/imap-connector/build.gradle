@@ -1,17 +1,8 @@
-plugins {
-  id 'idea'
-
-  id 'lucidworks.java-project' version '0.3.0'
-//  id 'lucidworks.release' version '0.3.0'
-  id 'lucidworks.sdk.plugin' version '0.13.0'
-}
-
 dependencies {
-  api "com.lucidworks.fusion:connector-plugin-sdk:${connectorsSDKVersion}"
-  api configurations.log4j
+  // Note: Fusion libraries are added by parent project.
 
-  compile group: 'com.sun.mail', name: 'javax.mail', version: '1.6.1'
+  implementation 'org.apache.logging.log4j:log4j:2.11.1'
+  implementation 'com.sun.mail:javax.mail:1.6.1'
 
-  testImplementation configurations.testing
-  testImplementation "com.lucidworks.fusion:junit:${componentsVersion}"
+  testCompile group: 'org.mockito', name: 'mockito-core', version: '2.23.4'
 }

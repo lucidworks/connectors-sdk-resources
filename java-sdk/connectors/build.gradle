@@ -1,0 +1,87 @@
+subprojects {
+
+  apply plugin: 'java'
+  apply plugin: 'idea'
+
+  sourceCompatibility = 1.8
+
+  // Folder where the plugins are built
+  ext.pluginsDir = "${rootProject.buildDir}/plugins"
+
+  configurations {
+    provided
+    compile.extendsFrom(provided)
+  }
+
+  repositories {
+    mavenCentral()
+    mavenLocal()
+  }
+
+  dependencies {
+    provided(fileTree(dir: "${fusionHome}/apps/connectors/connectors-rpc/libs", include: '*.jar'))
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+  }
+
+  jar {
+    baseName = "${project.name}"
+  }
+
+  task plugin(type: Jar) {
+    archiveName = "${project.name}" + ".zip"
+    manifest {
+      attributes 'Plugin-Class': "${pluginClass}",
+          'Plugin-Type': "connector",
+          'Plugin-Id': "${pluginId}",
+          'Plugin-Version': "${fusionVersion}",
+          'Plugin-Provider': "${pluginProvider}",
+          'Plugin-Connectors-SDK-Version': "${connectorsSDKVersion}"
+    }
+    into('lib') {
+      from configurations.compile - configurations.provided
+      // Copy the plugin
+      from jar
+    }
+    extension('zip')
+  }
+
+  task assemblePlugin(type: Copy) {
+    from plugin
+    into pluginsDir
+  }
+
+  task deploy(type: Exec, dependsOn: ["assemblePlugin"]) {
+    commandLine "curl", "-X", "PUT", "-H", "content-type:application/zip",
+            "http://${fusionApiTarget}/api/v1/blobs/lucidworks.sdk.${project.name}.zip?resourceType=plugin:connector",
+            "--data-binary",
+            "@${pluginsDir}/${plugin.outputs.files.singleFile.getName()}"
+    doLast {
+      logger.info("Curl result: ${standardOutput.toString().trim()}")
+    }
+  }
+
+  task connect(type: Exec, dependsOn: ["assemblePlugin"]) {
+    def clientJar = "${fusionHome}/apps/connectors/connectors-rpc/client/connector-plugin-client-${fusionVersion}-uberjar.jar"
+    def argsList = []
+    argsList << "java"
+    argsList << "-Dcom.lucidworks.fusion.plugin.hosts=${fusionRpcTarget}"
+    argsList << "-Dcom.lucidworks.fusion.plugin.stop.port=${stopPort}"
+    if (project.hasProperty("debug")) {
+      argsList << "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5010"
+    }
+    argsList << "-jar"
+    argsList << clientJar
+    argsList << "${project.buildDir}/libs/${project.name}.zip"
+
+    commandLine argsList
+
+    doFirst {
+      println "   -- Using client-jar ${clientJar}"
+      println "   -- Connecting plugin ${project.buildDir}/libs/${project.name}.zip to ${fusionRpcTarget}"
+    }
+  }
+}
+
+task assemblePlugins(type: Copy) {
+  dependsOn subprojects.assemblePlugin
+}

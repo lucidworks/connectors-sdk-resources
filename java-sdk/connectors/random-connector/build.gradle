@@ -1,20 +1,10 @@
-plugins {
-  id 'idea'
-
-  id 'lucidworks.java-project' version '0.3.0'
-  id 'lucidworks.sdk.plugin' version '0.13.0'
-}
 
 dependencies {
-  api "com.lucidworks.fusion:connector-plugin-sdk:${connectorsSDKVersion}"
-  api configurations.log4j
-  api configurations.guava
+  // Note: Fusion libraries are added by parent project.
 
-  // plugin specific dependencies which are bundled into plugin zips
-  implementation "com.lucidworks.fusion:fs-support:${componentsVersion}"
+  implementation 'org.apache.logging.log4j:log4j:2.11.1'
+  implementation 'com.google.guava:guava:27.0.1-jre'
   implementation 'org.apache.commons:commons-collections4:4.1'
   implementation 'org.apache.commons:commons-lang3:3.4'
 
-  testImplementation configurations.testing
-  testImplementation "com.lucidworks.fusion:junit:${componentsVersion}"
 }
