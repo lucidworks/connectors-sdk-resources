@@ -20,23 +20,17 @@ This artifact is now ready to be uploaded directly to Fusion as a connector plug
 
 **Important**
 
-Change the _fusionHome_ property in the https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/gradle.properties[`gradle.properties` file^].
-
-The _fusionHome_ property is the full path of your local Fusion installation. The path should include Fusion's version.
-
-For example `/opt/fusion/4.0.1`
-
-The _fusionHome_ is needed to import the code to an IDE.
+You have to use gradle wrapper attached to the project. It runs custom gradle distribution.
 
 ### Random Content Plugin
 
 Build the plugin zip:
 
 ```bash
-./gradlew clean assemblePlugin
+../gradlew clean build :assemblePlugin
 ```
 
-This produces one zip file, named `random-connector-{version}.zip`, located in the `build/plugins` directory.
+This produces one zip file, named `random-connector.zip`, located in the `build/libs` directory.
 
 At this point, the generated zip could be uploaded directly to Fusion, but follow the steps below to run as a remote plugin.
 
