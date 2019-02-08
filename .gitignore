@@ -1,4 +1,4 @@
-# 
+ 
 .idea/*
 .gradle
 *.iml
@@ -7,4 +7,3 @@
 build
 out
 *.log
-

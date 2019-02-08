@@ -1,7 +1,7 @@
 = Lucidworks Connector Java SDK
 
 == Overview
-The Lucidworks Java Connector SDK provides a set of components to support building all types of Fusion connectors.
+The Lucidworks Connector SDK provides a set of components to support building all types of Fusion connectors.
 Connectors can be created by implementing some of the classes described in this document and using the provided build tool.
 
 Connectors can be deployed directly within a Fusion cluster or outside Fusion as a remote client.
@@ -189,7 +189,7 @@ Errors are recorded in the data store, but are not sent to the associated `Index
 
 == Developing a Connector
 
-The simplest way to get started developing a connector is to review the https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/random-connector[examples^].
+The simplest way to get started developing a connector is to review the https://github.com/lucidworks/connectors-sdk-resources/tree/master/java-sdk/connectors/random-connector[examples^].
 
 === Dependencies
 At a minimum, all plugins require the connector SDK dependency.
@@ -210,5 +210,5 @@ A general guideline to follow when determining if something should be injected o
 
 The connectors use the https://github.com/google/guice[Guice^] framework for dependency injection and can be directly used when defining a connector plugin.
 
-==== Maven
-The Fusion connectors SDK is currently not published to any public Maven repositories.
+==== Repositories
+The Fusion connectors SDK is currently not published to any public repositories.
