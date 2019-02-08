@@ -1,8 +1,5 @@
 package com.lucidworks.fusion.connector.plugin;
 
-import com.google.common.collect.ImmutableMap;
-import com.lucidworks.fusion.connector.plugin.api.fetcher.Fetcher;
-
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
 
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
