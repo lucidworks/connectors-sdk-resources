@@ -1,4 +1,4 @@
-== Security Filtering Sample Connector
+# Security Filtering Sample Connector
 
 - This connector generates a configurable number of documents, all with random titles and body fields.
 - Also document ACLs, groups and users will be generated at demand.
