@@ -66,7 +66,7 @@ Alternatively, when proper configuration is done in the `gradle.properties` file
 After running this, logging should show that it either was able to connect to Fusion, or not. If not, be sure you're using the right Fusion address/port. If not, the client jar can accept various related settings.
 
 ## Fusion
-After the client process successfully connects to Fusion, you should see the Random Content Connector available in Fusion as a new connector type.
+After the client process successfully connects to Fusion, you should see the Security Filtering Sample Connector available in Fusion as a new connector type.
 
 ## Security Filtering Plugin Properties
 
