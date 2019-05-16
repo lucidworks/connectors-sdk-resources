@@ -75,8 +75,9 @@ After the client process successfully connects to Fusion, you should see the Sec
 | totalNumDocs | Total number of docs to generate |
 | numberOfNestedGroups | Number of nested groups |
 
-### Access Control Fetch behavior
+### Access Control Fetcher behavior
 
+- This fetcher was implemented in SecurityFilteringAccessControlFetcher class
 - `numberOfNestedGroups` represents the number of nested groups levels, for each level, the same number of groups will be created, and a user who will own them will be created too.
     - Groups in a higher level will be parent group of the next groups level
     - Groups level threshold will be `1 <= X <= numberOfNestedGroups`
