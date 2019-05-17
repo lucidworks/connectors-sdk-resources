@@ -26,18 +26,18 @@
 | id | ID of the access control |
 | type_s | Type of access control (group, user, role assignment, role definition,, etc) |
 | label_s | Description of the access control |
-| outbound_ss | Outbound edges, i.e. parent objects can be represented with this fields |
+| outbound_ss | Outbound edges, i.e. parent objects can be represented with this field |
 | inbound_ss | Inbound edges i.e. list of access controls which are owned by the current access control |
 
 ### Document ACL entity
 
 | Field | Description |
 | ------- | ------- |
-| id | ID of the document |
-| type_s | A document ACL is an access control too, but with type “acl”. So for  document ACL entities, this field is always set to acl |
+| id | ID of the content document |
+| type_s | A document ACL is an access control too, but with type “acl”. |
 | label_s | Description of the document ACL |
 | outbound_ss | Outbound edges, not commonly used |
-| inbound_ss | Inbound edges, i.e. an Document ACL can inherit permissions through this field |
+| inbound_ss | Inbound edges, i.e. used for inheriting permissions |
 
 ### Sample
 #### Diagram representation
@@ -49,7 +49,7 @@
 ## Indexing time
 ### Contents / Documents indexing
 
-- Documents are indexed as always to the content collection (No field “acl_ss”)
+- Documents are indexed to the content collection. Note, there is no field ACLs field (`acl_ss`).
 
 ```java
     ctx.newContent(<DOCUMENT_ID>, <STREAM_SUPPLIER>)
@@ -65,7 +65,7 @@
 
 ### Access controls / Document ACLs indexing
 
-- Normalized ACLs will be stored into the access content hierarchy collection.
+- Normalized ACLs are stored in the access control collection.
 
 ```java
     ctx.newAccessControlItem(<ACCESS_CONTROL_ID>, <TYPE>)
@@ -93,11 +93,11 @@
 
 ## Querying time
 
-- Graph query parser and Join query parser will be used together to build the final filter query.
-- Graph query parser will be used to filter access control items (groups, users, etc) in the hierarchy graph.
-    - An implicit denormalization is not required at querying time, since the graph deals with this filtering.
-- Join query parser will be used to join the access control collection with content collection.
-    - ACL entities on access control collection will be used as means to join the ACLs with the content collection.
+- Graph and join query parsers are used together to build a security filter query.
+- The input for building the query is typically a user ID.
+- Using the input (user ID), the graph query parser traverses linked access control documents (groups, roles etc.)
+- The Join query parser is used to join the access control collection and the content collection.
+- ACLs produced by the query are used to select the associated content documents into the final query result.
 
 ### Sample query
 
@@ -112,7 +112,7 @@
 ```
 ## Required components
 
-- Each plugin with support for security trimming must implement `AccessControlFetcher` component.
+- Plugins requiring security filtering must implement the `AccessControlFetcher` component.
 - The component must be registered in the plugin, i.e.
 
 ```
