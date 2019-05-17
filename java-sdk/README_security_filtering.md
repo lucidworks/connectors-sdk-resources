@@ -2,8 +2,8 @@
 ## Storage changes
 ![Storage changes](security_filtering_resources/storage_changes.png)
 
-- In the old approach the datasource collection stores either contents and ACLs.
-- In the new approach this collection is split out into two collections `Content collection` and `Access control collection`
+- In the old approach, content documents and ACLs were stored in the same collection.
+- In the new approach, ACLs are stored in an separate collection.
 
 ### Content collection
 
