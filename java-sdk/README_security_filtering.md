@@ -3,19 +3,20 @@
 ![Storage changes](security_filtering_resources/storage_changes.png)
 
 - In the old approach, content documents and ACLs were stored in the same collection.
-- In the new approach, ACLs are stored in an separate collection.
+- In the new approach, access control entities (users,groups,ACLs) are stored in an separate collection.
 
 ### Content collection
 
-- This collection represents the datasource collection created by the parent app
-- Content collection does not have ACLs information
+- This collection the contains content documents produced by a datasource.
+- This collection does not contain ACLs.
 
 ### Access control collection
 
-- Collection that will store permissions hierarchy
-- Permissions hierarchy will be represented by a graph of normalized access control entities and document ACL entities.
-    - Access control: it might represent a group, user, role, etc.
-    - Document ACL: it represents the relation between a document with its access control permissions (binds this collection with the content collection)
+- Contains users, groups and document ACLs.
+- The permission hierarchy is represented by a graph of normalized access control and document ACL entities.
+- Types of entities:
+    - Access control: Represents a group, user, role, etc.
+    - Document ACL: An entity which contains a reference to a content document, and associated permission hierarchy.
 
 ## Access Control collection - Data model
 ### Access control entity
