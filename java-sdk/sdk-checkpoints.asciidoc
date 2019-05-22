@@ -1,0 +1,92 @@
+= Checkpoints in the Connectors SDK
+
+== Use Cases
+
+=== Incremental Re-crawl
+
+Incremental re-crawl can be supported when a Changes API is available (e.g. Jive, Salesforce, OneDrive). The goal of a Changes API is to provide new, modified, and deleted objects given a specific parameter. In that way, the first crawl will retrieve all object instances (files, documents, etc), and the next jobs(re-crawls) will update the index by just retrieving new/modified/deleted objects from the Changes API.
+
+When a Changes API is available, it’s necessary to provide something as the input, it could be a date, a link, a page token, etc. That input parameter is generated/retrieved in the running job and will it be used in the next job as the start point (to retrieve just new/modified/deleted objects). When the next job is started, it will use that parameter to query the changes API. So, it’s necessary to store that parameter in the running job and use it in the next one. The SDK should provide a way to store those parameters and use them in the next jobs.
+
+=== Stop a Running Job
+
+When a job is stopped, the current state of the job should be stored. So, the next time a job is started, it can complete the previous job.
+
+== Design Description
+
+[[checkpoint-design]]
+=== Checkpoint Design
+
+The checkpoint message type was introduced. Fetcher implementations can emit checkpoints by calling:
+
+```
+fetchContext.emitCheckpoint(CHECKPOINT)ID, checkpointMetadata);
+```
+
+After the checkpoint is emitted, the SDK controller will handle this message differently:
+
+* The checkpoint emitted won’t be used in the current job.
+* The checkpoint will be stored in the crawlDB with the appropriately status.
+
+In the next job. The SDK controller will check the crawlDB, if there are checkpoints stored, then just the checkpoints will be sent to the fetchers. If there aren’t checkpoints, then all items in the crawlDB (documents, fetchInputs, errors, etc) will be sent to the fetchers. If a fetcher emits a checkpoint, is its responsibility to handle checkpoints in the next jobs.
+
+
+IMPORTANT:  In order to update a checkpoint, it has to be emitted with the same ID. The checkpoint ID is the only way the SDK controller has to identify and update a checkpoint.
+
+==== First Job Flow
+
+image:/assets/images/sdkcheck-1stflow.png[First Job Flow]
+
+. The Jobs API sends a start job request to the SDK controller.
+. The SDK controller queries the SDK CrawlDB to check for items.
+.. Since it’s the first job the SDK CrawlDB is empty, the controller will send the initial FetchInput to the fetcher.
+. During the job, the fetcher receives a FetchInput. At that point the fetcher can emit candidates and/or a checkpoint(s).
+. When the SDK controller receives a Checkpoint message, the checkpoint is stored/update in crawlDB. It also will process the candidates sent.
+. The SDK controller won’t send the checkpoint to the fetcher in the same job.
+
+==== Second Job Flow
+
+image:/assets/images/sdkcheck-2ndflow.png[Second Job Flow]
+
+. The Jobs API sends a start job request to the SDK controller.
+. The SDK controller queries the SDK CrawlDB to check for checkpoints.
+.. Since it’s the second job, checkpoints are stored in the SDK CrawlDB. They will be sent to the fetcher.
+. The fetcher receives the checkpoint(it has to detect and handle those messages) and emits candidates and also it has to update the checkpoint if it’s the right time(otherwise it can be updated in later iterations but it has to be updated).
+.. In case the checkpoint data would be the same, just emit the same checkpoint.
+. The SDK controller will process the candidates sent and will update the Checkpoint data in the SDK CrawlDB.
+
+=== Stop Handling Design
+
+The SDK controller will keep track of the complete/incomplete items during a job. A complete item is an item that was emitted first as a candidate, then it was sent to the fetcher to be processed and finally the fetcher finishes to process that item (by sending a FetchResult message after finish to process the candidate). An incomplete item is an item that was emitted as a candidate but was not sent to the fetcher to be processed or the fetch implementation, for some reason, didn’t emit the FetchResult message for that item.
+
+When an item is emitted as a candidate, it’s stored in the SDK CrawlDB and marked as incomplete. Later, when that item is sent to the fetcher and it finishes to process the item, the item is marked as complete. The SDK Controllers marks an item by setting the `blockId` field in the item metadata with the blockId of the current job.
+
+A blockId identifies a series of 1 or more Jobs, and the lifetime of a blockId spans from the start of a crawl to the crawls completion. When a Job starts and the previous Job did not complete (failed or stopped), the previous Job's blockId is reused. The same blockId will be reused until the crawl successfully completes. BlockIds are used to quickly identify items in the CrawlDb which may not have been fully processed (complete)
+
+When an item is a candidate, the marker (or blockId) is not added/updated to the item’s metadata. Just when the item was processed by the fetcher and a FetchResult was emitted for that item, the marker(or blockId) is added to the item metadata and stored in the SDK CrawlDB. When that happens the item is marked as completed and won’t be processed until the next non-stopped job.
+
+In order to support different scenarios, the SDK controller will generate and use a new blockId when:
+
+* The current job is the first job.
+* The previous job’s state is FINISHED.
+
+If the previous job’s state is STOPPED, then keep using the same blockId from the stopped job. The reason behind this approach is to mark all complete items with the same UUID, even if we stop the job multiple times in a row.
+
+Before starting a new job, the SDK controller will check the crawlDB for incomplete items. Incomplete items will be the ones that don’t match the previous job blockId. If that query returns items, it means that there are items that were not processed in the previous job(otherwise they will have the previous job blockId), and they need to be completed before starting a fresh job. If the query returns no items, then the SDK Controller will check for checkpoints (as detailed in <<checkpoint-design, Checkpoint Design>>).
+
+IMPORTANT: A fresh job won’t be run if there are incomplete items stored in the SDK crawlDB
+
+=== Item Completion Flow
+image:/assets/images/sdkcheck-itemcomplete.png[Item Completion Flow]
+
+. The SDK controller gets a FetchInput from the SDK CrawlDB and sends it to a fetcher
+. The fetcher receives the FetchInput.
+. The fetcher emits a candidate: `Item A`.
+. The controller receives the candidate and stores it in the SDK CrawlDB. Mandatory fields are set to the item metadata, the blockId field is not set.
+. Later, the candidate Item A is selected by the SDK controller and send it to the fetcher.
+. The fetcher receives the candidate and process it.
+. The fetcher emits a Document(from the candidate).
+. The fetcher emits a FetchResult to the SDK controller.
+. The SDK controller receives both the Document and the FetchResult
+.. When process the Document, the item status is updated to Document in SDK CrawlDB.
+.. When process the FetchResult, the Item A `blockId` is set to the current job blockId: `N8W12TQWK3`
