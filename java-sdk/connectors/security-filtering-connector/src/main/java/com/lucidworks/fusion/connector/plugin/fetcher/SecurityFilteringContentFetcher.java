@@ -10,6 +10,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.inject.Inject;
+import java.util.Collections;
 import java.util.Map;
 
 import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.TYPE;
@@ -40,9 +41,12 @@ public class SecurityFilteringContentFetcher extends RandomContentFetcher {
     Map<String, Object> metadata = Maps.newHashMap();
     metadata.put(TYPE, AccessControlConstants.ACL);
     
-    ctx.newCandidate(input.getId())
-        .withTargetPhase(ACCESS_CONTROL)
-        .withMetadata(metadata)
-        .emit();
+    
+    ctx.emitCandidate(
+        input.getId(),
+        ACCESS_CONTROL,
+        Collections.emptyMap(),
+        metadata
+    );
   }
 }

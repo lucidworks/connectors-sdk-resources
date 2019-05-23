@@ -1,7 +1,8 @@
 package com.lucidworks.fusion.connector.plugin.fetcher;
 
-import com.clearspring.analytics.util.Lists;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.lucidworks.fusion.connector.plugin.api.security.AccessControlConstants.AccessControlStoreOperation;
 import com.lucidworks.fusion.connector.plugin.config.SecurityFilteringConfig;
 import com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
@@ -50,9 +51,10 @@ public class SecurityFilteringAccessControlFetcher implements AccessControlFetch
     Map<String, Object> metadata = Maps.newHashMap();
     metadata.put(TYPE, AccessControlConstants.GROUP);
     metadata.put(PARENTS, parentGroups);
-    ctx.newCandidate(groupId)
-        .withMetadata(metadata)
-        .emit();
+    ctx.emitCandidate(
+        groupId,
+        metadata
+    );
     return groupId;
   }
   
@@ -82,9 +84,10 @@ public class SecurityFilteringAccessControlFetcher implements AccessControlFetch
     Map<String, Object> metadata = Maps.newHashMap();
     metadata.put(TYPE, AccessControlConstants.USER);
     metadata.put(PARENTS, levelGroups);
-    ctx.newCandidate(String.format(USER_ID_FORMAT, level))
-        .withMetadata(metadata)
-        .emit();
+    ctx.emitCandidate(
+        String.format(USER_ID_FORMAT, level),
+        metadata
+    );
   }
   
   @Override
@@ -125,26 +128,34 @@ public class SecurityFilteringAccessControlFetcher implements AccessControlFetch
     String type = (String) metadata.getOrDefault(TYPE, INVALID);
     
     if (type.equals(AccessControlConstants.ACL)) {
-      ctx.newDocumentACL(input.getId())
-          .withInbound(
+      ctx.emitAccessControlItem(
+          input.getId(),
+          AccessControlConstants.ACL,
+          null,
+          AccessControlStoreOperation.ADD_OR_REPLACE,
+          Collections.emptyList(),
+          Lists.newArrayList(
               String.format(
                   GROUP_ID_FORMAT,
                   random.nextInt(config.properties().numberOfNestedGroups()) + 1,
                   random.nextInt(config.properties().numberOfNestedGroups()) + 1
               )
-          ).emit();
+          )
+      );
     } else if (type.equals(AccessControlConstants.GROUP)) {
-      ctx.newGroup(input.getId())
-          .withOutbound(
-              (List<String>) metadata.getOrDefault(PARENTS, Collections.emptyList())
-          )
-          .emit();
+      ctx.emitGroup(
+          input.getId(),
+          null,
+          AccessControlStoreOperation.ADD_OR_REPLACE,
+          (List<String>) metadata.getOrDefault(PARENTS, Collections.emptyList())
+      );
     } else if (type.equals(AccessControlConstants.USER)) {
-      ctx.newUser(input.getId())
-          .withOutbound(
-              (List<String>) metadata.getOrDefault(PARENTS, Collections.emptyList())
-          )
-          .emit();
+      ctx.emitUser(
+          input.getId(),
+          null,
+          AccessControlStoreOperation.ADD_OR_REPLACE,
+          (List<String>) metadata.getOrDefault(PARENTS, Collections.emptyList())
+      );
     } else {
       logger.error("Invalid type to be processed for input {}", input.getId());
     }

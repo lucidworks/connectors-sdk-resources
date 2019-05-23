@@ -1,5 +1,6 @@
 package com.lucidworks.fusion.connector.plugin;
 
+import com.google.common.collect.Maps;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
 
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
@@ -43,15 +44,20 @@ public class RandomContentFetcher implements ContentFetcher {
     IntStream.range(0, randomContentConfig.properties().totalNumDocs()).asLongStream().forEach(i -> {
       logger.info("Emitting candidate -> number {}", i);
       Map<String, Object> data = Collections.singletonMap("number", i);
-      preFetchContext.newCandidate(String.valueOf(i))
-          .withMetadata(data)
-          .emit();
+      preFetchContext.emitCandidate(
+          MessageHelper.candidate(
+              String.valueOf(i),
+              Collections.emptyMap(),
+              data
+          ).build()
+      );
     });
     // Simulating an error item here... because we're emitting an item without a "number",
     // the fetch() call will attempt to convert the number into a long and throw an exception.
     // The item should be recorded as an error in the ConnectorJobStatus.
-    preFetchContext.newCandidate(ERROR_ID)
-        .emit();
+    preFetchContext.emitCandidate(
+        MessageHelper.candidate(ERROR_ID).build()
+    );
     return preFetchContext.newResult();
   }
 
@@ -79,16 +85,14 @@ public class RandomContentFetcher implements ContentFetcher {
       String txt = generator.makeText(numSentences);
       logger.info("Emitting Document -> number {}", num);
     
-      Map<String, Object> fields = new HashMap();
+      Map<String, Object> fields = Maps.newHashMap();
       fields.put("number_i", num);
       fields.put("timestamp_l", Instant.now().toEpochMilli());
       fields.put("headline_s", headline);
       fields.put("hostname_s", hostname);
       fields.put("text_t", txt);
       
-      fetchContext.newDocument()
-          .withFields(fields)
-          .emit();
+      fetchContext.emitDocument(fields);
     } catch (NullPointerException npe) {
       if (ERROR_ID.equals(input.getId())) {
         logger.info("The following error is expected, as means to demonstrate how errors are emitted");
