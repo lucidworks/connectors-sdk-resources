@@ -5,13 +5,13 @@
 
 ## Quick start
 
-NOTE: This quick start assumes that Fusion is installed on the `/opt` path and its version is `4.2.0`
+NOTE: This quick start assumes that Fusion is installed on the `/opt` path and its version is `4.1.0`
 
 1. Clone the repo:
 ```
 git clone https://github.com/lucidworks/connectors-sdk-resources.git
 cd connectors-sdk-resources/java-sdk/connectors/
-./gradlew assemblePlugins -PfusionHome=/opt/fusion/4.2.0 -PfusionVersion=4.2.0
+./gradlew assemblePlugins -PfusionHome=/opt/fusion/4.1.0 -PfusionVersion=4.1.0
 ```
 
 2. This produces one zip file, named `security-filtering-connector-{version}.zip`, located in the `security-filtering-connector/build/plugins` directory.
@@ -26,7 +26,7 @@ As a first step, change the _fusionHome_ property in the https://github.com/luci
 
 The _fusionHome_ property is the full path of your local Fusion installation. The path should include Fusion's version.
 
-For example `/opt/fusion/4.2.0`
+For example `/opt/fusion/4.1.0`
 
 The _fusionHome_ is needed to import the code to an IDE.
 
