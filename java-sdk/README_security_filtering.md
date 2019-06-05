@@ -118,15 +118,66 @@
 ```
 ## Required components
 
-- Plugins requiring security filtering must implement the `AccessControlFetcher` component.
-- The component must be registered in the plugin, i.e.
+- Plugins requiring security filtering must implement the `AccessControlFetcher` component and `SecurityFilter` component.
+
+### AccessControlFetcher sample component
+
+```java
+public class SecurityFilteringAccessControlFetcher implements AccessControlFetcher {
+  
+  private static final Logger logger = LogManager.getLogger(SecurityFilteringAccessControlFetcher.class);
+  
+  private final SecurityFilteringConfig config;
+  private final Random random;
+  
+  @Inject
+  public SecurityFilteringAccessControlFetcher(
+      SecurityFilteringConfig config
+  ) {
+    this.config = config;
+    this.random = new Random();
+  }
+  
+  @Override
+  public FetchResult fetch(FetchContext ctx) {
+    ...
+  }
+}
+```
+
+See [SecurityFilteringAccessControlFetcher](connectors/security-filtering-connector/src/main/java/com/lucidworks/fusion/connector/plugin/fetcher/SecurityFilteringAccessControlFetcher.java) for additional details.
+
+### SecurityFilter sample component
+
+```java
+public class SecurityFilteringSecurityFilterComponent implements SecurityFilterComponent {
+
+  private final SecurityFilterBuilder builder;
+
+  @Inject
+  public SecurityFilteringSecurityFilterComponent(SecurityFilterBuilder builder) {
+    this.builder = builder;
+  }
+
+
+  @Override
+  public SecurityFilter buildSecurityFilter(Subject subject) {
+    return builder.withAccessControl(subject.getPrincipal()).build();
+  }
+}
+```
+
+See [SecurityFilteringSecurityFilterComponent](connectors/security-filtering-connector/src/main/java/com/lucidworks/fusion/connector/plugin/security/SecurityFilteringSecurityFilterComponent.java) for additional details.
+
+- Components must be registered in the plugin, i.e.
 
 ```
-return ConnectorPlugin.builder(getPluginMetadata(), SharepointConfig.class)
-        .withFetcher("content", SharepointContentFetcher.class, fetchModule)
-        .withFetcher("access-control", SharepointAccessControlFetcher.class, fetchModule)
-        .withConfigSuggester(SharepointConfigSuggester.class)
-        .withValidator(SharepointValidationComponent.class, fetchModule)
-        .withSecurityFilter(SharepointSecurityFilterComponent.class, fetchModule)
+    return builder(SecurityFilteringConfig.class)
+        .withFetcher(CONTENT, SecurityFilteringContentFetcher.class, nonGenModule)
+        .withFetcher(ACCESS_CONTROL, SecurityFilteringAccessControlFetcher.class, nonGenModule)
+        .withSecurityFilter(SecurityFilteringSecurityFilterComponent.class, nonGenModule)
         .build();
+
 ```
+
+See [SecurityFilteringPlugin](connectors/security-filtering-connector/src/main/java/com/lucidworks/fusion/connector/plugin/SecurityFilteringPlugin.java) for additional details.
