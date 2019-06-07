@@ -58,12 +58,27 @@ public class RandomContentFetcher implements ContentFetcher {
     FetchInput input = fetchContext.getFetchInput();
     logger.info("Received FetchInput -> {}", input);
     String hostname = getHostname();
+    
+    emitDocument(
+        fetchContext,
+        input,
+        hostname
+    );
+
+    return fetchContext.newResult();
+  }
+  
+  protected void emitDocument(
+      FetchContext fetchContext,
+      FetchInput input,
+      String hostname
+  ) {
     long num = (Long) input.getMetadata().get("number");
     String headline = generator.makeSentence(true);
     int numSentences = getRandomNumberInRange(10, 255);
     String txt = generator.makeText(numSentences);
     logger.info("Emitting Document -> number {}", num);
-
+  
     Map<String, Object> fields = new HashMap();
     fields.put("number_i", num);
     fields.put("timestamp_l", Instant.now().toEpochMilli());
@@ -71,7 +86,6 @@ public class RandomContentFetcher implements ContentFetcher {
     fields.put("hostname_s", hostname);
     fields.put("text_t", txt);
     fetchContext.emitDocument(fields);
-    return fetchContext.newResult();
   }
 
   private static int getRandomNumberInRange(int min, int max) {

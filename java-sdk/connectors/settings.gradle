@@ -1,1 +1,2 @@
 include 'random-connector'
+include 'security-filtering-connector'
