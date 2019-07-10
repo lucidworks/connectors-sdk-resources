@@ -35,7 +35,7 @@ image:/assets/images/sdkcheck-1stflow.png[First Job Flow]
 . It’s the first job, so the SDK CrawlDB is empty. The controller will send the initial FetchInput to the fetcher.
 .. During the job, the fetcher receives a FetchInput.
 . The fetcher can then emit candidates and/or checkpoints.
-. When the SDK controller receives a checkpoint message, the checkpoint is stored or updated in CrawlDB. It also will process the candidates sent.
+. When the SDK controller receives a checkpoint message, the checkpoint is stored or updated in CrawlDB. It will also process the other items it has received.
 .. The SDK controller will not send the checkpoint to the fetcher in the same job.
 
 ===== Second Job Flow
