@@ -19,8 +19,8 @@ fetchContext.emitCheckpoint(CHECKPOINT)_ID, checkpointMetadata);
 
 After the checkpoint is emitted, Fusion will handle this message as follows:
 
-* The checkpoint will not be used in the current job.
 * The checkpoint will be stored in the CrawlDB with the appropriate status.
+* The checkpoint will not be used in the current job.
 
 In subsequent job runs, Fusion will check the CrawlDB for any previously stored checkpoints. If any are available, only those checkpoints will be sent to the fetchers; no other input types will be sent. If checkpoints are not available, all other items in the CrawlDB (Documents, FetchInputs, Errors, etc.) will be sent to the fetchers instead.
 
@@ -32,10 +32,11 @@ image:/assets/images/sdkcheck-1stflow.png[First Job Flow]
 
 . The Jobs API sends a start job request to the SDK controller.
 . The SDK controller queries the SDK CrawlDB to check for items.
-.. It’s the first job, so the SDK CrawlDB is empty. The controller will send the initial FetchInput to the fetcher.
-. During the job, the fetcher receives a FetchInput. The fetcher can then emit candidates and/or checkpoints.
+. It’s the first job, so the SDK CrawlDB is empty. The controller will send the initial FetchInput to the fetcher.
+.. During the job, the fetcher receives a FetchInput.
+. The fetcher can then emit candidates and/or checkpoints.
 . When the SDK controller receives a checkpoint message, the checkpoint is stored or updated in CrawlDB. It also will process the candidates sent.
-. The SDK controller will not send the checkpoint to the fetcher in the same job.
+.. The SDK controller will not send the checkpoint to the fetcher in the same job.
 
 ===== Second Job Flow
 
@@ -43,7 +44,7 @@ image:/assets/images/sdkcheck-2ndflow.png[Second Job Flow]
 
 . The Jobs API sends a start job request to the SDK controller.
 . The SDK controller queries the SDK CrawlDB to check for items.
-.. It’s the second job, so checkpoints are stored in the SDK CrawlDB. The controller will send the checkpoints to the fetcher.
+. It’s the second job, so checkpoints are stored in the SDK CrawlDB. The controller will send the checkpoints to the fetcher.
 . The fetcher receives and detects the checkpoints. Then, the fetcher emits candidates and updates the checkpoint. The update may take place at a later point, but the checkout _must_ be updated.
 .. If the checkpoint data matches current data, the fetcher will emit the same checkpoint.
 . The SDK controller will process the candidates and update the checkpoint data in the SDK CrawlDB.
@@ -70,7 +71,7 @@ When an item is considered a new candidate, the item's blockId does not change. 
 
 When all items are complete, the SDK will check for checkpoints, as detailed in <<checkpoint-design, Checkpoint Design>>.
 
-IMPORTANT: A job won’t be started if there are incomplete items from the previous job stored in the SDK CrawlDB.
+IMPORTANT: If there are incomplete items from the previous job stored in the SDK CrawlDB, *_only those items_* will be processed during the next job.
 
 ===== Item Completion Flow
 image:/assets/images/sdkcheck-itemcomplete.png[Item Completion Flow]
