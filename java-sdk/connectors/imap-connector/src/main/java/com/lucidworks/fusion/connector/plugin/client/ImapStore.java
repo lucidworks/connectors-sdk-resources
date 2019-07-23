@@ -1,7 +1,5 @@
 package com.lucidworks.fusion.connector.plugin.client;
 
-import javax.mail.MessagingException;
-
 /**
  * T is the type of folder an implementation will return.
  */

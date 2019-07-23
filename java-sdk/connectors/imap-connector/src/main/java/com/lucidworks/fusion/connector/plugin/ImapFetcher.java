@@ -6,8 +6,8 @@ import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFe
 import com.lucidworks.fusion.connector.plugin.client.Email;
 import com.lucidworks.fusion.connector.plugin.client.ImapClient;
 import com.lucidworks.fusion.connector.plugin.client.MailException;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.mail.MessagingException;
@@ -26,7 +26,8 @@ import static com.lucidworks.fusion.connector.plugin.ImapConstants.TO_FIELD;
 
 
 public class ImapFetcher implements ContentFetcher {
-  private static final Logger logger = LogManager.getLogger(ImapFetcher.class);
+
+  private static final Logger logger = LoggerFactory.getLogger(ImapFetcher.class);
 
   private final ImapConfig config;
 

@@ -16,10 +16,14 @@ subprojects {
   repositories {
     mavenCentral()
     mavenLocal()
+    maven {
+      url "https://artifactory.lucidworks.com/artifactory/public-artifacts/"
+    }
   }
 
   dependencies {
-    provided(fileTree(dir: "${fusionHome}/apps/connectors/connectors-rpc/libs", include: '*.jar'))
+    provided ("com.lucidworks.connector.sdk:connector-plugin-sdk:${connectorsSDKVersion}")
+    provided "org.slf4j:slf4j-api:${slf4jVersion}"
     testCompile group: 'junit', name: 'junit', version: '4.12'
   }
 
@@ -84,4 +88,8 @@ subprojects {
 
 task assemblePlugins(type: Copy) {
   dependsOn subprojects.assemblePlugin
+}
+
+wrapper {
+  gradleVersion '5.3.1'
 }
