@@ -1,6 +1,8 @@
 package com.lucidworks.fusion.connector.plugin.client;
 
-import org.apache.logging.log4j.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.mail.Address;
@@ -20,12 +22,13 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class ImapClient {
+
+  private static final Logger logger = LoggerFactory.getLogger(ImapClient.class);
+
   private ImapStore<Folder> store;
-  private Logger logger;
 
   @Inject
-  public ImapClient(ImapStore store, Logger logger) throws MailException {
-    this.logger = logger;
+  public ImapClient(ImapStore store) throws MailException {
     this.store = store;
 
     store.connect();

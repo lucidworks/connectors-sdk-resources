@@ -3,21 +3,21 @@ package com.lucidworks.fusion.connector.plugin.fetcher;
 import com.google.common.collect.Maps;
 import com.lucidworks.fusion.connector.plugin.RandomContentFetcher;
 import com.lucidworks.fusion.connector.plugin.RandomContentGenerator;
-import com.lucidworks.fusion.connector.plugin.config.SecurityFilteringConfig;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
 import com.lucidworks.fusion.connector.plugin.api.security.AccessControlConstants;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.lucidworks.fusion.connector.plugin.config.SecurityFilteringConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.Map;
 
-import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.TYPE;
 import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.ACCESS_CONTROL;
+import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.TYPE;
 
 public class SecurityFilteringContentFetcher extends RandomContentFetcher {
-  
-  private static final Logger logger = LogManager.getLogger(SecurityFilteringContentFetcher.class);
+
+  private static final Logger logger = LoggerFactory.getLogger(SecurityFilteringContentFetcher.class);
   
   @Inject
   public SecurityFilteringContentFetcher(

@@ -6,7 +6,6 @@ import com.lucidworks.fusion.schema.SchemaAnnotations.BooleanSchema;
 import com.lucidworks.fusion.schema.SchemaAnnotations.Property;
 import com.lucidworks.fusion.schema.SchemaAnnotations.RootSchema;
 import com.lucidworks.fusion.schema.SchemaAnnotations.StringSchema;
-
 import com.lucidworks.fusion.schema.UIHints;
 
 @RootSchema(

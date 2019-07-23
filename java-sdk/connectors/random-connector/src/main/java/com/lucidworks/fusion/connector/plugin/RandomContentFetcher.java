@@ -1,15 +1,11 @@
 package com.lucidworks.fusion.connector.plugin;
 
-import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
-
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.PreFetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
-
-import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.MessageHelper;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
+import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.net.InetAddress;
@@ -22,10 +18,11 @@ import java.util.stream.IntStream;
 
 public class RandomContentFetcher implements ContentFetcher {
 
+  private static final Logger logger = LoggerFactory.getLogger(RandomContentFetcher.class);
+
   private final static String ERROR_ID = "no-number-this-should-fail";
 
   private static final Random rnd = new Random();
-  private static final Logger logger = LogManager.getLogger(RandomContentFetcher.class);
   private final RandomContentConfig randomContentConfig;
   private final RandomContentGenerator generator;
 
