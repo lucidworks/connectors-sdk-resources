@@ -5,13 +5,13 @@
 
 ## Quick start
 
-NOTE: This quick start assumes that Fusion is installed on the `/opt` path and its version is `4.2.0`
+NOTE: This quick start assumes that Fusion is installed on the `/opt`.
 
 1. Clone the repo:
 ```
 git clone https://github.com/lucidworks/connectors-sdk-resources.git
 cd connectors-sdk-resources/java-sdk/connectors/
-./gradlew assemblePlugins -PfusionHome=/opt/fusion/4.2.0 -PfusionVersion=4.2.0
+./gradlew assemblePlugins
 ```
 
 2. This produces one zip file, named `security-filtering-connector-{version}.zip`, located in the `security-filtering-connector/build/plugins` directory.
