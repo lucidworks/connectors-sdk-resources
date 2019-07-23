@@ -1,16 +1,15 @@
 package com.lucidworks.fusion.connector.plugin.fetcher;
 
-import com.clearspring.analytics.util.Lists;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.lucidworks.fusion.connector.plugin.config.SecurityFilteringConfig;
-import com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.PreFetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.security.AccessControlFetcher;
 import com.lucidworks.fusion.connector.plugin.api.security.AccessControlConstants;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import com.lucidworks.fusion.connector.plugin.config.SecurityFilteringConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.Collections;
@@ -19,16 +18,16 @@ import java.util.Map;
 import java.util.Random;
 import java.util.stream.IntStream;
 
-import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.TYPE;
-import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.PARENTS;
 import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.GROUP_ID_FORMAT;
-import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.USER_ID_FORMAT;
 import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.INVALID;
+import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.PARENTS;
+import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.TYPE;
+import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.USER_ID_FORMAT;
 
 public class SecurityFilteringAccessControlFetcher implements AccessControlFetcher {
   
-  private static final Logger logger = LogManager.getLogger(SecurityFilteringAccessControlFetcher.class);
-  
+  private static final Logger logger = LoggerFactory.getLogger(SecurityFilteringAccessControlFetcher.class);
+
   private final SecurityFilteringConfig config;
   private final Random random;
   

@@ -3,8 +3,6 @@ package com.lucidworks.fusion.connector.plugin.client;
 import com.google.common.collect.ImmutableMap;
 import com.lucidworks.fusion.connector.plugin.ImapConfig;
 import com.lucidworks.fusion.schema.ModelGenerator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.Test;
 
 import javax.mail.Address;
@@ -26,7 +24,6 @@ import static org.mockito.Mockito.when;
 
 
 public class ImapClientTest {
-  private final static Logger logger = LogManager.getLogger(ImapClientTest.class);
 
   private String folder = "Inbox";
 
@@ -68,7 +65,7 @@ public class ImapClientTest {
     when(store.getFolder(eq(folder))).thenReturn(fldr);
     when(store.isConnected()).thenReturn(true);
 
-    ImapClient client = new ImapClient(store, logger);
+    ImapClient client = new ImapClient(store);
 
     client.getUnreadMessages(folder);
     verify(fldr, times(1)).open(eq(Folder.READ_ONLY));

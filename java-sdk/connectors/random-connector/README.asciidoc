@@ -34,7 +34,7 @@ The _fusionHome_ is needed to import the code to an IDE.
 Build the plugin zip:
 
 ```bash
-../gradlew clean build :assemblePlugin
+./gradlew clean build :assemblePlugin
 ```
 
 This produces one zip file, named `random-connector.zip`, located in the `build/libs` directory.

@@ -8,8 +8,6 @@ import com.lucidworks.fusion.schema.SchemaGenerator;
 import com.lucidworks.fusion.schema.ValidationError;
 import com.lucidworks.fusion.schema.types.ObjectType;
 import com.lucidworks.fusion.schema.validator.SchemaValidator;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -19,7 +17,6 @@ import java.util.Set;
 import static org.junit.Assert.assertEquals;
 
 public class ImapConfigValidatorTest {
-  private static final Logger logger = LogManager.getLogger(ImapConfigValidatorTest.class);
 
   private ObjectType schema;
   private Map<String, Object> invalidConfig = ImmutableMap.<String, Object>builder()

@@ -6,16 +6,17 @@ import com.google.inject.Inject;
 import com.lucidworks.fusion.connector.plugin.api.validation.ValidationComponent;
 import com.lucidworks.fusion.connector.plugin.api.validation.ValidationContext;
 import com.lucidworks.fusion.connector.plugin.api.validation.result.ConnectorConfigValidationResult;
+import com.lucidworks.fusion.connector.plugin.client.ImapClient;
 import com.lucidworks.fusion.schema.ValidationError;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
 
 public class ImapConfigValidator implements ValidationComponent {
 
-  private final static Logger logger = LogManager.getLogger(ImapConfigValidator.class);
+  private static final Logger logger = LoggerFactory.getLogger(ImapConfigValidator.class);
 
   private final ImapConfig config;
 
