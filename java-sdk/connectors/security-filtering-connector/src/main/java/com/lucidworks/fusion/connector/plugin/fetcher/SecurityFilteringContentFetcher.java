@@ -1,23 +1,24 @@
 package com.lucidworks.fusion.connector.plugin.fetcher;
 
-import com.google.common.collect.Maps;
 import com.lucidworks.fusion.connector.plugin.RandomContentFetcher;
 import com.lucidworks.fusion.connector.plugin.RandomContentGenerator;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
-import com.lucidworks.fusion.connector.plugin.api.security.AccessControlConstants;
 import com.lucidworks.fusion.connector.plugin.config.SecurityFilteringConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
+import java.time.Instant;
+import java.util.HashMap;
 import java.util.Map;
 
-import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.ACCESS_CONTROL;
-import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.TYPE;
+import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.GROUP_ID_FORMAT;
 
 public class SecurityFilteringContentFetcher extends RandomContentFetcher {
 
   private static final Logger logger = LoggerFactory.getLogger(SecurityFilteringContentFetcher.class);
+
+  private final SecurityFilteringConfig config;
   
   @Inject
   public SecurityFilteringContentFetcher(
@@ -25,24 +26,32 @@ public class SecurityFilteringContentFetcher extends RandomContentFetcher {
       RandomContentGenerator generator
   ) {
     super(config, generator);
+    this.config = config;
   }
   
   @Override
   protected void emitDocument(
       FetchContext ctx,
       FetchInput input,
+      long num,
       String hostname
   ) {
-    super.emitDocument(ctx, input, hostname);
-    
-    logger.info("Emitting document ACL candidate for ID {}", input.getId());
-    
-    Map<String, Object> metadata = Maps.newHashMap();
-    metadata.put(TYPE, AccessControlConstants.ACL);
-    
-    ctx.newCandidate(input.getId())
-        .withTargetPhase(ACCESS_CONTROL)
-        .withMetadata(metadata)
-        .emit();
+    try {
+      Map<String, Object> fields = getFields(num, hostname);
+
+      ctx.newDocument()
+          .withFields(fields)
+          .withACLs(String.format(
+              GROUP_ID_FORMAT,
+              rnd.nextInt(config.properties().numberOfNestedGroups()) + 1,
+              rnd.nextInt(config.properties().numberOfNestedGroups()) + 1
+          )).emit();
+    } catch (NullPointerException npe) {
+      if (ERROR_ID.equals(input.getId())) {
+        logger.info("The following error is expected, as means to demonstrate how errors are emitted");
+      }
+
+      throw npe;
+    }
   }
 }
