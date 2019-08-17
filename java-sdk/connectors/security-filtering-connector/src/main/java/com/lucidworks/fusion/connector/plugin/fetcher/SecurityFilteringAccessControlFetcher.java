@@ -30,6 +30,7 @@ public class SecurityFilteringAccessControlFetcher implements AccessControlFetch
 
   private final SecurityFilteringConfig config;
   private final Random random;
+  private final Long intervalSize;
   
   @Inject
   public SecurityFilteringAccessControlFetcher(
@@ -37,6 +38,10 @@ public class SecurityFilteringAccessControlFetcher implements AccessControlFetch
   ) {
     this.config = config;
     this.random = new Random();
+
+    Long totalNumDocs = Long.valueOf(config.properties().totalNumDocs());
+    Long numberOfNestedGroups = Long.valueOf(config.properties().numberOfNestedGroups());
+    intervalSize =  totalNumDocs / numberOfNestedGroups;
   }
   
   private String emitGroup(
@@ -124,9 +129,8 @@ public class SecurityFilteringAccessControlFetcher implements AccessControlFetch
     String type = (String) metadata.getOrDefault(TYPE, INVALID);
     
     if (type.equals(AccessControlConstants.ACL)) {
-      long number = (Long) input.getMetadata().get("number");
-      long intervalSize = config.properties().totalNumDocs() / config.properties().numberOfNestedGroups();
-      Double groupLevel = Math.floor(number / intervalSize);
+      Long number = (Long) input.getMetadata().get("number") ;
+      Double groupLevel = Math.ceil(number.doubleValue() / intervalSize.doubleValue());
 
       ctx.newDocumentACL(input.getId())
           .withInbound(

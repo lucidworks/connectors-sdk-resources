@@ -40,7 +40,7 @@ public class SecurityFilteringContentFetcher extends RandomContentFetcher {
     
     Map<String, Object> metadata = Maps.newHashMap();
     metadata.put(TYPE, AccessControlConstants.ACL);
-    metadata.put("number", num);
+    metadata.put("number", num + 1);
     
     ctx.newCandidate(input.getId())
         .withTargetPhase(ACCESS_CONTROL)
