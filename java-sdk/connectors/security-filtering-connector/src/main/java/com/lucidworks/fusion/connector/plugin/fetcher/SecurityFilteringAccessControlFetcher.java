@@ -124,12 +124,16 @@ public class SecurityFilteringAccessControlFetcher implements AccessControlFetch
     String type = (String) metadata.getOrDefault(TYPE, INVALID);
     
     if (type.equals(AccessControlConstants.ACL)) {
+      long number = (Long) input.getMetadata().get("number");
+      long intervalSize = config.properties().totalNumDocs() / config.properties().numberOfNestedGroups();
+      Double groupLevel = Math.floor(number / intervalSize);
+
       ctx.newDocumentACL(input.getId())
           .withInbound(
               String.format(
                   GROUP_ID_FORMAT,
-                  random.nextInt(config.properties().numberOfNestedGroups()) + 1,
-                  random.nextInt(config.properties().numberOfNestedGroups()) + 1
+                  groupLevel.intValue(),
+                  random.nextInt(groupLevel.intValue()) + 1
               )
           ).emit();
     } else if (type.equals(AccessControlConstants.GROUP)) {
