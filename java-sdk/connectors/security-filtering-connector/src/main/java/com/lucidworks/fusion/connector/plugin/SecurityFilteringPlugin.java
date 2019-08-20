@@ -8,7 +8,6 @@ import com.lucidworks.fusion.connector.plugin.fetcher.SecurityFilteringAccessCon
 import com.lucidworks.fusion.connector.plugin.fetcher.SecurityFilteringContentFetcher;
 import com.lucidworks.fusion.connector.plugin.impl.DefaultRandomContentGenerator;
 import com.lucidworks.fusion.connector.plugin.security.SecurityFilteringSecurityFilterComponent;
-import com.lucidworks.fusion.connector.plugin.validation.SecurityFilteringValidationComponent;
 import org.pf4j.PluginWrapper;
 
 import javax.inject.Inject;
@@ -35,7 +34,6 @@ public class SecurityFilteringPlugin extends ConnectorPluginModule {
         .withFetcher(CONTENT, SecurityFilteringContentFetcher.class, nonGenModule)
         .withFetcher(ACCESS_CONTROL, SecurityFilteringAccessControlFetcher.class, nonGenModule)
         .withSecurityFilter(SecurityFilteringSecurityFilterComponent.class, nonGenModule)
-        .withValidator(SecurityFilteringValidationComponent.class, nonGenModule)
         .build();
   }
 }
