@@ -123,16 +123,7 @@ public class SecurityFilteringAccessControlFetcher implements AccessControlFetch
     Map<String, Object> metadata = input.getMetadata();
     String type = (String) metadata.getOrDefault(TYPE, INVALID);
     
-    if (type.equals(AccessControlConstants.ACL)) {
-      ctx.newDocumentACL(input.getId())
-          .withInbound(
-              String.format(
-                  GROUP_ID_FORMAT,
-                  random.nextInt(config.properties().numberOfNestedGroups()) + 1,
-                  random.nextInt(config.properties().numberOfNestedGroups()) + 1
-              )
-          ).emit();
-    } else if (type.equals(AccessControlConstants.GROUP)) {
+    if (type.equals(AccessControlConstants.GROUP)) {
       ctx.newGroup(input.getId())
           .withOutbound(
               (List<String>) metadata.getOrDefault(PARENTS, Collections.emptyList())
