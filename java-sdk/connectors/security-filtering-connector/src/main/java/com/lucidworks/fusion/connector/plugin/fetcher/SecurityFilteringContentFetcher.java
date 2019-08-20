@@ -31,14 +31,16 @@ public class SecurityFilteringContentFetcher extends RandomContentFetcher {
   protected void emitDocument(
       FetchContext ctx,
       FetchInput input,
+      long num,
       String hostname
   ) {
-    super.emitDocument(ctx, input, hostname);
+    super.emitDocument(ctx, input, num, hostname);
     
     logger.info("Emitting document ACL candidate for ID {}", input.getId());
     
     Map<String, Object> metadata = Maps.newHashMap();
     metadata.put(TYPE, AccessControlConstants.ACL);
+    metadata.put("number", num + 1);
     
     ctx.newCandidate(input.getId())
         .withTargetPhase(ACCESS_CONTROL)

@@ -57,31 +57,38 @@ public class RandomContentFetcher implements ContentFetcher {
     FetchInput input = fetchContext.getFetchInput();
     logger.info("Received FetchInput -> {}", input);
     String hostname = getHostname();
+    long num = (Long) input.getMetadata().get("number");
 
-    emitDocument(fetchContext, input, hostname);
-    
+    logger.info("Emitting Document -> number {}", num);
+
+    emitDocument(fetchContext, input, num, hostname);
+
     return fetchContext.newResult();
   }
-  
+
+  protected Map<String, Object> getFields(long num, String hostname) {
+    String headline = generator.makeSentence(true);
+    int numSentences = getRandomNumberInRange(10, 255);
+    String txt = generator.makeText(numSentences);
+
+    Map<String, Object> fields = new HashMap();
+    fields.put("number_i", num);
+    fields.put("timestamp_l", Instant.now().toEpochMilli());
+    fields.put("headline_s", headline);
+    fields.put("hostname_s", hostname);
+    fields.put("text_t", txt);
+
+    return fields;
+  }
+
   protected void emitDocument(
       FetchContext fetchContext,
       FetchInput input,
+      long num,
       String hostname
   ) {
     try {
-      long num = (Long) input.getMetadata().get("number");
-    
-      String headline = generator.makeSentence(true);
-      int numSentences = getRandomNumberInRange(10, 255);
-      String txt = generator.makeText(numSentences);
-      logger.info("Emitting Document -> number {}", num);
-    
-      Map<String, Object> fields = new HashMap();
-      fields.put("number_i", num);
-      fields.put("timestamp_l", Instant.now().toEpochMilli());
-      fields.put("headline_s", headline);
-      fields.put("hostname_s", hostname);
-      fields.put("text_t", txt);
+      Map<String, Object> fields = getFields(num, hostname);
       
       fetchContext.newDocument()
           .withFields(fields)
