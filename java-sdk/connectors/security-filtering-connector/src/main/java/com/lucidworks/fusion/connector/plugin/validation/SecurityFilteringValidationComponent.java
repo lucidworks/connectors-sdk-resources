@@ -7,6 +7,7 @@ import com.lucidworks.fusion.connector.plugin.config.SecurityFilteringConfig;
 import com.lucidworks.fusion.schema.ValidationError;
 
 import javax.inject.Inject;
+import java.util.function.Predicate;
 
 public class SecurityFilteringValidationComponent implements ValidationComponent {
 
@@ -20,15 +21,15 @@ public class SecurityFilteringValidationComponent implements ValidationComponent
   @Override
   public ConnectorConfigValidationResult validateConfig(ValidationContext validationContext) {
     ConnectorConfigValidationResult.Builder builder = ConnectorConfigValidationResult.builder(config);
-    if (validationContext.isCreateOrUpdate()) {
-      if (config.properties().totalNumDocs() % config.properties().numberOfNestedGroups() != 0) {
-        builder.withErrors(new ValidationError(
-            "numberOfNestedGroups",
-            config.properties().numberOfNestedGroups(),
-            null,
-            "Module between totalNumDocs and numberOfNestedGroups must be zero"
-        ));
-      }
+    Predicate<SecurityFilteringConfig.Properties> predicate = p -> p.totalNumDocs() % p.numberOfNestedGroups() != 0;
+
+    if (validationContext.isCreateOrUpdate() && predicate.test(config.properties())) {
+      builder.withErrors(new ValidationError(
+          "numberOfNestedGroups",
+          config.properties().numberOfNestedGroups(),
+          null,
+          "Module between totalNumDocs and numberOfNestedGroups must be zero"
+      ));
     }
     return builder.build();
   }
