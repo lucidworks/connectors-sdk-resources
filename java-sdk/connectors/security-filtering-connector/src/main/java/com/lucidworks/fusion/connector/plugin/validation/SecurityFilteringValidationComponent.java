@@ -18,7 +18,6 @@ public class SecurityFilteringValidationComponent implements ValidationComponent
     this.config = config;
   }
 
-
   @Override
   public ConnectorConfigValidationResult validateConfig(ValidationContext validationContext) {
     ConnectorConfigValidationResult.Builder builder = ConnectorConfigValidationResult.builder(config);
