@@ -8,8 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.time.Instant;
-import java.util.HashMap;
 import java.util.Map;
 
 import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.GROUP_ID_FORMAT;
@@ -19,6 +17,7 @@ public class SecurityFilteringContentFetcher extends RandomContentFetcher {
   private static final Logger logger = LoggerFactory.getLogger(SecurityFilteringContentFetcher.class);
 
   private final SecurityFilteringConfig config;
+  private final Long intervalSize;
   
   @Inject
   public SecurityFilteringContentFetcher(
@@ -27,6 +26,10 @@ public class SecurityFilteringContentFetcher extends RandomContentFetcher {
   ) {
     super(config, generator);
     this.config = config;
+
+    Long totalNumDocs = Long.valueOf(config.properties().totalNumDocs());
+    Long numberOfNestedGroups = Long.valueOf(config.properties().numberOfNestedGroups());
+    intervalSize =  totalNumDocs / numberOfNestedGroups;
   }
   
   @Override
@@ -38,13 +41,15 @@ public class SecurityFilteringContentFetcher extends RandomContentFetcher {
   ) {
     try {
       Map<String, Object> fields = getFields(num, hostname);
+      Long number = Long.valueOf(num + 1);
+      Double groupLevel = Math.ceil(number.doubleValue() / intervalSize.doubleValue());
 
       ctx.newDocument()
           .withFields(fields)
           .withACLs(String.format(
               GROUP_ID_FORMAT,
-              rnd.nextInt(config.properties().numberOfNestedGroups()) + 1,
-              rnd.nextInt(config.properties().numberOfNestedGroups()) + 1
+              groupLevel.intValue(),
+              rnd.nextInt(groupLevel.intValue()) + 1
           )).emit();
     } catch (NullPointerException npe) {
       if (ERROR_ID.equals(input.getId())) {
