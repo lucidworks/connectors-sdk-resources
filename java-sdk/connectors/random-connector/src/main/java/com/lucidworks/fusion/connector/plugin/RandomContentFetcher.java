@@ -20,11 +20,11 @@ public class RandomContentFetcher implements ContentFetcher {
 
   private static final Logger logger = LoggerFactory.getLogger(RandomContentFetcher.class);
 
-  protected final static String ERROR_ID = "no-number-this-should-fail";
-  protected static final Random rnd = new Random();
-  protected final RandomContentGenerator generator;
+  private final static String ERROR_ID = "no-number-this-should-fail";
 
+  private static final Random rnd = new Random();
   private final RandomContentConfig randomContentConfig;
+  private final RandomContentGenerator generator;
 
   @Inject
   public RandomContentFetcher(
@@ -57,13 +57,12 @@ public class RandomContentFetcher implements ContentFetcher {
     FetchInput input = fetchContext.getFetchInput();
     logger.info("Received FetchInput -> {}", input);
     String hostname = getHostname();
-
     long num = (Long) input.getMetadata().get("number");
 
     logger.info("Emitting Document -> number {}", num);
 
     emitDocument(fetchContext, input, num, hostname);
-    
+
     return fetchContext.newResult();
   }
 
@@ -81,7 +80,7 @@ public class RandomContentFetcher implements ContentFetcher {
 
     return fields;
   }
-  
+
   protected void emitDocument(
       FetchContext fetchContext,
       FetchInput input,

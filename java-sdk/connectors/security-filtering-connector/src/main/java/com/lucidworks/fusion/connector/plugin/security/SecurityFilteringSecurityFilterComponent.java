@@ -1,6 +1,6 @@
 package com.lucidworks.fusion.connector.plugin.security;
 
-import com.lucidworks.fusion.connector.plugin.api.security.AclGraphJoinSecurityFilterBuilder;
+import com.lucidworks.fusion.connector.plugin.api.security.GraphJoinSecurityFilterBuilder;
 import com.lucidworks.fusion.connector.plugin.api.security.SecurityFilter;
 import com.lucidworks.fusion.connector.plugin.api.security.SecurityFilterComponent;
 import com.lucidworks.fusion.connector.plugin.api.security.Subject;
@@ -9,10 +9,10 @@ import javax.inject.Inject;
 
 public class SecurityFilteringSecurityFilterComponent implements SecurityFilterComponent {
 
-  private final AclGraphJoinSecurityFilterBuilder builder;
+  private final GraphJoinSecurityFilterBuilder builder;
 
   @Inject
-  public SecurityFilteringSecurityFilterComponent(AclGraphJoinSecurityFilterBuilder builder) {
+  public SecurityFilteringSecurityFilterComponent(GraphJoinSecurityFilterBuilder builder) {
     this.builder = builder;
   }
 
