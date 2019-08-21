@@ -15,7 +15,6 @@ import javax.inject.Inject;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.stream.IntStream;
 
 import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.GROUP_ID_FORMAT;
@@ -29,19 +28,12 @@ public class SecurityFilteringAccessControlFetcher implements AccessControlFetch
   private static final Logger logger = LoggerFactory.getLogger(SecurityFilteringAccessControlFetcher.class);
 
   private final SecurityFilteringConfig config;
-  private final Random random;
-  private final Long intervalSize;
   
   @Inject
   public SecurityFilteringAccessControlFetcher(
       SecurityFilteringConfig config
   ) {
     this.config = config;
-    this.random = new Random();
-
-    Long totalNumDocs = Long.valueOf(config.properties().totalNumDocs());
-    Long numberOfNestedGroups = Long.valueOf(config.properties().numberOfNestedGroups());
-    intervalSize =  totalNumDocs / numberOfNestedGroups;
   }
   
   private String emitGroup(
@@ -128,19 +120,7 @@ public class SecurityFilteringAccessControlFetcher implements AccessControlFetch
     Map<String, Object> metadata = input.getMetadata();
     String type = (String) metadata.getOrDefault(TYPE, INVALID);
     
-    if (type.equals(AccessControlConstants.ACL)) {
-      Long number = (Long) input.getMetadata().get("number") ;
-      Double groupLevel = Math.ceil(number.doubleValue() / intervalSize.doubleValue());
-
-      ctx.newDocumentACL(input.getId())
-          .withInbound(
-              String.format(
-                  GROUP_ID_FORMAT,
-                  groupLevel.intValue(),
-                  random.nextInt(groupLevel.intValue()) + 1
-              )
-          ).emit();
-    } else if (type.equals(AccessControlConstants.GROUP)) {
+    if (type.equals(AccessControlConstants.GROUP)) {
       ctx.newGroup(input.getId())
           .withOutbound(
               (List<String>) metadata.getOrDefault(PARENTS, Collections.emptyList())

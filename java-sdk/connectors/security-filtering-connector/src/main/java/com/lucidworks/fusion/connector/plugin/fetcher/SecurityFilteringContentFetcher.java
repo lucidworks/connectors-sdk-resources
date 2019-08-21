@@ -1,10 +1,8 @@
 package com.lucidworks.fusion.connector.plugin.fetcher;
 
-import com.google.common.collect.Maps;
 import com.lucidworks.fusion.connector.plugin.RandomContentFetcher;
 import com.lucidworks.fusion.connector.plugin.RandomContentGenerator;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
-import com.lucidworks.fusion.connector.plugin.api.security.AccessControlConstants;
 import com.lucidworks.fusion.connector.plugin.config.SecurityFilteringConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,12 +10,13 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import java.util.Map;
 
-import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.ACCESS_CONTROL;
-import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.TYPE;
+import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.GROUP_ID_FORMAT;
 
 public class SecurityFilteringContentFetcher extends RandomContentFetcher {
 
   private static final Logger logger = LoggerFactory.getLogger(SecurityFilteringContentFetcher.class);
+
+  private final Long intervalSize;
   
   @Inject
   public SecurityFilteringContentFetcher(
@@ -25,6 +24,10 @@ public class SecurityFilteringContentFetcher extends RandomContentFetcher {
       RandomContentGenerator generator
   ) {
     super(config, generator);
+
+    Long totalNumDocs = Long.valueOf(config.properties().totalNumDocs());
+    Long numberOfNestedGroups = Long.valueOf(config.properties().numberOfNestedGroups());
+    intervalSize =  totalNumDocs / numberOfNestedGroups;
   }
   
   @Override
@@ -34,17 +37,24 @@ public class SecurityFilteringContentFetcher extends RandomContentFetcher {
       long num,
       String hostname
   ) {
-    super.emitDocument(ctx, input, num, hostname);
-    
-    logger.info("Emitting document ACL candidate for ID {}", input.getId());
-    
-    Map<String, Object> metadata = Maps.newHashMap();
-    metadata.put(TYPE, AccessControlConstants.ACL);
-    metadata.put("number", num + 1);
-    
-    ctx.newCandidate(input.getId())
-        .withTargetPhase(ACCESS_CONTROL)
-        .withMetadata(metadata)
-        .emit();
+    try {
+      Map<String, Object> fields = getFields(num, hostname);
+      Long number = Long.valueOf(num + 1);
+      Double groupLevel = Math.ceil(number.doubleValue() / intervalSize.doubleValue());
+
+      ctx.newDocument()
+          .withFields(fields)
+          .withACLs(String.format(
+              GROUP_ID_FORMAT,
+              groupLevel.intValue(),
+              rnd.nextInt(groupLevel.intValue()) + 1
+          )).emit();
+    } catch (NullPointerException npe) {
+      if (ERROR_ID.equals(input.getId())) {
+        logger.info("The following error is expected, as means to demonstrate how errors are emitted");
+      }
+
+      throw npe;
+    }
   }
 }

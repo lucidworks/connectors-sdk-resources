@@ -20,11 +20,11 @@ public class RandomContentFetcher implements ContentFetcher {
 
   private static final Logger logger = LoggerFactory.getLogger(RandomContentFetcher.class);
 
-  private final static String ERROR_ID = "no-number-this-should-fail";
+  protected final static String ERROR_ID = "no-number-this-should-fail";
+  protected static final Random rnd = new Random();
 
-  private static final Random rnd = new Random();
-  private final RandomContentConfig randomContentConfig;
   private final RandomContentGenerator generator;
+  private final RandomContentConfig randomContentConfig;
 
   @Inject
   public RandomContentFetcher(
