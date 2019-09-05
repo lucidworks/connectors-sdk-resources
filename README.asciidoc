@@ -59,7 +59,7 @@ The gRPC framework provides flexibility in the way services and their methods ar
 The data persisted by the connectors framework is distributed across the Fusion cluster. Each node holds its primary partition of the data, as well as backups of other partitions.
 If a node goes down during a crawl, the data store remains intact and usable. Connector implementations do not need to be concerned with this layer, because it is all handled by Fusion.
 
-=== CrawlDB fields
+== CrawlDB fields
 * Core fields required for any connector would include: id and state_s.
 
 * Connector specific values include the "fields" and "metadata" properties, which result in Solr document prefixed fields: field_ and meta_, respectively.
