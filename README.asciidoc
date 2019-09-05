@@ -59,5 +59,37 @@ The gRPC framework provides flexibility in the way services and their methods ar
 The data persisted by the connectors framework is distributed across the Fusion cluster. Each node holds its primary partition of the data, as well as backups of other partitions.
 If a node goes down during a crawl, the data store remains intact and usable. Connector implementations do not need to be concerned with this layer, because it is all handled by Fusion.
 
+=== CrawlDB fields
+* Core fields required for any connector would include: id and state_s.
+
+* Connector specific values include the "fields" and "metadata" properties, which result in Solr document prefixed fields: field_ and meta_, respectively.
+
+|====================================================
+| Field Name | Field Description  | Example value  
+|  id  | Unique candidate indentifier  |  content:/app 
+|  jobId_s | Unique job identifier. All items processed in the new job will have a different jobId.  | KTPbmHYTqm 
+| blockId_s | A BlockId identifies a series of 1 or more Jobs, and the lifetime of a BlockId spans from the start of a crawl to the crawls completion.When a Job starts and the previous Job did not complete (failed or stopped), the previous Job's BlockId is reused. The same BlockId will be reused until the crawl successfully completes.BlockIds are used to quickly identify items in the CrawlDb which may not have been fully processed (complete).  | KwhuWW7wya 
+| state_s | State transition. Possible values (FetchInput, Document, Skip, Error, Checkpoint, ACI(AccessControItem), Delete, FetchResult).  | Document  
+| targetPhase_s  | Name of the phase this item is emitted to.  | content  
+| sourcePhase_s | Name of the phase an item was emitted from.  | content  
+| isTransient_b  | Flag to indicate that the item should be removed from CrawDB after it has been processed.  | false  
+| isLeafNode_b  | This flag is used to prioritize the processing leaf node instead of nested nodes to avoid emitting of too many Candidates.  | false  
+| createdAt_l  | Item created timestamp.  | 1566508663611  
+| createdAt_tdt  | Item created ISO date.  | 2019-08-22T21:17:43.611Z  
+|  modifiedAt_l |  Item modified timestamp. | 1566508665709  
+| modifiedAt_tdt  | Item modified ISO date.  | 2019-08-22T21:17:45.709Z  
+| fetchInput_id_s  | FetchInput Id.  | /app 
+| meta_lastModified_l  | Last modified timestamp for directory/file.  | 1566485811000  
+| meta_name_s  | Name of directory/file. | app  
+| meta_length_l  | Content lenght of the file | 4096  
+| meta_owner_s  | Owner of directory/file.  | root  
+| meta_group_s  | Group of directory/file.  | root  
+| meta_path_s  |  Absolute path of the directory/file. | /app  
+| meta_fetchCounter_l  | Number of items fetched.  | 1 
+| meta_isFile_b  | Is the item file?  | false  
+| meta_exists_b  | Directory/file exits or not?  | true 
+| meta_isDirectory_b  | Is the item directory?  | true  
+| \_version_ | Solr generated version number | 1642603392772603905  
+|====================================================
 
 Copyright 2019 https://lucidworks.com[Lucidworks^]
