@@ -22,8 +22,8 @@ public class LabConnectorPlugin extends ConnectorPluginModule {
 
       }
     };
-    return builder(RandomContentConfig.class)
-        .withFetcher("content", RandomContentFetcher.class, module)
+    return builder(LabConnectorConfig.class)
+        .withFetcher("content", LabConnectorFetcher.class, module)
         .build();
   }
 }

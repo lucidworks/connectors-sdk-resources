@@ -45,3 +45,16 @@ Now view the schema:
 ```shell script
 curl http://$LAB_HOST:8765/api/v1/connectors-experimental/plugins/lucidworks.labs.lab-connector-plugin
 ```
+
+## Step 3
+This step include an implementation for a fetcher.
+
+Execute the following commands to build and re-deploy the plugin:
+
+```shell script
+./gradlew clean build
+./gradlew assemblePlugin
+./gradlew deploy -PfusionApiTarget=$LAB_HOST:8765
+```
+
+Configure the datasource and run a job. You should see a single document in the collection.

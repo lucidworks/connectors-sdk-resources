@@ -12,7 +12,7 @@ import com.lucidworks.fusion.schema.SchemaAnnotations.RootSchema;
     description = "A connector that generates lab documents.",
     category = "Lab"
 )
-public interface RandomContentConfig extends ConnectorConfig<RandomContentConfig.Properties> {
+public interface LabConnectorConfig extends ConnectorConfig<LabConnectorConfig.Properties> {
 
   @Property(
       title = "Properties",

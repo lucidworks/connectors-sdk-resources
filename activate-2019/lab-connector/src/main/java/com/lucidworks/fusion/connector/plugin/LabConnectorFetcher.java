@@ -8,18 +8,18 @@ import javax.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class RandomContentFetcher implements ContentFetcher {
+public class LabConnectorFetcher implements ContentFetcher {
 
-  private static final Logger logger = LoggerFactory.getLogger(RandomContentFetcher.class);
+  private static final Logger logger = LoggerFactory.getLogger(LabConnectorFetcher.class);
 
-  private final RandomContentConfig randomContentConfig;
+  private final LabConnectorConfig labConnectorConfig;
 
   @Inject
-  public RandomContentFetcher(
-      RandomContentConfig randomContentConfig
+  public LabConnectorFetcher(
+      LabConnectorConfig labConnectorConfig
   ) {
     logger.info("Initializing the fetcher component");
-    this.randomContentConfig = randomContentConfig;
+    this.labConnectorConfig = labConnectorConfig;
   }
 
   @Override
