@@ -58,3 +58,8 @@ Execute the following commands to build and re-deploy the plugin:
 ```
 
 Configure the datasource and run a job. You should see a single document in the collection.
+
+## Step 4
+This steps shows how to add a dependency to the fetcher, and then shows how the dependency is used.
+
+Re-build the plugin, re-deploy and re-run the job. You should see a single document, with new fields.
