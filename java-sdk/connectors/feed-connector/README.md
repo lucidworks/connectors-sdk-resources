@@ -1,7 +1,6 @@
 # Feed Connector
 
-'Feed Connector' fetches the entries of a feed file. The file must to be in json format and have the following format.
-The connector has one property:
+'Feed Connector' fetches the entries of a feed file. The file must to be in json format and has [this format](https://gist.github.com/mcondo/1186e69d8bbf2779c4db30d43a52850f). The connector has one property:
 - "Feed file path": Feed file path location
 
 This connector emit checkpoints, emit candidates as transient=true, and enable the 'Purge Stray Items' feature.
