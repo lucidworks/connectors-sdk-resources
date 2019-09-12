@@ -1,9 +1,8 @@
-== Random Content Incremental Connector
+# Random Content Incremental Connector
 
 This connector generates a configurable number of documents all with random titles and body fields. It has the following two properties:
 - "Total": The total number of docs that will be generated in a first crawl
-- "Incremental Total": The total number of docs to generate from the second crawl."
-
+- "Incremental Total": The total number of docs to generate from the second and subsequent crawls"
 
 ## Quick start
 

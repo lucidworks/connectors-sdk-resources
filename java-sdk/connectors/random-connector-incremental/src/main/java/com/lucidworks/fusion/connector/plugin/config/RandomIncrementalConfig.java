@@ -24,7 +24,7 @@ public interface RandomIncrementalConfig extends RandomContentConfig {
 
     @Property(
         title = "Incremental Total",
-        description = "Total number of docs to generate from the second crawl. This amount is incremented on each crawl"
+        description = "Total number of docs to generate from the second and subsequent crawls."
     )
     @NumberSchema(
         defaultValue = 10
