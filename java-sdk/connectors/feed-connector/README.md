@@ -5,6 +5,7 @@
 
 This connector emit checkpoints, emit candidates as transient=true, and enable the 'Purge Stray Items' feature.
 
+Crawls are incremental.
 
 ### How to use 'Feed Connector'
 - Start a crawl. Let it finishes. All the entries are indexed.
