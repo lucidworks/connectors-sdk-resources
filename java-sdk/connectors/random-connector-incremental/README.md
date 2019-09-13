@@ -4,6 +4,10 @@ This connector generates a configurable number of documents all with random titl
 - "Total": The total number of docs that will be generated in a first crawl
 - "Incremental Total": The total number of docs to generate from the second and subsequent crawls"
 
+This connector emit checkpoints and emit candidates as transient=true.
+
+Crawls are incremental.
+
 ## Quick start
 
 NOTE: This quick start assumes that Fusion is installed on the `/opt` path.
