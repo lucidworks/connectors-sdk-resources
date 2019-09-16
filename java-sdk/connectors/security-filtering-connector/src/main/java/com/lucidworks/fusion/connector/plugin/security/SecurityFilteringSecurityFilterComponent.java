@@ -16,7 +16,6 @@ public class SecurityFilteringSecurityFilterComponent implements SecurityFilterC
     this.builder = builder;
   }
 
-
   @Override
   public SecurityFilter buildSecurityFilter(Subject subject) {
     return builder.withAccessControl(subject.getPrincipal()).build();
