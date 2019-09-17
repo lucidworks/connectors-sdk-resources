@@ -66,7 +66,6 @@ public class ImapFetcher implements ContentFetcher {
 
         fetchContext.newDocument(fetchContext.getFetchInput().getId())
           .withFields(data)
-          .withMetadata(null)
           .emit();
       }
 
