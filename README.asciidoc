@@ -79,17 +79,6 @@ If a node goes down during a crawl, the data store remains intact and usable. Co
 |  modifiedAt_l |  Item modified timestamp. | 1566508665709  
 | modifiedAt_tdt  | Item modified ISO date.  | 2019-08-22T21:17:45.709Z  
 | fetchInput_id_s  | FetchInput Id.  | /app 
-| meta_lastModified_l  | Last modified timestamp for directory/file.  | 1566485811000  
-| meta_name_s  | Name of directory/file. | app  
-| meta_length_l  | Content lenght of the file | 4096  
-| meta_owner_s  | Owner of directory/file.  | root  
-| meta_group_s  | Group of directory/file.  | root  
-| meta_path_s  |  Absolute path of the directory/file. | /app  
-| meta_fetchCounter_l  | Number of items fetched.  | 1 
-| meta_isFile_b  | Is the item file?  | false  
-| meta_exists_b  | Directory/file exits or not?  | true 
-| meta_isDirectory_b  | Is the item directory?  | true  
-| \_version_ | Solr generated version number | 1642603392772603905  
 |====================================================
 
 Copyright 2019 https://lucidworks.com[Lucidworks^]
