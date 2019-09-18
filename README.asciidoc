@@ -76,9 +76,9 @@ If a node goes down during a crawl, the data store remains intact and usable. Co
 | isLeafNode_b  | This flag is used to prioritize the processing leaf node instead of nested nodes to avoid emitting of too many Candidates.  | false  
 | createdAt_l  | Item created timestamp.  | 1566508663611  
 | createdAt_tdt  | Item created ISO date.  | 2019-08-22T21:17:43.611Z  
-|  modifiedAt_l |  Item modified timestamp. | 1566508665709  
-| modifiedAt_tdt  | Item modified ISO date.  | 2019-08-22T21:17:45.709Z  
-| fetchInput_id_s  | FetchInput Id.  | /app 
+|  modifiedAt_l |  Timestamp value which is updated when item changes its state. Also, if purge stray items feature is enabled in the connector plugin, this field is used to determine whether the item is stray or not, then the item is deleted if it's a stray item.  | 1566508665709
+| modifiedAt_tdt  | ISO date value which is updated when item changes its state. It serves same purpose as modifiedAt_l.  | 2019-08-22T21:17:45.709Z
+| fetchInput_id_s  | FetchInput Id.  | /app
 |====================================================
-
+:
 Copyright 2019 https://lucidworks.com[Lucidworks^]
