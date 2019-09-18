@@ -60,7 +60,7 @@ The data persisted by the connectors framework is distributed across the Fusion 
 If a node goes down during a crawl, the data store remains intact and usable. Connector implementations do not need to be concerned with this layer, because it is all handled by Fusion.
 
 == CrawlDB fields
-* Core fields required for any connector would include: id and state_s.
+* Core fields required for any connector include: id and state_s.
 
 * Connector specific values include the "fields" and "metadata" properties, which result in Solr document prefixed fields: field_ and meta_, respectively.
 
