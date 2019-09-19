@@ -64,13 +64,17 @@ public class ImapFetcher implements ContentFetcher {
           };
         }
 
-        fetchContext.emitDocument(data);
+        fetchContext.newDocument(fetchContext.getFetchInput().getId())
+          .withFields(data)
+          .emit();
       }
 
     } catch (MailException e) {
       String message = "Failed to parse message.";
       logger.error(message, e);
-      fetchContext.emitError(message);
+      fetchContext.newError(fetchContext.getFetchInput().getId())
+        .withError(message)
+        .emit();
     }
 
     return fetchContext.newResult();

@@ -71,7 +71,7 @@ public class RandomContentFetcher implements ContentFetcher {
     int numSentences = getRandomNumberInRange(10, 255);
     String txt = generator.makeText(numSentences);
 
-    Map<String, Object> fields = new HashMap();
+    Map<String, Object> fields = new HashMap<>();
     fields.put("number_i", num);
     fields.put("timestamp_l", Instant.now().toEpochMilli());
     fields.put("headline_s", headline);
