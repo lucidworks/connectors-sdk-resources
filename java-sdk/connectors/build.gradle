@@ -24,7 +24,6 @@ subprojects {
   dependencies {
     provided ("com.lucidworks.connector.sdk:connector-plugin-sdk:${connectorsSDKVersion}")
     provided "org.slf4j:slf4j-api:${slf4jVersion}"
-    provided "com.fasterxml.jackson.core:jackson-databind:${fasterxmlVersion}"
     testCompile group: 'junit', name: 'junit', version: '4.12'
   }
 
