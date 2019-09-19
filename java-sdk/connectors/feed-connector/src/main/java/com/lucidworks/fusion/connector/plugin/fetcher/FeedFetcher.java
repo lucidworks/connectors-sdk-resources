@@ -170,7 +170,7 @@ public class FeedFetcher implements ContentFetcher {
       return 0;
     }
     return Integer.valueOf(fetchInput.getMetadata().get(ENTRY_INDEX_START).toString()) +
-        connectorConfig.properties().generateProperties().entriesToRemove();
+        connectorConfig.properties().generateProperties().entriesToRemoveIncremental();
   }
 
 }

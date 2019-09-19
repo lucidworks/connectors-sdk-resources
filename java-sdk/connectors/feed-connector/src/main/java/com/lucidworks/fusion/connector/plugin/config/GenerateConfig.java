@@ -34,9 +34,9 @@ public interface GenerateConfig extends Model {
         description = "Total number of entries to remove from the second and subsequent crawls. It will be ignored if 'Feed file path' is provided"
     )
     @NumberSchema(
-        defaultValue = 10
+        defaultValue = 100
     )
-    Integer entriesToRemove();
+    Integer entriesToRemoveIncremental();
 
     @Property(
         title = "Total incremental to add",

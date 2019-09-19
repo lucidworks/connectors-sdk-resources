@@ -27,17 +27,17 @@ Crawls are incremental.
 
 - Not provide a json file.
 - 'Generate Properties' has default values. From UI, see 'GENERATE PROPERTIES'
-- Start a crawl. Let it finishes. By default, 1000 entries will be indexed. Item ids are from 0 to 999
-- Start another crawl. Let it finishes. total 905 entries will be indexed:
+- Start a crawl. Let it finishes. By default, 1000 items will be indexed. Item ids are from 0 to 999
+- Start another crawl. Let it finishes. total 905 items exist in content collection:  Item ids are from 100 to 1004
    - The first 100 entries (0-99) will be removed
    - 5 new items are added (1000-1004)
-- Start another crawl. Let it finishes. total 810 entries will be indexed:
+- Start another crawl. Let it finishes. total 810 items exist in content collection: Item ids are from 200 to 1009
    - 100 more entries will be removed (100-199)
    - 5 more new items are added (1005-1009)  
 - Etc
  
 
-Note: If after some recrawls, all the documents are removed:
+Note: If after some subsequent crawls, all the documents are removed:
  - clear the datasource (checkpoint wil be removed)
  - change some properties if desired and save the datasource. 
  - Start crawling again
