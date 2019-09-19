@@ -8,4 +8,6 @@ public interface FeedGenerator {
 
   Map<String, Object> generateFieldsMap();
 
+  Feed generateFeed(int entryIndexStart, int entryIndexEnd);
+
 }

@@ -9,7 +9,7 @@ import com.lucidworks.fusion.schema.SchemaAnnotations.StringSchema;
 @RootSchema(
     name = "feed-random",
     title = "Feed Random Connector",
-    description = "A feed-random connector",
+    description = "A simple feed connector",
     category = "Feed"
 )
 public interface FeedConfig extends ConnectorConfig<FeedConfig.Properties> {
@@ -26,15 +26,15 @@ public interface FeedConfig extends ConnectorConfig<FeedConfig.Properties> {
   /**
    * Connector specific settings
    */
-  interface Properties extends ConnectorPluginProperties {
+  interface Properties extends ConnectorPluginProperties, GenerateConfig {
 
     @Property(
         title = "Feed file path",
-        description = "Feed file path location",
-        required = true,
-        order = 1
+        description = "Feed file path location. If empty, the connector will generate entries (see 'Generate Properties')"
     )
     @StringSchema
     String path();
+
   }
+
 }

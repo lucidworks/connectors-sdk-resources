@@ -7,8 +7,10 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.time.Instant;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 public class DefaultFeedGenerator implements FeedGenerator {
 
@@ -25,6 +27,22 @@ public class DefaultFeedGenerator implements FeedGenerator {
     }
   }
 
+  @Override
+  public Feed generateFeed(int entryIndexStart, int entryIndexEnd) {
+    ImmutableMap.Builder<String, FeedEntry> builder = ImmutableMap.builder();
+    // generating entries from 'entryIndexStart'.
+    // Entries not generated before 'entryIndexStart' will not be emitted as candidates, this will simulate when
+    // entries are removed from the Feed
+    IntStream.range(entryIndexStart, entryIndexEnd).asLongStream().forEach(index -> {
+      builder.put(
+          String.valueOf(index),
+          new FeedEntry(String.valueOf(index), UUID.randomUUID().toString(), Instant.now().toEpochMilli())
+      );
+    });
+    return new Feed(builder.build());
+  }
+
+  @Override
   public Map<String, Object> generateFieldsMap() {
     return ImmutableMap.<String, Object>builder()
         .put("abc_s", UUID.randomUUID().toString())
@@ -37,4 +55,5 @@ public class DefaultFeedGenerator implements FeedGenerator {
         .put("tyu_s", UUID.randomUUID().toString())
         .build();
   }
+
 }
