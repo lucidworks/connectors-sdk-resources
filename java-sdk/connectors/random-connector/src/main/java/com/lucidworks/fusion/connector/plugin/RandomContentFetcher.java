@@ -109,7 +109,7 @@ public class RandomContentFetcher implements ContentFetcher {
     return rnd.nextInt((max - min) + 1) + min;
   }
 
-  private String getHostname() {
+  protected String getHostname() {
     try {
       return InetAddress.getLocalHost().getHostName();
     } catch (Exception ex) {
