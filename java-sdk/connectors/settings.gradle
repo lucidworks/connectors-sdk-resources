@@ -1,3 +1,5 @@
+rootProject.name = 'examples'
+
 include 'random-connector'
 include 'imap-connector'
 include 'security-filtering-connector'
