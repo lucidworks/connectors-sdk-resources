@@ -1,5 +1,6 @@
-package com.lucidworks.fusion.connector.plugin;
+package com.lucidworks.connector.plugins.config;
 
+import com.lucidworks.connector.plugins.config.RandomContentConfig.Properties;
 import com.lucidworks.fusion.connector.plugin.api.config.ConnectorConfig;
 import com.lucidworks.fusion.connector.plugin.api.config.ConnectorPluginProperties;
 import com.lucidworks.fusion.schema.SchemaAnnotations.NumberSchema;
@@ -7,12 +8,11 @@ import com.lucidworks.fusion.schema.SchemaAnnotations.Property;
 import com.lucidworks.fusion.schema.SchemaAnnotations.RootSchema;
 
 @RootSchema(
-    name = "demo.random.content",
-    title = "Random Content Generator",
+    title = "Random Content Generator (v2)",
     description = "A connector that generates random documents.",
     category = "Generator"
 )
-public interface RandomContentConfig extends ConnectorConfig<RandomContentConfig.Properties> {
+public interface RandomContentConfig extends ConnectorConfig<Properties> {
 
   @Property(
       title = "Properties",
@@ -26,10 +26,9 @@ public interface RandomContentConfig extends ConnectorConfig<RandomContentConfig
   interface Properties extends ConnectorPluginProperties {
 
     @Property(
-        title = "Total",
-        description = "Total number of docs to generate"
+        title = "Random Content properties",
+        description = "Random Content properties"
     )
-    @NumberSchema(defaultValue = 1000)
-    Integer totalNumDocs();
+    RandomContentProperties getRandomContentProperties();
   }
 }

@@ -1,7 +1,7 @@
 package com.lucidworks.fusion.connector.plugin.util;
 
 public class SecurityFilteringConstants {
-  
+
   public static final String ACCESS_CONTROL = "access-control";
   public static final String CONTENT = "content";
   public static final String TYPE = "type";

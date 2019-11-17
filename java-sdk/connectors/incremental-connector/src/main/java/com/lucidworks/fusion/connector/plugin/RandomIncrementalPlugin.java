@@ -1,11 +1,12 @@
 package com.lucidworks.fusion.connector.plugin;
 
 import com.google.inject.AbstractModule;
+import com.lucidworks.connector.plugins.client.RandomContentGenerator;
 import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPlugin;
 import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPluginModule;
 import com.lucidworks.fusion.connector.plugin.config.RandomIncrementalConfig;
 import com.lucidworks.fusion.connector.plugin.fetcher.RandomInContentIncrementalFetcher;
-import com.lucidworks.fusion.connector.plugin.impl.DefaultRandomContentGenerator;
+import com.lucidworks.connector.plugins.client.impl.DefaultRandomContentGenerator;
 import org.pf4j.PluginWrapper;
 
 import javax.inject.Inject;

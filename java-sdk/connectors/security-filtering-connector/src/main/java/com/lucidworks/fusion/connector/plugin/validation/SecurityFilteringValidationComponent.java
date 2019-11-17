@@ -21,7 +21,7 @@ public class SecurityFilteringValidationComponent implements ValidationComponent
   @Override
   public ConnectorConfigValidationResult validateConfig(ValidationContext validationContext) {
     ConnectorConfigValidationResult.Builder builder = ConnectorConfigValidationResult.builder(config);
-    Predicate<SecurityFilteringConfig.Properties> predicate = p -> p.totalNumDocs() % p.numberOfNestedGroups() != 0;
+    Predicate<SecurityFilteringConfig.Properties> predicate = p -> p.getRandomContentProperties().totalNumDocs() % p.numberOfNestedGroups() != 0;
 
     if (validationContext.isCreateOrUpdate() && predicate.test(config.properties())) {
       builder.withErrors(new ValidationError(

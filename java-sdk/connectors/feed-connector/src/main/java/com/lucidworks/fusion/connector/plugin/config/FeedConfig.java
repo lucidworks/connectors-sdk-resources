@@ -7,8 +7,7 @@ import com.lucidworks.fusion.schema.SchemaAnnotations.RootSchema;
 import com.lucidworks.fusion.schema.SchemaAnnotations.StringSchema;
 
 @RootSchema(
-    name = "feed-random",
-    title = "Feed Random Connector",
+    title = "Feed Random Connector (v2)",
     description = "A simple feed connector",
     category = "Feed"
 )

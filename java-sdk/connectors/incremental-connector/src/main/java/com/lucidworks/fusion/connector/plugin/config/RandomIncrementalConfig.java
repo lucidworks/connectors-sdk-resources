@@ -1,13 +1,12 @@
 package com.lucidworks.fusion.connector.plugin.config;
 
-import com.lucidworks.fusion.connector.plugin.RandomContentConfig;
+import com.lucidworks.connector.plugins.config.RandomContentConfig;
 import com.lucidworks.fusion.schema.SchemaAnnotations.NumberSchema;
 import com.lucidworks.fusion.schema.SchemaAnnotations.Property;
 import com.lucidworks.fusion.schema.SchemaAnnotations.RootSchema;
 
 @RootSchema(
-    name = "demo.random.content.incremental",
-    title = "Random Content Incremental Generator",
+    title = "Random Content Incremental Generator (v2)",
     description = "A connector that generates incremental random documents.",
     category = "Generator"
 )
