@@ -100,7 +100,3 @@ subprojects {
 task assemblePlugins(type: Copy) {
   dependsOn subprojects.assemblePlugin
 }
-
-wrapper {
-  gradleVersion '5.6.2'
-}

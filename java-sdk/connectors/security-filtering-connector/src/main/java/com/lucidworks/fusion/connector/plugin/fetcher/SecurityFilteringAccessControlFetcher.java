@@ -8,15 +8,16 @@ import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInpu
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.security.AccessControlFetcher;
 import com.lucidworks.fusion.connector.plugin.api.security.AccessControlConstants;
 import com.lucidworks.fusion.connector.plugin.config.SecurityFilteringConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 import java.util.stream.IntStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.GROUP_ID_FORMAT;
 import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.INVALID;
@@ -25,25 +26,84 @@ import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConst
 import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.USER_ID_FORMAT;
 
 public class SecurityFilteringAccessControlFetcher implements AccessControlFetcher {
-  
+
   private static final Logger logger = LoggerFactory.getLogger(SecurityFilteringAccessControlFetcher.class);
 
   private final SecurityFilteringConfig config;
-  private final Random random;
-  private final Long intervalSize;
-  
-  @Inject
-  public SecurityFilteringAccessControlFetcher(
-      SecurityFilteringConfig config
-  ) {
-    this.config = config;
-    this.random = new Random();
 
-    Long totalNumDocs = Long.valueOf(config.properties().totalNumDocs());
-    Long numberOfNestedGroups = Long.valueOf(config.properties().numberOfNestedGroups());
-    intervalSize =  totalNumDocs / numberOfNestedGroups;
+  @Inject
+  public SecurityFilteringAccessControlFetcher(SecurityFilteringConfig config) {
+    this.config = config;
   }
-  
+
+  @Override
+  public PreFetchResult preFetch(PreFetchContext ctx) {
+    if (!config.securityTrimmingIsEnabled()) {
+      return ctx.newResult();
+    }
+
+    List<String> parentGroups = Lists.newArrayList();
+    IntStream.rangeClosed(1, config.properties().numberOfNestedGroups())
+        .forEach(level -> {
+          List<String> levelGroups = processGroupLevel(
+              ctx,
+              level,
+              parentGroups
+          );
+
+          parentGroups.clear();
+          parentGroups.addAll(levelGroups);
+
+          emitUser(
+              ctx,
+              level,
+              levelGroups
+          );
+        });
+
+    return ctx.newResult();
+  }
+
+  @Override
+  public FetchResult fetch(FetchContext ctx) {
+    FetchInput input = ctx.getFetchInput();
+
+    logger.info("Processing input {}", input.getId());
+
+    Map<String, Object> metadata = input.getMetadata();
+    String type = (String) metadata.getOrDefault(TYPE, INVALID);
+
+    Map<String, Object> meta = new HashMap<>();
+    meta.put("m_uno", "1");
+    meta.put("m_dos", "2");
+    meta.put("m_tres", "3");
+
+    Map<String, Object> fieds = new HashMap<>();
+    meta.put("f_uno", "1");
+    meta.put("f_dos", "2");
+    meta.put("f_tres", "3");
+
+    if (type.equals(AccessControlConstants.GROUP)) {
+      ctx.newGroup(input.getId())
+          .withMetadata(meta)
+          .withFields(fieds)
+          .withOutbound(
+              (List<String>) metadata.getOrDefault(PARENTS, Collections.emptyList())
+          )
+          .emit();
+    } else if (type.equals(AccessControlConstants.USER)) {
+      ctx.newUser(input.getId())
+          .withOutbound(
+              (List<String>) metadata.getOrDefault(PARENTS, Collections.emptyList())
+          )
+          .emit();
+    } else {
+      logger.error("Invalid type to be processed for input {}", input.getId());
+    }
+
+    return ctx.newResult();
+  }
+
   private String emitGroup(
       PreFetchContext ctx,
       int level,
@@ -59,7 +119,7 @@ public class SecurityFilteringAccessControlFetcher implements AccessControlFetch
         .emit();
     return groupId;
   }
-  
+
   private List<String> processGroupLevel(
       PreFetchContext ctx,
       int level,
@@ -77,7 +137,7 @@ public class SecurityFilteringAccessControlFetcher implements AccessControlFetch
     });
     return levelGroups;
   }
-  
+
   private void emitUser(
       PreFetchContext ctx,
       int level,
@@ -90,72 +150,5 @@ public class SecurityFilteringAccessControlFetcher implements AccessControlFetch
         .withMetadata(metadata)
         .emit();
   }
-  
-  @Override
-  public PreFetchResult preFetch(PreFetchContext ctx) {
-    if (!config.securityTrimmingIsEnabled()) {
-      return ctx.newResult();
-    }
-    
-    List<String> parentGroups = Lists.newArrayList();
-    IntStream.rangeClosed(1, config.properties().numberOfNestedGroups())
-        .forEach(level -> {
-          List<String> levelGroups = processGroupLevel(
-              ctx,
-              level,
-              parentGroups
-          );
-          
-          parentGroups.clear();
-          parentGroups.addAll(levelGroups);
-          
-          emitUser(
-              ctx,
-              level,
-              levelGroups
-          );
-        });
-    
-    return ctx.newResult();
-  }
-  
-  @Override
-  public FetchResult fetch(FetchContext ctx) {
-    FetchInput input = ctx.getFetchInput();
-    
-    logger.info("Processing input {}", input.getId());
-    
-    Map<String, Object> metadata = input.getMetadata();
-    String type = (String) metadata.getOrDefault(TYPE, INVALID);
-    
-    if (type.equals(AccessControlConstants.ACL)) {
-      Long number = (Long) input.getMetadata().get("number") ;
-      Double groupLevel = Math.ceil(number.doubleValue() / intervalSize.doubleValue());
 
-      ctx.newDocumentACL(input.getId())
-          .withInbound(
-              String.format(
-                  GROUP_ID_FORMAT,
-                  groupLevel.intValue(),
-                  random.nextInt(groupLevel.intValue()) + 1
-              )
-          ).emit();
-    } else if (type.equals(AccessControlConstants.GROUP)) {
-      ctx.newGroup(input.getId())
-          .withOutbound(
-              (List<String>) metadata.getOrDefault(PARENTS, Collections.emptyList())
-          )
-          .emit();
-    } else if (type.equals(AccessControlConstants.USER)) {
-      ctx.newUser(input.getId())
-          .withOutbound(
-              (List<String>) metadata.getOrDefault(PARENTS, Collections.emptyList())
-          )
-          .emit();
-    } else {
-      logger.error("Invalid type to be processed for input {}", input.getId());
-    }
-    
-    return ctx.newResult();
-  }
 }

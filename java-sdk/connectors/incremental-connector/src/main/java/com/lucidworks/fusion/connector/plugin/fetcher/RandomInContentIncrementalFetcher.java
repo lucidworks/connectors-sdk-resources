@@ -1,10 +1,11 @@
 package com.lucidworks.fusion.connector.plugin.fetcher;
 
 import com.google.common.collect.ImmutableMap;
-import com.lucidworks.fusion.connector.plugin.RandomContentFetcher;
-import com.lucidworks.fusion.connector.plugin.RandomContentGenerator;
+import com.lucidworks.connector.plugins.fetcher.RandomContentFetcher;
+import com.lucidworks.connector.plugins.client.RandomContentGenerator;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.PreFetchResult;
+import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
 import com.lucidworks.fusion.connector.plugin.config.RandomIncrementalConfig;
 import org.slf4j.Logger;
@@ -16,7 +17,7 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-public class RandomInContentIncrementalFetcher extends RandomContentFetcher {
+public class RandomInContentIncrementalFetcher implements ContentFetcher {
 
   private static final Logger logger = LoggerFactory.getLogger(RandomInContentIncrementalFetcher.class);
 
@@ -30,7 +31,7 @@ public class RandomInContentIncrementalFetcher extends RandomContentFetcher {
       RandomIncrementalConfig randomContentConfig,
       RandomContentGenerator generator
   ) {
-    super(randomContentConfig, generator);
+    //super(randomContentConfig, generator);
     this.randomContentConfig = randomContentConfig;
   }
 
@@ -43,7 +44,7 @@ public class RandomInContentIncrementalFetcher extends RandomContentFetcher {
   public FetchResult fetch(FetchContext fetchContext) {
     FetchInput input = fetchContext.getFetchInput();
     logger.info("Received FetchInput -> {}", input);
-    int totalNumDocs = randomContentConfig.properties().totalNumDocs();
+    int totalNumDocs = 10;// randomContentConfig.properties().totalNumDocs();
     if (!input.hasId()) {
       generateRandom(fetchContext, 0, totalNumDocs);
       emitCheckpoint(fetchContext, totalNumDocs);
@@ -59,12 +60,12 @@ public class RandomInContentIncrementalFetcher extends RandomContentFetcher {
           previousTotal + randomContentConfig.properties().totalNumDocsIncremental()
       );
     } else {
-      emitDocument(
-          fetchContext,
-          input,
-          (Long) input.getMetadata().get("number"),
-          getHostname()
-      );
+//      emitDocument(
+//          fetchContext,
+//          input,
+//          (Long) input.getMetadata().get("number"),
+//          getHostname()
+//      );
     }
     return fetchContext.newResult();
   }
@@ -75,7 +76,7 @@ public class RandomInContentIncrementalFetcher extends RandomContentFetcher {
         .withMetadata(ImmutableMap.<String, Object>builder()
             .put(TOTAL_INDEXED, totalNumDocs)
             .put("lastJobRunDateTime", Instant.now().toEpochMilli())
-            .put("hostname", getHostname())
+           // .put("hostname", getHostname())
             .build()
         )
         .emit();

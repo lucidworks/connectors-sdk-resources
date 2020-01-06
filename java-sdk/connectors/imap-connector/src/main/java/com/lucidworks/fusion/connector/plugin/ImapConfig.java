@@ -9,8 +9,7 @@ import com.lucidworks.fusion.schema.SchemaAnnotations.StringSchema;
 import com.lucidworks.fusion.schema.UIHints;
 
 @RootSchema(
-    name = "demo.imap",
-    title = "IMAP",
+    title = "IMAP (v2)",
     description = "An IMAP connector",
     category = "Email"
 )

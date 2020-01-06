@@ -8,7 +8,6 @@ import com.lucidworks.fusion.schema.SchemaAnnotations.Property;
 public interface GenerateConfig extends Model {
 
   /**
-   *
    * @return an instance of {@link Properties}.
    */
   @Property
@@ -22,7 +21,8 @@ public interface GenerateConfig extends Model {
 
     @Property(
         title = "Total to generate first crawl",
-        description = "Total number of total entries to generate in the first crawl. It will be ignored if 'Feed file path' is provided"
+        description = "Total number of total entries to generate in the first crawl. It will be ignored if 'Feed file" +
+            " path' is provided"
     )
     @NumberSchema(
         defaultValue = 1000
@@ -31,7 +31,8 @@ public interface GenerateConfig extends Model {
 
     @Property(
         title = "Total incremental to remove",
-        description = "Total number of entries to remove from the second and subsequent crawls. It will be ignored if 'Feed file path' is provided"
+        description = "Total number of entries to remove from the second and subsequent crawls. It will be ignored if" +
+            " 'Feed file path' is provided"
     )
     @NumberSchema(
         defaultValue = 100
@@ -40,12 +41,12 @@ public interface GenerateConfig extends Model {
 
     @Property(
         title = "Total incremental to add",
-        description = "Total number of entries to add from the second and subsequent crawls. It will be ignored if 'Feed file path' is provided"
+        description = "Total number of entries to add from the second and subsequent crawls. It will be ignored if " +
+            "'Feed file path' is provided"
     )
     @NumberSchema(
         defaultValue = 5
     )
     Integer entriesToAddIncremental();
-
   }
 }

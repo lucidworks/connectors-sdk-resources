@@ -1,7 +1,7 @@
-rootProject.name = 'examples'
+rootProject.name = 'example-connectors'
 
-include 'random-connector'
-include 'imap-connector'
-include 'security-filtering-connector'
 include 'feed-connector'
-include 'random-connector-incremental'
+include 'imap-connector'
+include 'incremental-connector'
+include 'random-connector'
+include 'security-filtering-connector'

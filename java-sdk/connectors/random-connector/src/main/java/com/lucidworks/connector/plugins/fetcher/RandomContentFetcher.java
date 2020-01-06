@@ -1,17 +1,12 @@
-package com.lucidworks.fusion.connector.plugin.fetcher;
+package com.lucidworks.connector.plugins.fetcher;
 
 import com.lucidworks.connector.plugins.client.RandomContentGenerator;
 import com.lucidworks.connector.plugins.config.RandomContentConfig;
 import com.lucidworks.connector.plugins.config.RandomContentProperties;
-import com.lucidworks.connector.plugins.fetcher.HostnameProvider;
-import com.lucidworks.connector.plugins.fetcher.RandomContentFetcher;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.PreFetchResult;
-import com.lucidworks.fusion.connector.plugin.api.fetcher.result.StartResult;
-import com.lucidworks.fusion.connector.plugin.api.fetcher.result.StopResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
-import com.lucidworks.fusion.connector.plugin.config.SecurityFilteringConfig;
 
 import javax.inject.Inject;
 import java.time.Instant;
@@ -23,29 +18,24 @@ import java.util.stream.IntStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.GROUP_ID_FORMAT;
+public class RandomContentFetcher implements ContentFetcher {
 
-public class SecurityFilteringContentFetcher implements ContentFetcher {
+  private static final Logger logger = LoggerFactory.getLogger(RandomContentFetcher.class);
 
-  private static final Logger logger = LoggerFactory.getLogger(SecurityFilteringContentFetcher.class);
+  private static final String ERROR_ID = "no-number-this-should-fail";
 
   private final RandomContentGenerator generator;
   private final RandomContentProperties randomContentProperties;
-
   private final String hostname;
-  private final Long intervalSize;
 
   @Inject
-  public SecurityFilteringContentFetcher(
-      SecurityFilteringConfig config,
+  public RandomContentFetcher(
+      RandomContentConfig randomContentConfig,
       RandomContentGenerator generator,
       HostnameProvider hostnameProvider
   ) {
+    this.randomContentProperties = randomContentConfig.properties().getRandomContentProperties();
     this.generator = generator;
-    this.randomContentProperties = config.properties().getRandomContentProperties();
-    Long totalNumDocs = Long.valueOf(randomContentProperties.totalNumDocs());
-    Long numberOfNestedGroups = Long.valueOf(config.properties().numberOfNestedGroups());
-    this.intervalSize = totalNumDocs / numberOfNestedGroups;
     this.hostname = hostnameProvider.get();
   }
 
@@ -61,6 +51,11 @@ public class SecurityFilteringContentFetcher implements ContentFetcher {
               .withMetadata(data)
               .emit();
         });
+    // Simulating an error item here... because we're emitting an item without a "number",
+    // the fetch() call will attempt to convert the number into a long and throw an exception.
+    // The item should be recorded as an error in the ConnectorJobStatus.
+    preFetchContext.newCandidate(ERROR_ID)
+        .emit();
     return preFetchContext.newResult();
   }
 
@@ -69,25 +64,27 @@ public class SecurityFilteringContentFetcher implements ContentFetcher {
     FetchInput input = fetchContext.getFetchInput();
     logger.info("Received FetchInput -> {}", input);
     long num = (Long) input.getMetadata().get("number");
+
     logger.info("Emitting Document -> number {}", num);
-    emitDocument(fetchContext, num);
+
+    emitDocument(fetchContext, input, num);
+
     return fetchContext.newResult();
   }
 
-  private void emitDocument(FetchContext fetchContext, long num) {
+  private void emitDocument(FetchContext fetchContext, FetchInput input, long num) {
+    try {
       Map<String, Object> fields = getFields(num);
-
-    Double groupLevel = Math.ceil((num + 1)/ intervalSize.doubleValue());
 
       fetchContext.newDocument()
           .withFields(fields)
-          .withACLs(String.format(
-          GROUP_ID_FORMAT,
-          groupLevel.intValue(),
-          1
-          //rnd.nextInt(groupLevel.intValue()) + 1
-        ))
           .emit();
+    } catch (NullPointerException npe) {
+      if (ERROR_ID.equals(input.getId())) {
+        logger.info("The following error is expected, as means to demonstrate how errors are emitted");
+      }
+      throw npe;
+    }
   }
 
   private Map<String, Object> getFields(long num) {

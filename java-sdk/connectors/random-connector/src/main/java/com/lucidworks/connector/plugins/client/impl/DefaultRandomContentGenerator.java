@@ -1,16 +1,13 @@
-package com.lucidworks.fusion.connector.plugin.impl;
+package com.lucidworks.connector.plugins.client.impl;
 
-import com.lucidworks.fusion.connector.plugin.RandomContentGenerator;
+import com.lucidworks.connector.plugins.client.RandomContentGenerator;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class DefaultRandomContentGenerator implements RandomContentGenerator {
-
-  private static DefaultRandomContentGenerator sInstance;
-
-  private Random mRandom;
 
   private static final String[] THINGS = {"bottle", "bowl", "brick", "building", "bunny", "cake", "car", "cat", "cup",
       "desk", "dog", "duck", "elephant", "engineer", "fork", "glass", "griffon", "hat", "key", "knife", "lawyer",
@@ -36,52 +33,55 @@ public class DefaultRandomContentGenerator implements RandomContentGenerator {
       "expected to buy", "expected to sell", "reported to have met with", "works together with",
       "plans cease fire against", "starts war with", "signs truce with", "now manages"};
 
-  public static synchronized DefaultRandomContentGenerator getInstance() {
-    if (sInstance == null) {
-      sInstance = new DefaultRandomContentGenerator();
-    }
-    return sInstance;
-  }
+  private final Random mRandom;
 
+  @Inject
   public DefaultRandomContentGenerator() {
-    mRandom = new Random();
+    this.mRandom = new Random();
   }
 
-  /**
-   * Produces something that reads like a headline.
-   */
+  private static String joinWords(List<String> words) {
+    if (words.isEmpty()) {
+      return "";
+    }
+    StringBuilder sb = new StringBuilder();
+    sb.append(words.get(0));
+    for (int i = 1; i < words.size(); i++) {
+      if (!words.get(i).startsWith(",")) {
+        sb.append(" ");
+      }
+      sb.append(words.get(i));
+    }
+    return sb.toString();
+  }
+
   @Override
   public String makeHeadline() {
-    return makeSentence(true);
-  }
-
-  /**
-   * Produces a sentence.
-   *
-   * @param isHeadline whether the sentence should look like a headline or not.
-   *
-   * @return the generated sentence.
-   */
-  @Override
-  public String makeSentence(boolean isHeadline) {
-    List<String> words = new ArrayList<String>();
-    generateSentence(words, isHeadline);
-    words.set(0, String.valueOf(Character.toUpperCase(words.get(0).charAt(0))) + words.get(0).substring(1));
+    List<String> words = new ArrayList<>();
+    generateSentence(words, true);
+    words.set(0, Character.toUpperCase(words.get(0).charAt(0)) + words.get(0).substring(1));
     return joinWords(words);
   }
 
-  /**
-   * Produces news article text.
-   *
-   * @param numSentences how many sentences the text is to contain.
-   *
-   * @return the generated text.
-   */
+  @Override
+  public String makeSentence() {
+    List<String> words = new ArrayList<>();
+    generateSentence(words, false);
+    words.set(0, Character.toUpperCase(words.get(0).charAt(0)) + words.get(0).substring(1));
+    return joinWords(words);
+  }
+
+  @Override
+  public String makeRandomText(int min, int max) {
+    return makeText(getRandomNumberInRange(min, max));
+  }
+
   @Override
   public String makeText(int numSentences) {
     StringBuilder sb = new StringBuilder();
     while (numSentences-- > 0) {
-      sb.append(makeSentence(false) + ".");
+      sb.append(makeSentence())
+          .append(".");
       if (numSentences > 0) {
         sb.append(" ");
       }
@@ -97,13 +97,13 @@ public class DefaultRandomContentGenerator implements RandomContentGenerator {
    */
   private void generateSentence(List<String> words, boolean isHeadline) {
     if (!isHeadline && mRandom.nextInt(4) == 0) {
-      generateTimeClause(words, isHeadline);
+      generateTimeClause(words);
     }
     generateAgent(words, isHeadline);
     generatePredicate(words, isHeadline);
   }
 
-  private void generateTimeClause(List<String> words, boolean isHeadline) {
+  private void generateTimeClause(List<String> words) {
     if (mRandom.nextInt(2) == 0) {
       words.add(pickOneOf("today", "yesterday", "this afternoon", "this morning", "last evening"));
     } else {
@@ -149,19 +149,10 @@ public class DefaultRandomContentGenerator implements RandomContentGenerator {
     return options[mRandom.nextInt(options.length)];
   }
 
-  private static String joinWords(List<String> words) {
-    int i;
-    if (words.size() == 0) {
-      return "";
+  private int getRandomNumberInRange(int min, int max) {
+    if (min >= max) {
+      throw new IllegalArgumentException("max must be greater than min");
     }
-    StringBuilder sb = new StringBuilder();
-    sb.append(words.get(0));
-    for (i = 1; i < words.size(); i++) {
-      if (!words.get(i).startsWith(",")) {
-        sb.append(" ");
-      }
-      sb.append(words.get(i));
-    }
-    return sb.toString();
+    return mRandom.nextInt((max - min) + 1) + min;
   }
 }
