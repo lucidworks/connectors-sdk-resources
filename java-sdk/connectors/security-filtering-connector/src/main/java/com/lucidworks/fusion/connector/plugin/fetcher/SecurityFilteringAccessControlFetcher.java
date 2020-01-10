@@ -72,14 +72,8 @@ public class SecurityFilteringAccessControlFetcher implements AccessControlFetch
     Map<String, Object> metadata = input.getMetadata();
     String type = (String) metadata.getOrDefault(TYPE, INVALID);
 
-    Map<String, Object> meta = new HashMap<>();
-    meta.put("m_one", "1");
-    meta.put("m_two", "2");
-    meta.put("m_three", "3");
-
     if (type.equals(AccessControlConstants.GROUP)) {
       ctx.newGroup(input.getId())
-          .withMetadata(meta)
           .addField("field_1", "value_1")
           .addField("field_2", "value_2")
           .addField("field_3", "value_3")

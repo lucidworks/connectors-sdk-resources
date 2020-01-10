@@ -5,6 +5,21 @@ and dependencies.
 
 See the following instructions on how to build, deploy, and run the plugins
 
+## Sub-projects
+
+This repository contains connector implementations(see the list [here](settings.gradle) ) and a [shared library](shared-lib).
+
+The project structure of each connector is defined [here](../README.asciidoc#project-layout).
+
+The `shared-lib` sub-project contains common classes and utility methods used on different connector implementations.
+To include the shared library in a connector project, add it as a dependency in the build file:
+
+```
+dependencies {
+  compile project(":shared-lib")
+}
+```
+ For example, the random-connector [build](random-connector/build.gradle) project is including the `shared-lib` project.
 ## Building
 
 **Important**

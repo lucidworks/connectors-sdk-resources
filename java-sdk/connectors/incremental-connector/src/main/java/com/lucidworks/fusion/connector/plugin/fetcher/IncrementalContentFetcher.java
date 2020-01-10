@@ -80,7 +80,7 @@ public class IncrementalContentFetcher implements ContentFetcher {
         .withMetadata(ImmutableMap.<String, Object>builder()
             .put(TOTAL_INDEXED, totalNumDocs)
             .put("lastJobRunDateTime", Instant.now().toEpochMilli())
-           // .put("hostname", getHostname())
+            .put("hostname", hostname)
             .build()
         )
         .emit();
