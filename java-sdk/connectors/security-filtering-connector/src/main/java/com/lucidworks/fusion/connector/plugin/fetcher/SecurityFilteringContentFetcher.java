@@ -1,17 +1,15 @@
 package com.lucidworks.fusion.connector.plugin.fetcher;
 
-import com.lucidworks.connector.plugins.client.RandomContentGenerator;
-import com.lucidworks.connector.plugins.config.RandomContentConfig;
-import com.lucidworks.connector.plugins.config.RandomContentProperties;
-import com.lucidworks.connector.plugins.fetcher.HostnameProvider;
-import com.lucidworks.connector.plugins.fetcher.RandomContentFetcher;
+import com.lucidowkrs.connector.shared.generator.RandomContentGenerator;
+import com.lucidowkrs.connector.shared.generator.config.RandomContentProperties;
+import com.lucidowkrs.connector.shared.hostname.HostnameProvider;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.PreFetchResult;
-import com.lucidworks.fusion.connector.plugin.api.fetcher.result.StartResult;
-import com.lucidworks.fusion.connector.plugin.api.fetcher.result.StopResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
 import com.lucidworks.fusion.connector.plugin.config.SecurityFilteringConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.time.Instant;
@@ -19,9 +17,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.GROUP_ID_FORMAT;
 
@@ -75,19 +70,18 @@ public class SecurityFilteringContentFetcher implements ContentFetcher {
   }
 
   private void emitDocument(FetchContext fetchContext, long num) {
-      Map<String, Object> fields = getFields(num);
+    Map<String, Object> fields = getFields(num);
 
-    Double groupLevel = Math.ceil((num + 1)/ intervalSize.doubleValue());
+    double groupLevel = Math.ceil((num + 1) / intervalSize.doubleValue());
 
-      fetchContext.newDocument()
-          .withFields(fields)
-          .withACLs(String.format(
-          GROUP_ID_FORMAT,
-          groupLevel.intValue(),
-          1
-          //rnd.nextInt(groupLevel.intValue()) + 1
+    fetchContext.newDocument()
+        .withFields(fields)
+        .withACLs(String.format(
+            GROUP_ID_FORMAT,
+            (int) groupLevel,
+            1
         ))
-          .emit();
+        .emit();
   }
 
   private Map<String, Object> getFields(long num) {

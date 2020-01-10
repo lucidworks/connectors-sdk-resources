@@ -8,6 +8,8 @@ import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInpu
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.security.AccessControlFetcher;
 import com.lucidworks.fusion.connector.plugin.api.security.AccessControlConstants;
 import com.lucidworks.fusion.connector.plugin.config.SecurityFilteringConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.Collections;
@@ -15,9 +17,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.GROUP_ID_FORMAT;
 import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.INVALID;
@@ -74,19 +73,16 @@ public class SecurityFilteringAccessControlFetcher implements AccessControlFetch
     String type = (String) metadata.getOrDefault(TYPE, INVALID);
 
     Map<String, Object> meta = new HashMap<>();
-    meta.put("m_uno", "1");
-    meta.put("m_dos", "2");
-    meta.put("m_tres", "3");
-
-    Map<String, Object> fieds = new HashMap<>();
-    meta.put("f_uno", "1");
-    meta.put("f_dos", "2");
-    meta.put("f_tres", "3");
+    meta.put("m_one", "1");
+    meta.put("m_two", "2");
+    meta.put("m_three", "3");
 
     if (type.equals(AccessControlConstants.GROUP)) {
       ctx.newGroup(input.getId())
           .withMetadata(meta)
-          .withFields(fieds)
+          .addField("field_1", "value_1")
+          .addField("field_2", "value_2")
+          .addField("field_3", "value_3")
           .withOutbound(
               (List<String>) metadata.getOrDefault(PARENTS, Collections.emptyList())
           )

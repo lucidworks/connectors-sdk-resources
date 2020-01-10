@@ -1,6 +1,6 @@
 package com.lucidworks.fusion.connector.plugin.config;
 
-import com.lucidworks.connector.plugins.config.RandomContentProperties;
+import com.lucidowkrs.connector.shared.generator.config.RandomContentProperties;
 import com.lucidworks.fusion.connector.plugin.api.config.ConnectorConfig;
 import com.lucidworks.fusion.connector.plugin.api.config.ConnectorPluginProperties;
 import com.lucidworks.fusion.connector.plugin.api.config.SecurityTrimmingConfig;
@@ -26,14 +26,16 @@ public interface SecurityFilteringConfig extends ConnectorConfig<Properties> {
   interface Properties extends ConnectorPluginProperties, SecurityTrimmingConfig {
     @Property(
         title = "Nested groups",
-        description = "Number of nested groups"
+        description = "Number of nested groups",
+        order = 1
     )
     @NumberSchema(defaultValue = 10, minimum = 1)
     Integer numberOfNestedGroups();
 
     @Property(
         title = "Random Content properties",
-        description = "Random Content properties"
+        description = "Random Content properties",
+        order = 2
     )
     RandomContentProperties getRandomContentProperties();
   }

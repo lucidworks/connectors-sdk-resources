@@ -1,35 +1,32 @@
 package com.lucidworks.fusion.connector.plugin;
 
 import com.google.inject.AbstractModule;
-import com.lucidworks.connector.plugins.client.RandomContentGenerator;
+import com.google.inject.Module;
+import com.lucidowkrs.connector.shared.generator.RandomContentGenerator;
+import com.lucidowkrs.connector.shared.generator.impl.DefaultRandomContentGenerator;
+import com.lucidowkrs.connector.shared.hostname.HostnameProvider;
 import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPlugin;
-import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPluginModule;
+import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPluginProvider;
 import com.lucidworks.fusion.connector.plugin.config.RandomIncrementalConfig;
-import com.lucidworks.fusion.connector.plugin.fetcher.RandomInContentIncrementalFetcher;
-import com.lucidworks.connector.plugins.client.impl.DefaultRandomContentGenerator;
-import org.pf4j.PluginWrapper;
+import com.lucidworks.fusion.connector.plugin.fetcher.IncrementalContentFetcher;
 
-import javax.inject.Inject;
-
-public class RandomIncrementalPlugin extends ConnectorPluginModule {
-
-  @Inject
-  public RandomIncrementalPlugin(PluginWrapper wrapper) {
-    super(wrapper);
-  }
+public class RandomIncrementalPlugin implements ConnectorPluginProvider {
 
   @Override
-  public ConnectorPlugin getConnectorPlugin() {
-    AbstractModule module = new AbstractModule() {
+  public ConnectorPlugin get() {
+    Module fetchModule = new AbstractModule() {
       @Override
       protected void configure() {
+        bind(HostnameProvider.class).asEagerSingleton();
         bind(RandomContentGenerator.class)
             .to(DefaultRandomContentGenerator.class)
             .asEagerSingleton();
       }
     };
-    return builder(RandomIncrementalConfig.class)
-        .withFetcher("content", RandomInContentIncrementalFetcher.class, module)
+
+    return ConnectorPlugin.builder(RandomIncrementalConfig.class)
+        .withFetcher("content", IncrementalContentFetcher.class, fetchModule)
         .build();
   }
+
 }

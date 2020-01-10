@@ -1,3 +1,5 @@
+ext.connectorprojects = subprojects - project("shared")
+
 subprojects {
 
   apply plugin: 'java'
@@ -26,6 +28,9 @@ subprojects {
     provided "org.slf4j:slf4j-api:${slf4jVersion}"
     testCompile group: 'junit', name: 'junit', version: '4.12'
   }
+}
+
+configure(connectorprojects) { p ->
 
   jar {
     baseName = "${project.name}"
@@ -35,11 +40,11 @@ subprojects {
     archiveName = "${project.name}" + ".zip"
     manifest {
       attributes 'Plugin-Class': "${pluginClass}",
-          'Plugin-Type': "connector",
-          'Plugin-Id': "${pluginId}",
-          'Plugin-Version': "${version}",
-          'Plugin-Provider': "${pluginProvider}",
-          'Plugin-Connectors-SDK-Version': "${connectorsSDKVersion}"
+        'Plugin-Type': "connector",
+        'Plugin-Id': "${pluginId}",
+        'Plugin-Version': "${version}",
+        'Plugin-Provider': "${pluginProvider}",
+        'Plugin-Connectors-SDK-Version': "${connectorsSDKVersion}"
     }
     into('lib') {
       from configurations.compile - configurations.provided
@@ -61,15 +66,15 @@ subprojects {
     }
     service += "plugins"
     commandLine "curl",
-        "-u",
-        "${userPass}",
-        "-X",
-        "PUT",
-        "-H",
-        "content-type:application/zip",
-        "${service}",
-        "--data-binary",
-        "@${pluginsDir}/${plugin.outputs.files.singleFile.getName()}"
+      "-u",
+      "${userPass}",
+      "-X",
+      "PUT",
+      "-H",
+      "content-type:application/zip",
+      "${service}",
+      "--data-binary",
+      "@${pluginsDir}/${plugin.outputs.files.singleFile.getName()}"
     doLast {
       logger.info("Curl result: ${standardOutput.toString().trim()}")
     }
@@ -97,6 +102,7 @@ subprojects {
   }
 }
 
+
 task assemblePlugins(type: Copy) {
-  dependsOn subprojects.assemblePlugin
+  dependsOn connectorprojects.assemblePlugin
 }

@@ -1,12 +1,15 @@
 package com.lucidworks.connector.plugins.fetcher;
 
-import com.lucidworks.connector.plugins.client.RandomContentGenerator;
+import com.lucidowkrs.connector.shared.generator.RandomContentGenerator;
+import com.lucidowkrs.connector.shared.generator.config.RandomContentProperties;
+import com.lucidowkrs.connector.shared.hostname.HostnameProvider;
 import com.lucidworks.connector.plugins.config.RandomContentConfig;
-import com.lucidworks.connector.plugins.config.RandomContentProperties;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.PreFetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.time.Instant;
@@ -14,9 +17,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class RandomContentFetcher implements ContentFetcher {
 
@@ -63,17 +63,17 @@ public class RandomContentFetcher implements ContentFetcher {
   public FetchResult fetch(FetchContext fetchContext) {
     FetchInput input = fetchContext.getFetchInput();
     logger.info("Received FetchInput -> {}", input);
-    long num = (Long) input.getMetadata().get("number");
 
-    logger.info("Emitting Document -> number {}", num);
-
-    emitDocument(fetchContext, input, num);
+    emitDocument(fetchContext, input);
 
     return fetchContext.newResult();
   }
 
-  private void emitDocument(FetchContext fetchContext, FetchInput input, long num) {
+  private void emitDocument(FetchContext fetchContext, FetchInput input) {
     try {
+      long num = (Long) input.getMetadata().get("number");
+
+      logger.info("Emitting Document -> number {}", num);
       Map<String, Object> fields = getFields(num);
 
       fetchContext.newDocument()
@@ -81,7 +81,9 @@ public class RandomContentFetcher implements ContentFetcher {
           .emit();
     } catch (NullPointerException npe) {
       if (ERROR_ID.equals(input.getId())) {
-        logger.info("The following error is expected, as means to demonstrate how errors are emitted");
+        logger.error("The following error is expected, as means to demonstrate how errors are emitted");
+        fetchContext.newError(input.getId()).withError("Expected exception").emit();
+        return;
       }
       throw npe;
     }

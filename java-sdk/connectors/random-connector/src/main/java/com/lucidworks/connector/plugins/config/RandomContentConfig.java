@@ -1,5 +1,6 @@
 package com.lucidworks.connector.plugins.config;
 
+import com.lucidowkrs.connector.shared.generator.config.RandomContentProperties;
 import com.lucidworks.connector.plugins.config.RandomContentConfig.Properties;
 import com.lucidworks.fusion.connector.plugin.api.config.ConnectorConfig;
 import com.lucidworks.fusion.connector.plugin.api.config.ConnectorPluginProperties;

@@ -1,28 +1,20 @@
 package com.lucidworks.connector.plugins;
 
 import com.google.inject.AbstractModule;
-import com.lucidworks.connector.plugins.client.RandomContentGenerator;
-import com.lucidworks.connector.plugins.client.impl.DefaultRandomContentGenerator;
+import com.google.inject.Module;
+import com.lucidowkrs.connector.shared.generator.RandomContentGenerator;
+import com.lucidowkrs.connector.shared.generator.impl.DefaultRandomContentGenerator;
+import com.lucidowkrs.connector.shared.hostname.HostnameProvider;
 import com.lucidworks.connector.plugins.config.RandomContentConfig;
-import com.lucidworks.connector.plugins.fetcher.HostnameProvider;
 import com.lucidworks.connector.plugins.fetcher.RandomContentFetcher;
 import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPlugin;
-import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPluginModule;
+import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPluginProvider;
 
-import javax.inject.Inject;
-
-import org.pf4j.PluginWrapper;
-
-public class RandomContentPlugin extends ConnectorPluginModule {
-
-  @Inject
-  public RandomContentPlugin(PluginWrapper wrapper) {
-    super(wrapper);
-  }
+public class RandomContentPlugin implements ConnectorPluginProvider {
 
   @Override
-  public ConnectorPlugin getConnectorPlugin() {
-    AbstractModule nonGenModule = new AbstractModule() {
+  public ConnectorPlugin get() {
+    Module fetchModule = new AbstractModule() {
       @Override
       protected void configure() {
         bind(HostnameProvider.class).asEagerSingleton();
@@ -31,8 +23,9 @@ public class RandomContentPlugin extends ConnectorPluginModule {
             .asEagerSingleton();
       }
     };
-    return builder(RandomContentConfig.class)
-        .withFetcher("content", RandomContentFetcher.class, nonGenModule)
+
+    return ConnectorPlugin.builder(RandomContentConfig.class)
+        .withFetcher("content", RandomContentFetcher.class, fetchModule)
         .build();
   }
 }

@@ -1,4 +1,4 @@
-package com.lucidworks.connector.plugins.fetcher;
+package com.lucidowkrs.connector.shared.hostname;
 
 import javax.inject.Provider;
 import java.net.InetAddress;

@@ -1,33 +1,25 @@
 package com.lucidworks.fusion.connector.plugin;
 
 import com.google.inject.AbstractModule;
-import com.lucidworks.connector.plugins.client.RandomContentGenerator;
+import com.google.inject.Module;
+import com.lucidowkrs.connector.shared.generator.RandomContentGenerator;
+import com.lucidowkrs.connector.shared.generator.impl.DefaultRandomContentGenerator;
 import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPlugin;
-import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPluginModule;
+import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPluginProvider;
 import com.lucidworks.fusion.connector.plugin.config.SecurityFilteringConfig;
 import com.lucidworks.fusion.connector.plugin.fetcher.SecurityFilteringAccessControlFetcher;
 import com.lucidworks.fusion.connector.plugin.fetcher.SecurityFilteringContentFetcher;
-import com.lucidworks.connector.plugins.client.impl.DefaultRandomContentGenerator;
 import com.lucidworks.fusion.connector.plugin.security.SecurityFilteringSecurityFilterComponent;
 import com.lucidworks.fusion.connector.plugin.validation.SecurityFilteringValidationComponent;
-
-import javax.inject.Inject;
-
-import org.pf4j.PluginWrapper;
 
 import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.ACCESS_CONTROL;
 import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.CONTENT;
 
-public class SecurityFilteringPlugin extends ConnectorPluginModule {
-
-  @Inject
-  public SecurityFilteringPlugin(PluginWrapper wrapper) {
-    super(wrapper);
-  }
+public class SecurityFilteringPlugin implements ConnectorPluginProvider {
 
   @Override
-  public ConnectorPlugin getConnectorPlugin() {
-    AbstractModule nonGenModule = new AbstractModule() {
+  public ConnectorPlugin get() {
+    Module fetchModule = new AbstractModule() {
       @Override
       protected void configure() {
         bind(RandomContentGenerator.class)
@@ -35,11 +27,12 @@ public class SecurityFilteringPlugin extends ConnectorPluginModule {
             .asEagerSingleton();
       }
     };
-    return builder(SecurityFilteringConfig.class)
-        //.withFetcher(CONTENT, SecurityFilteringContentFetcher.class, nonGenModule)
-        .withFetcher(ACCESS_CONTROL, SecurityFilteringAccessControlFetcher.class, nonGenModule)
-        .withSecurityFilter(SecurityFilteringSecurityFilterComponent.class, nonGenModule)
-        .withValidator(SecurityFilteringValidationComponent.class, nonGenModule)
+
+    return ConnectorPlugin.builder(SecurityFilteringConfig.class)
+        .withFetcher(CONTENT, SecurityFilteringContentFetcher.class, fetchModule)
+        .withFetcher(ACCESS_CONTROL, SecurityFilteringAccessControlFetcher.class, fetchModule)
+        .withSecurityFilter(SecurityFilteringSecurityFilterComponent.class, fetchModule)
+        .withValidator(SecurityFilteringValidationComponent.class, fetchModule)
         .build();
   }
 }
