@@ -1,6 +1,8 @@
 # IMAP Connector
 
-This connector downloads email messages from an IMAP server.
+## Connector Description
+
+Imap Connector fetches email messages from an IMAP server.
 
 ## Quick start
 
@@ -16,3 +18,14 @@ cd connectors-sdk-resources/java-sdk/connectors/
 This artifact is now ready to be uploaded directly to Fusion as a Connector plugin.
 
 3. See the following [instructions](../README.md) on how to build, deploy, and run the plugin
+
+## Connector properties
+
+### Main properties
+|Property Name| Property description|
+|---|---|
+| SSL | enable SSL connection|
+| Folder | The folder to retrieve messages from |
+| Host |  The hostname of the IMAP server |
+| Username | Username to login |
+| Password | The user's password |

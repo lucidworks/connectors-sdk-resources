@@ -25,15 +25,13 @@ dependencies {
 **Important**
 
 
-As a first step, change the _fusionHome_ property in the [`gradle.properties` file](gradle.properties)
+As a first step, change the _fusionHome_ property in the [`gradle.properties` ](gradle.properties) file
 
 The _fusionHome_ property is the full path of your local Fusion installation. The path should include Fusion's version.
 
-For example `/opt/fusion/4.2.4`
-
 The _fusionHome_ is needed to import the code to an IDE.
 
-### Building the Plugin Zip
+### Building the Plugin Zip file
 
 From `java-sdk/connectors`, execute
 ```bash
@@ -43,7 +41,6 @@ From `java-sdk/connectors`, execute
 This produces the zip files, e.g. `random-connector.zip` located in the `build/libs` directory.
 
 At this point, the generated zip could be uploaded directly to Fusion, but follow the steps below to run as a remote plugin.
-
 
 ## Start
 
@@ -69,3 +66,48 @@ After running this, logging should show that it either was able to connect to Fu
 
 ## Fusion
 After the client process successfully connects to Fusion, you should see connector available in Fusion as a new connector type.
+
+
+## Upgrade Connector implementation to Fusion 5
+
+For `connector-plugin-sdk:1.4.0` version, the way to implement the plugin definition class has changed.
+Below is an example on how to implement the plugin definition class:
+
+
+```
+import com.google.inject.AbstractModule;
+import com.google.inject.Module;
+
+import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPlugin;
+import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPluginProvider;
+import com.lucidworks.fusion.connector.plugin.config.SecurityFilteringConfig;
+
+public class MyPlugin implements ConnectorPluginProvider { // <1>
+
+  @Override
+  public ConnectorPlugin get() { // <2>
+    Module fetchModule = new AbstractModule() {
+      @Override
+      protected void configure() {
+        bind(MyClient.class).to(MyHttpClientImpl.class).asEagerSingleton();  // <3>
+      }
+    };
+
+    return ConnectorPlugin.builder(MyPluginConfig.class) // <4>
+        .withFetcher("content", MyContentFetcher.class, fetchModule) // <5>
+        .withFetcher("access_control", MyAccessControlFetcher.class, fetchModule) // <6>
+        .withSecurityFilter(MySecurityFilterComponennt.class, fetchModule)
+        .withValidator(MyValidator.class, fetchModule)
+        .build(); // <7>
+  }
+}
+```
+1. The plugin definition class should implement `com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPluginProvider` interface.
+2. Implement the `get()` method(it should return a `com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPlugin` object).
+3. Define the bindings in this method implementation, as usual.
+4. Use the `com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPlugin.build()` static method to get an instance of the `ConnectorPlugin.Builder` class. Pass the connector configuration class as parameter(the class where the connector properties are defined).
+5. Add the fetcher(s) classes to the build by using `ConnectorPlugin.Builder.withFetcher()` method
+6. Set other components to the plugin definition. See the `com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPlugin.Builder` class for more details.
+7. Call the `build()` method on the build instance.
+
+See more examples of the plugin definition classes in the [example connectors](https://github.com/lucidworks/connectors-sdk-resources/tree/master/java-sdk/connectors) project.
