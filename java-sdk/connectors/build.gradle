@@ -66,6 +66,7 @@ configure(connectorprojects) { p ->
     }
     service += "plugins"
     commandLine "curl",
+      "-m $maxTimeout",
       "-u",
       "${userPass}",
       "-X",
