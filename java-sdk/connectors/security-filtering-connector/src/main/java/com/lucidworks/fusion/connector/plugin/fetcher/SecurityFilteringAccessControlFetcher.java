@@ -6,8 +6,10 @@ import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.PreFetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.security.AccessControlFetcher;
+import com.lucidworks.fusion.connector.plugin.api.helper.ConnectorConfigHelper;
 import com.lucidworks.fusion.connector.plugin.api.security.AccessControlConstants;
 import com.lucidworks.fusion.connector.plugin.config.SecurityFilteringConfig;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,9 +39,10 @@ public class SecurityFilteringAccessControlFetcher implements AccessControlFetch
 
   @Override
   public PreFetchResult preFetch(PreFetchContext ctx) {
-    if (!config.securityTrimmingIsEnabled()) {
+    if (!ConnectorConfigHelper.securityTrimmingIsEnabled(config)) {
       return ctx.newResult();
     }
+
 
     List<String> parentGroups = Lists.newArrayList();
     IntStream.rangeClosed(1, config.properties().numberOfNestedGroups())
