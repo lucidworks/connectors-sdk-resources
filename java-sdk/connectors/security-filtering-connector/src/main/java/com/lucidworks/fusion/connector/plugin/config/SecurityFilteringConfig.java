@@ -1,6 +1,5 @@
 package com.lucidworks.fusion.connector.plugin.config;
 
-import com.lucidowkrs.connector.shared.generator.config.RandomContentProperties;
 import com.lucidworks.fusion.connector.plugin.api.config.ConnectorConfig;
 import com.lucidworks.fusion.connector.plugin.api.config.ConnectorPluginProperties;
 import com.lucidworks.fusion.connector.plugin.api.config.SecurityTrimmingConfig;
@@ -11,7 +10,9 @@ import com.lucidworks.fusion.schema.SchemaAnnotations.RootSchema;
 
 @RootSchema(
     title = "Security Filtering Generator (v2)",
-    description = "A connector that generates random documents, document ACLs and access controls.",
+    description =
+        "A connector that generates different types of documents(Type A, B, C and D), permissions for those documents "
+            + "and user/groups.",
     category = "Generator"
 )
 public interface SecurityFilteringConfig extends ConnectorConfig<Properties> {
@@ -24,19 +25,37 @@ public interface SecurityFilteringConfig extends ConnectorConfig<Properties> {
   Properties properties();
 
   interface Properties extends ConnectorPluginProperties, SecurityTrimmingConfig {
-    @Property(
-        title = "Nested groups",
-        description = "Number of nested groups",
-        order = 1
-    )
-    @NumberSchema(defaultValue = 10, minimum = 1)
-    Integer numberOfNestedGroups();
 
     @Property(
-        title = "Random Content properties",
-        description = "Random Content properties",
+        title = "Number of Type A documents",
+        description = "The number of the Type A documents to be generated",
+        order = 1
+    )
+    @NumberSchema(defaultValue = 5, minimum = 1)
+    Integer typeADocuments();
+
+    @Property(
+        title = "Number of Type B documents",
+        description = "The number of the Type B documents to be generated",
         order = 2
     )
-    RandomContentProperties getRandomContentProperties();
+    @NumberSchema(defaultValue = 5, minimum = 1)
+    Integer typeBDocuments();
+
+    @Property(
+        title = "Number of Type C documents",
+        description = "The number of the Type C documents to be generated",
+        order = 3
+    )
+    @NumberSchema(defaultValue = 5, minimum = 1)
+    Integer typeCDocuments();
+
+    @Property(
+        title = "Number of Type D documents",
+        description = "The number of the Type D documents to be generated",
+        order = 4
+    )
+    @NumberSchema(defaultValue = 5, minimum = 1)
+    Integer typeDDocuments();
   }
 }

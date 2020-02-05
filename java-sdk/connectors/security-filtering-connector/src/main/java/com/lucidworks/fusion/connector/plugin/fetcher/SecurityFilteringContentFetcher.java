@@ -1,103 +1,87 @@
 package com.lucidworks.fusion.connector.plugin.fetcher;
 
-import com.lucidowkrs.connector.shared.generator.RandomContentGenerator;
-import com.lucidowkrs.connector.shared.generator.config.RandomContentProperties;
-import com.lucidowkrs.connector.shared.hostname.HostnameProvider;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.PreFetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
 import com.lucidworks.fusion.connector.plugin.config.SecurityFilteringConfig;
+import com.lucidworks.fusion.connector.plugin.generator.DocumentGenerator;
+import com.lucidworks.fusion.connector.plugin.model.Permission;
+import com.lucidworks.fusion.connector.plugin.model.SecurityDocument;
+import com.lucidworks.fusion.connector.plugin.util.DocumentType;
+import com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.time.Instant;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.GROUP_ID_FORMAT;
+import static com.lucidworks.fusion.connector.plugin.util.SecurityFilteringConstants.ACCESS_CONTROL;
 
 public class SecurityFilteringContentFetcher implements ContentFetcher {
 
   private static final Logger logger = LoggerFactory.getLogger(SecurityFilteringContentFetcher.class);
 
-  private final RandomContentGenerator generator;
-  private final RandomContentProperties randomContentProperties;
-
-  private final String hostname;
-  private final Long intervalSize;
+  private final DocumentGenerator documentGenerator;
+  private final SecurityFilteringConfig config;
 
   @Inject
-  public SecurityFilteringContentFetcher(
-      SecurityFilteringConfig config,
-      RandomContentGenerator generator,
-      HostnameProvider hostnameProvider
-  ) {
-    this.generator = generator;
-    this.randomContentProperties = config.properties().getRandomContentProperties();
-    Long totalNumDocs = Long.valueOf(randomContentProperties.totalNumDocs());
-    Long numberOfNestedGroups = Long.valueOf(config.properties().numberOfNestedGroups());
-    this.intervalSize = totalNumDocs / numberOfNestedGroups;
-    this.hostname = hostnameProvider.get();
+  public SecurityFilteringContentFetcher(SecurityFilteringConfig config, DocumentGenerator documentGenerator) {
+    this.config = config;
+    this.documentGenerator = documentGenerator;
   }
 
   @Override
   public PreFetchResult preFetch(PreFetchContext preFetchContext) {
-    int totalNumberOfDocs = randomContentProperties.totalNumDocs();
-    IntStream.range(0, totalNumberOfDocs)
-        .asLongStream()
-        .forEach(i -> {
-          logger.info("Emitting candidate -> number {}", i);
-          Map<String, Object> data = Collections.singletonMap("number", i);
-          preFetchContext.newCandidate(String.valueOf(i))
-              .withMetadata(data)
-              .emit();
-        });
+    AtomicInteger index = new AtomicInteger(1);
+
+    IntStream.rangeClosed(1, config.properties().typeADocuments())
+        .forEach(indexA -> emitCandidate(preFetchContext, DocumentType.DOCUMENT_TYPE_A, index.getAndIncrement()));
+
+    IntStream.rangeClosed(1, config.properties().typeBDocuments())
+        .forEach(indexB -> emitCandidate(preFetchContext, DocumentType.DOCUMENT_TYPE_B, index.getAndIncrement()));
+
+    IntStream.rangeClosed(1, config.properties().typeCDocuments())
+        .forEach(indexC -> emitCandidate(preFetchContext, DocumentType.DOCUMENT_TYPE_C, index.getAndIncrement()));
+
+    IntStream.rangeClosed(1, config.properties().typeDDocuments())
+        .forEach(indexD -> emitCandidate(preFetchContext, DocumentType.DOCUMENT_TYPE_D, index.getAndIncrement()));
+    logger.info("Generated [{}] candidates", index.get());
     return preFetchContext.newResult();
   }
 
   @Override
   public FetchResult fetch(FetchContext fetchContext) {
     FetchInput input = fetchContext.getFetchInput();
-    logger.info("Received FetchInput -> {}", input);
-    long num = (Long) input.getMetadata().get("number");
-    logger.info("Emitting Document -> number {}", num);
-    emitDocument(fetchContext, num);
+    Optional<SecurityDocument> document = documentGenerator.generate(input.getId(), input.getMetadata());
+    document.ifPresent(securityDocument -> {
+      fetchContext.newDocument()
+          .withFields(securityDocument.getFields())
+          .withACLs(securityDocument.getPermissions()
+              .stream()
+              .map(Permission::getId)
+              .collect(Collectors.toList()))
+          .emit();
+
+      for (Permission permission : securityDocument.getPermissions()) {
+        Map<String, Object> metadata = new HashMap<>();
+        metadata.put(SecurityFilteringConstants.ASSIGNED, permission.getAssigned());
+        metadata.put(SecurityFilteringConstants.TYPE, SecurityFilteringConstants.PERMISSION_TYPE);
+        fetchContext.newCandidate(permission.getId()).withTargetPhase(ACCESS_CONTROL).withMetadata(metadata).emit();
+      }
+    });
     return fetchContext.newResult();
   }
 
-  private void emitDocument(FetchContext fetchContext, long num) {
-    Map<String, Object> fields = getFields(num);
-
-    double groupLevel = Math.ceil((num + 1) / intervalSize.doubleValue());
-
-    fetchContext.newDocument()
-        .withFields(fields)
-        .withACLs(String.format(
-            GROUP_ID_FORMAT,
-            (int) groupLevel,
-            1
-        ))
-        .emit();
-  }
-
-  private Map<String, Object> getFields(long num) {
-    int min = randomContentProperties.minimumNumberSentences();
-    int max = randomContentProperties.maximumNumberSentences();
-
-    String headline = generator.makeHeadline();
-    String txt = generator.makeRandomText(min, max);
-
-    Map<String, Object> fields = new HashMap<>();
-    fields.put("number_i", num);
-    fields.put("timestamp_l", Instant.now().toEpochMilli());
-    fields.put("headline_s", headline);
-    fields.put("hostname_s", hostname);
-    fields.put("text_t", txt);
-
-    return fields;
+  private void emitCandidate(PreFetchContext preFetchContext, DocumentType documentType, int index) {
+    Map<String, Object> metadata = new HashMap<>();
+    metadata.put(SecurityFilteringConstants.TYPE, documentType.name());
+    metadata.put("index", index);
+    preFetchContext.newCandidate(String.format("item-%d", index)).withMetadata(metadata).emit();
   }
 }
