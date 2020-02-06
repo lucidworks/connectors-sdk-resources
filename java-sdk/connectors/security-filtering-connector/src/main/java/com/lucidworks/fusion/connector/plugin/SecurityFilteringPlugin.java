@@ -2,8 +2,8 @@ package com.lucidworks.fusion.connector.plugin;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
-import com.lucidowkrs.connector.shared.generator.RandomContentGenerator;
-import com.lucidowkrs.connector.shared.generator.impl.DefaultRandomContentGenerator;
+import com.lucidworks.connector.shared.generator.RandomContentGenerator;
+import com.lucidworks.connector.shared.generator.impl.DefaultRandomContentGenerator;
 import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPlugin;
 import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPluginProvider;
 import com.lucidworks.fusion.connector.plugin.config.SecurityFilteringConfig;
