@@ -29,7 +29,7 @@ At this point, the generated zip could be uploaded directly to Fusion, but follo
 
 ## Deploy to Fusion
 
-While developing the plugin, you will want to make sure it is quick and easy to deploy your connector to Fusion so that you can do tests. 
+While developing the plugin, need a way to deploy your changes quick and easy to Fusion.
 
 Here is a Linux/Mac example of how to deploy your SDK connector to Fusion which uses `curl`:
 
