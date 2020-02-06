@@ -1,4 +1,4 @@
-package com.lucidowkrs.connector.shared.generator.config;
+package com.lucidworks.connector.shared.generator.config;
 
 import com.lucidworks.fusion.schema.Model;
 import com.lucidworks.fusion.schema.SchemaAnnotations.NumberSchema;

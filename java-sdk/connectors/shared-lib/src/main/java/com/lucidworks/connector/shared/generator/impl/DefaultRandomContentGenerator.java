@@ -1,6 +1,6 @@
-package com.lucidowkrs.connector.shared.generator.impl;
+package com.lucidworks.connector.shared.generator.impl;
 
-import com.lucidowkrs.connector.shared.generator.RandomContentGenerator;
+import com.lucidworks.connector.shared.generator.RandomContentGenerator;
 
 import javax.inject.Inject;
 import java.util.ArrayList;

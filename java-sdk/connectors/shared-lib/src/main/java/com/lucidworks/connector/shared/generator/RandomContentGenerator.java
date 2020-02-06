@@ -1,4 +1,4 @@
-package com.lucidowkrs.connector.shared.generator;
+package com.lucidworks.connector.shared.generator;
 
 public interface RandomContentGenerator {
 
