@@ -27,6 +27,30 @@ This produces the zip files, e.g. `random-connector.zip` located in the `build/l
 
 At this point, the generated zip could be uploaded directly to Fusion, but follow the steps below to run as a remote plugin.
 
+## Deploy to Fusion
+
+While developing the plugin, you will want to make sure it is quick and easy to deploy your connector to Fusion so that you can do tests. 
+
+To do this, use curl (Linux) or Invoke-RestMethod (Windows):
+
+```bash
+FUSION_PROXY_URL="http://192.168.1.36:8764"
+PLUGIN_NAME="feed-connector"
+PLUGIN_ZIP_PATH="./feed-connector/build/libs/feed-connector.zip"
+curl -u admin:password123 -X PUT -H "content-type:application/zip" "${FUSION_PROXY_URL}/api/blobs/${PLUGIN_NAME}?resourceType=plugin:connector" --data-binary "@${PLUGIN_ZIP_PATH}"
+```
+
+or the following powershell task that will do the same thing:
+
+```powershell
+$fusion_proxy_url="http://192.168.1.36:8764"
+$plugin_name="feed-connector"
+$plugin_zip_path="./feed-connector/build/libs/feed-connector.zip"
+$username = "admin"
+$password = "password123"
+$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $username,$password)))
+Invoke-RestMethod -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Method PUT -ContentType "application/zip" "${FUSION_PROXY_URL}/api/blobs/${PLUGIN_NAME}?resourceType=plugin:connector" -InFile "${PLUGIN_ZIP_PATH}"
+```
 
 ## Start
 
