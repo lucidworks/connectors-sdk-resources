@@ -80,7 +80,7 @@ import com.google.inject.Module;
 
 import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPlugin;
 import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPluginProvider;
-import com.lucidworks.fusion.connector.plugin.config.SecurityFilteringConfig;
+import com.lucidworks.connectors.plugins.security.config.SecurityFilteringConfig;
 
 public class MyPlugin implements ConnectorPluginProvider { // <1>
 

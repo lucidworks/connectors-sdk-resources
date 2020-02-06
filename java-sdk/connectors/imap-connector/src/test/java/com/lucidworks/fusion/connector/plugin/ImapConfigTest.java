@@ -1,6 +1,7 @@
 package com.lucidworks.fusion.connector.plugin;
 
 import com.google.common.collect.ImmutableMap;
+import com.lucidworks.connectors.plugins.imap.ImapConfig;
 import com.lucidworks.fusion.schema.ModelGenerator;
 import com.lucidworks.fusion.schema.SchemaGenerator;
 import com.lucidworks.fusion.schema.types.AnyType;
