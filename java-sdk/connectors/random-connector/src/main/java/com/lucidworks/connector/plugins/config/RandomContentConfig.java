@@ -1,9 +1,10 @@
 package com.lucidworks.connector.plugins.config;
 
-import com.lucidworks.connector.shared.generator.config.RandomContentProperties;
+import com.lucidowkrs.connector.shared.generator.config.RandomContentProperties;
 import com.lucidworks.connector.plugins.config.RandomContentConfig.Properties;
 import com.lucidworks.fusion.connector.plugin.api.config.ConnectorConfig;
 import com.lucidworks.fusion.connector.plugin.api.config.ConnectorPluginProperties;
+import com.lucidworks.fusion.schema.SchemaAnnotations.NumberSchema;
 import com.lucidworks.fusion.schema.SchemaAnnotations.Property;
 import com.lucidworks.fusion.schema.SchemaAnnotations.RootSchema;
 

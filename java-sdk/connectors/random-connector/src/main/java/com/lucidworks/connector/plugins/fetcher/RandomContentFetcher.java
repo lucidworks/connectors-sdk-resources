@@ -1,8 +1,8 @@
 package com.lucidworks.connector.plugins.fetcher;
 
-import com.lucidworks.connector.shared.generator.RandomContentGenerator;
-import com.lucidworks.connector.shared.generator.config.RandomContentProperties;
-import com.lucidworks.connector.shared.hostname.HostnameProvider;
+import com.lucidowkrs.connector.shared.generator.RandomContentGenerator;
+import com.lucidowkrs.connector.shared.generator.config.RandomContentProperties;
+import com.lucidowkrs.connector.shared.hostname.HostnameProvider;
 import com.lucidworks.connector.plugins.config.RandomContentConfig;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.PreFetchResult;

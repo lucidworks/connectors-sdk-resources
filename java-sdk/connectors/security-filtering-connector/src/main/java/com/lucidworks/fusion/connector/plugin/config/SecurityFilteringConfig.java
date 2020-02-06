@@ -1,6 +1,6 @@
 package com.lucidworks.fusion.connector.plugin.config;
 
-import com.lucidworks.connector.shared.generator.config.RandomContentProperties;
+import com.lucidowkrs.connector.shared.generator.config.RandomContentProperties;
 import com.lucidworks.fusion.connector.plugin.api.config.ConnectorConfig;
 import com.lucidworks.fusion.connector.plugin.api.config.ConnectorPluginProperties;
 import com.lucidworks.fusion.connector.plugin.api.config.SecurityTrimmingConfig;
