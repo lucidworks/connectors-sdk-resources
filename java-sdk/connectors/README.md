@@ -31,7 +31,7 @@ At this point, the generated zip could be uploaded directly to Fusion, but follo
 
 While developing the plugin, you will want to make sure it is quick and easy to deploy your connector to Fusion so that you can do tests. 
 
-To do this, use curl (Linux) or Invoke-RestMethod (Windows):
+Here is a Linux/Mac example of how to deploy your SDK connector to Fusion, which uses `curl`:
 
 ```bash
 FUSION_PROXY_URL="http://192.168.1.36:8764"
@@ -40,7 +40,7 @@ PLUGIN_ZIP_PATH="./feed-connector/build/libs/feed-connector.zip"
 curl -u admin:password123 -X PUT -H "content-type:application/zip" "${FUSION_PROXY_URL}/api/blobs/${PLUGIN_NAME}?resourceType=plugin:connector" --data-binary "@${PLUGIN_ZIP_PATH}"
 ```
 
-or the following powershell task that will do the same thing:
+Here is a Windows example of how to deploy your SDK connector to Fusion, which uses `powershell`:
 
 ```powershell
 $fusion_proxy_url="http://192.168.1.36:8764"
