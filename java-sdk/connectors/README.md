@@ -34,21 +34,23 @@ While developing the plugin, need a way to deploy your changes quick and easy to
 Here is a Linux/Mac example of how to deploy your SDK connector to Fusion which uses `curl`:
 
 ```bash
-FUSION_PROXY_URL="http://192.168.1.36:8764"
+FUSION_PROXY_URL="http://127.0.0.1:8764"
 PLUGIN_NAME="feed-connector"
 PLUGIN_ZIP_PATH="./feed-connector/build/libs/feed-connector.zip"
-curl -u admin:password123 -X PUT -H "content-type:application/zip" "${FUSION_PROXY_URL}/api/blobs/${PLUGIN_NAME}?resourceType=plugin:connector" --data-binary "@${PLUGIN_ZIP_PATH}"
+FUSION_USERNAME="admin"
+FUSION_PASSWORD="password"
+curl -u "${FUSION_USERNAME}:${FUSION_PASSWORD}" -X PUT -H "content-type:application/zip" "${FUSION_PROXY_URL}/api/blobs/${PLUGIN_NAME}?resourceType=plugin:connector" --data-binary "@${PLUGIN_ZIP_PATH}"
 ```
 
 Here is a Windows example of how to deploy your SDK connector to Fusion which uses `powershell`:
 
 ```powershell
-$fusion_proxy_url="http://192.168.1.36:8764"
+$fusion_proxy_url="http://127.0.0.1:8764"
 $plugin_name="feed-connector"
 $plugin_zip_path="./feed-connector/build/libs/feed-connector.zip"
-$username = "admin"
-$password = "password123"
-$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $username,$password)))
+$fusion_username = "admin"
+$fusion_password = "password"
+$base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $fusion_username,$fusion_password)))
 Invoke-RestMethod -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Method PUT -ContentType "application/zip" "${FUSION_PROXY_URL}/api/blobs/${PLUGIN_NAME}?resourceType=plugin:connector" -InFile "${PLUGIN_ZIP_PATH}"
 ```
 
