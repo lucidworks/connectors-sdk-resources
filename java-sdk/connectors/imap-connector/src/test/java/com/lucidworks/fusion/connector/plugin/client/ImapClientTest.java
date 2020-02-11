@@ -1,7 +1,11 @@
 package com.lucidworks.fusion.connector.plugin.client;
 
 import com.google.common.collect.ImmutableMap;
-import com.lucidworks.fusion.connector.plugin.ImapConfig;
+import com.lucidworks.connectors.plugins.imap.ImapConfig;
+import com.lucidworks.connectors.plugins.imap.client.Email;
+import com.lucidworks.connectors.plugins.imap.client.ImapClient;
+import com.lucidworks.connectors.plugins.imap.client.ImapStore;
+import com.lucidworks.connectors.plugins.imap.client.MailException;
 import com.lucidworks.fusion.schema.ModelGenerator;
 import org.junit.Test;
 

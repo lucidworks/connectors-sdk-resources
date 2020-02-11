@@ -1,6 +1,8 @@
 package com.lucidworks.fusion.connector.plugin;
 
 import com.google.common.collect.ImmutableMap;
+import com.lucidworks.connectors.plugins.imap.ImapConfig;
+import com.lucidworks.connectors.plugins.imap.ImapConfigValidator;
 import com.lucidworks.fusion.connector.plugin.api.validation.ValidationContext;
 import com.lucidworks.fusion.connector.plugin.api.validation.result.ConnectorConfigValidationResult;
 import com.lucidworks.fusion.schema.ModelGenerator;
