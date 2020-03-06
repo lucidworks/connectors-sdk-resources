@@ -32,7 +32,7 @@ public class SecurityFilteringPlugin implements ConnectorPluginProvider {
         .withFetcher(CONTENT, SecurityFilteringContentFetcher.class, fetchModule)
         .withFetcher(ACCESS_CONTROL, SecurityFilteringAccessControlFetcher.class, fetchModule)
         .withValidator(SecurityFilteringValidationComponent.class, fetchModule)
-        .withSecurityFilterFields(ExampleSecurityFilterFieldsComponent.class)
+        .withSecurityFilter(ExampleSecurityFilterFieldsComponent.class)
         .build();
   }
 }
