@@ -10,7 +10,7 @@ import com.lucidworks.connectors.plugins.security.fetcher.SecurityFilteringConte
 import com.lucidworks.connectors.plugins.security.validation.SecurityFilteringValidationComponent;
 import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPlugin;
 import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPluginProvider;
-import com.lucidworks.connectors.plugins.security.component.ExampleSecurityFilterFieldsComponent;
+import com.lucidworks.fusion.connector.plugin.validation.ExampleSecurityFilterFieldsComponent;
 
 import static com.lucidworks.connectors.plugins.security.util.SecurityFilteringConstants.ACCESS_CONTROL;
 import static com.lucidworks.connectors.plugins.security.util.SecurityFilteringConstants.CONTENT;
