@@ -61,7 +61,7 @@ public class SecurityFilteringContentFetcher implements ContentFetcher {
     Optional<SecurityDocument> document = documentGenerator.generate(input.getId(), input.getMetadata());
     document.ifPresent(securityDocument -> {
       fetchContext.newDocument()
-          .withFields(securityDocument.getFields())
+          .fields(f -> f.merge(securityDocument.getFields()))
           .withACLs(securityDocument.getPermissions()
               .stream()
               .map(Permission::getId)
@@ -72,7 +72,10 @@ public class SecurityFilteringContentFetcher implements ContentFetcher {
         Map<String, Object> metadata = new HashMap<>();
         metadata.put(SecurityFilteringConstants.ASSIGNED, permission.getAssigned());
         metadata.put(SecurityFilteringConstants.TYPE, SecurityFilteringConstants.PERMISSION_TYPE);
-        fetchContext.newCandidate(permission.getId()).withTargetPhase(ACCESS_CONTROL).withMetadata(metadata).emit();
+        fetchContext.newCandidate(permission.getId())
+                .withTargetPhase(ACCESS_CONTROL)
+                .metadata(m -> m.merge(metadata))
+                .emit();
       }
     });
     return fetchContext.newResult();
@@ -82,6 +85,6 @@ public class SecurityFilteringContentFetcher implements ContentFetcher {
     Map<String, Object> metadata = new HashMap<>();
     metadata.put(SecurityFilteringConstants.TYPE, documentType.name());
     metadata.put("index", index);
-    preFetchContext.newCandidate(String.format("item-%d", index)).withMetadata(metadata).emit();
+    preFetchContext.newCandidate(String.format("item-%d", index)).metadata(m-> m.merge(metadata)).emit();
   }
 }

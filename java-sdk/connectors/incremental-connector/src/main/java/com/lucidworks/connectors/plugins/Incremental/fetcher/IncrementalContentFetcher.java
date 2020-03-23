@@ -68,7 +68,7 @@ public class IncrementalContentFetcher implements ContentFetcher {
       long num = (Long) input.getMetadata().get("number");
       Map<String, Object> fields = getFields(num);
       fetchContext.newDocument()
-          .withFields(fields)
+          .fields(f -> f.merge(fields))
           .emit();
     }
     return fetchContext.newResult();
@@ -77,12 +77,11 @@ public class IncrementalContentFetcher implements ContentFetcher {
   private void emitCheckpoint(FetchContext fetchContext, int totalNumDocs) {
     logger.info("Emit checkpoint");
     fetchContext.newCheckpoint(CHECKPOINT_PREFIX)
-        .withMetadata(ImmutableMap.<String, Object>builder()
-            .put(TOTAL_INDEXED, totalNumDocs)
-            .put("lastJobRunDateTime", Instant.now().toEpochMilli())
-            .put("hostname", hostname)
-            .build()
-        )
+        .metadata(m -> {
+            m.setInteger(TOTAL_INDEXED, totalNumDocs);
+            m.setLong("lastJobRunDateTime", Instant.now().toEpochMilli());
+            m.setString("hostname", hostname);
+        })
         .emit();
   }
 
@@ -92,7 +91,7 @@ public class IncrementalContentFetcher implements ContentFetcher {
       logger.info("Emitting candidate -> number {}", id);
       Map<String, Object> data = Collections.singletonMap("number", id);
       fetchContext.newCandidate(String.valueOf(id))
-          .withMetadata(data)
+          .metadata(m -> m.merge(data))
           .withTransient(true)
           .emit();
     });

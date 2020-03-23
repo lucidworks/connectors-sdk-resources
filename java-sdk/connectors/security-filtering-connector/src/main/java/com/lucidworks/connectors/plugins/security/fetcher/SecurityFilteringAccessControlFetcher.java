@@ -97,6 +97,6 @@ public class SecurityFilteringAccessControlFetcher implements AccessControlFetch
     if (!Strings.isNullOrEmpty(parentId)) {
       metadata.put(SecurityFilteringConstants.PARENTS, parentId);
     }
-    context.newCandidate(id).withMetadata(metadata).emit();
+    context.newCandidate(id).metadata(m -> m.merge(metadata)).emit();
   }
 }

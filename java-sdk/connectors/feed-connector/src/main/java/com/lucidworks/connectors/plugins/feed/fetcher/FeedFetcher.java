@@ -85,13 +85,12 @@ public class FeedFetcher implements ContentFetcher {
     // If true it means an entry was updated after the last time a job was run, the emit the item as document in order to be re-indexed.
     if (entryLastUpdated > lastJobRunDateTime) {
       fetchContext.newDocument(input.getId())
-          .withFields(ImmutableMap.<String, Object>builder()
-              .put("title_s", metaData.get("title"))
-              .put("lastUpdatedEntry_l", entryLastUpdated)
+          .fields(f -> {
+              f.setString("title_s", (String) metaData.get("title"));
+              f.setLong("lastUpdatedEntry_l", entryLastUpdated);
               // adding more fields with random values.
-              .putAll(generator.generateFieldsMap())
-              .build()
-          )
+              f.merge(generator.generateFieldsMap());
+          })
           .emit();
       logger.info("Emit document id: {}, lastUpdatedEntry {}", input.getId(), entryLastUpdated);
     } else {
@@ -109,14 +108,13 @@ public class FeedFetcher implements ContentFetcher {
     Map<String, FeedEntry> entryMap = feed.getEntries();
     entryMap.forEach((id, entry) -> {
       fetchContext.newCandidate(entry.getId())
-          .withMetadata(ImmutableMap.<String, Object>builder()
-              .put("title", entry.getTitle())
-              // add last time when entry was modified
-              .put(ENTRY_LAST_UPDATED, entry.getLastUpdated())
-              // add 'lastJobRunDateTime'.
-              .put(LAST_JOB_RUN_DATE_TIME, lastJobRunDateTime)
-              .build()
-          )
+          .metadata(m -> {
+            m.setString("title", entry.getTitle());
+            // add last time when entry was modified
+            m.setLong(ENTRY_LAST_UPDATED, entry.getLastUpdated());
+            // add 'lastJobRunDateTime'.
+            m.setLong(LAST_JOB_RUN_DATE_TIME, lastJobRunDateTime);
+          })
           // for feed-connector purposes, we do not want to reevaluate the crawlDb items in subsequent crawls (except checkpoints)
           // so, we will emit candidates as transient=true
           .withTransient(true)
@@ -135,15 +133,14 @@ public class FeedFetcher implements ContentFetcher {
     // Reason is to update the lastJobRunDateTime with the current crawl time.
     logger.info("Emit checkpoint with date {}", currentJobRunDateTime);
     fetchContext.newCheckpoint(CHECKPOINT_PREFIX)
-        .withMetadata(ImmutableMap.<String, Object>builder()
-            .put(LAST_JOB_RUN_DATE_TIME, currentJobRunDateTime)
-            .put("requestInfoId", fetchContext.getRequestInfo().getId())
-            .put(ENTRY_INDEX_START,
-                entryIndexStart) // needed when generating entries (entries are not get from a json file)
-            .put(ENTRY_INDEX_END,
-                entryIndexEnd) // needed when generating entries (  entries are not get from a json file)
-            .build()
-        )
+        .metadata(m -> {
+            m.setLong(LAST_JOB_RUN_DATE_TIME, currentJobRunDateTime);
+            m.setString("requestInfoId", fetchContext.getRequestInfo().getId());
+            m.setInteger(ENTRY_INDEX_START,
+                entryIndexStart); // needed when generating entries (entries are not get from a json file)
+            m.setInteger(ENTRY_INDEX_END,
+                entryIndexEnd); // needed when generating entries (  entries are not get from a json file)
+        })
         .emit();
   }
 
