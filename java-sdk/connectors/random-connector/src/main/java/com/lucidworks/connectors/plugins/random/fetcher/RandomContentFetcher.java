@@ -48,7 +48,7 @@ public class RandomContentFetcher implements ContentFetcher {
           logger.info("Emitting candidate -> number {}", i);
           Map<String, Object> data = Collections.singletonMap("number", i);
           preFetchContext.newCandidate(String.valueOf(i))
-              .withMetadata(data)
+              .metadata(m -> m.merge(data))
               .emit();
         });
     // Simulating an error item here... because we're emitting an item without a "number",
@@ -77,7 +77,7 @@ public class RandomContentFetcher implements ContentFetcher {
       Map<String, Object> fields = getFields(num);
 
       fetchContext.newDocument()
-          .withFields(fields)
+          .fields(f -> f.merge(fields))
           .emit();
     } catch (NullPointerException npe) {
       if (ERROR_ID.equals(input.getId())) {
