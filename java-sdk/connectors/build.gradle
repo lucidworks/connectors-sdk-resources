@@ -40,11 +40,11 @@ configure(connectorprojects) { p ->
     archiveName = "${project.name}" + ".zip"
     manifest {
       attributes 'Plugin-Class': "${pluginClass}",
-        'Plugin-Type': "connector",
-        'Plugin-Id': "${pluginId}",
-        'Plugin-Version': "${version}",
-        'Plugin-Provider': "${pluginProvider}",
-        'Plugin-Connectors-SDK-Version': "${connectorsSDKVersion}"
+          'Plugin-Type': "connector",
+          'Plugin-Id': "${pluginId}",
+          'Plugin-Version': "${version}",
+          'Plugin-Provider': "${pluginProvider}",
+          'Plugin-Connectors-SDK-Version': "${connectorsSDKVersion}"
     }
     into('lib') {
       from configurations.compile - configurations.provided
@@ -66,16 +66,16 @@ configure(connectorprojects) { p ->
     }
     service += "plugins"
     commandLine "curl",
-      "-m $maxTimeout",
-      "-u",
-      "${userPass}",
-      "-X",
-      "PUT",
-      "-H",
-      "content-type:application/zip",
-      "${service}",
-      "--data-binary",
-      "@${pluginsDir}/${plugin.outputs.files.singleFile.getName()}"
+        "-m $maxTimeout",
+        "-u",
+        "${userPass}",
+        "-X",
+        "PUT",
+        "-H",
+        "content-type:application/zip",
+        "${service}",
+        "--data-binary",
+        "@${pluginsDir}/${plugin.outputs.files.singleFile.getName()}"
     doLast {
       logger.info("Curl result: ${standardOutput.toString().trim()}")
     }

@@ -50,24 +50,22 @@ While developing the plugin, you will need a way to deploy your changes quick an
 Here is a Linux/Mac example of how to deploy your SDK connector to Fusion which uses `curl`:
 
 ```bash
-FUSION_PROXY_URL="http://127.0.0.1:8764"
-PLUGIN_NAME="feed-connector"
+FUSION_PROXY_URL="http://127.0.0.1:6764/connectors/plugins"
 PLUGIN_ZIP_PATH="./feed-connector/build/libs/feed-connector.zip"
 FUSION_USERNAME="admin"
 FUSION_PASSWORD="password"
-curl -u "${FUSION_USERNAME}:${FUSION_PASSWORD}" -X PUT -H "content-type:application/zip" "${FUSION_PROXY_URL}/api/blobs/${PLUGIN_NAME}?resourceType=plugin:connector" --data-binary "@${PLUGIN_ZIP_PATH}"
+curl -u "${FUSION_USERNAME}:${FUSION_PASSWORD}" -X PUT -H "content-type:application/zip" "${FUSION_PROXY_URL}" --data-binary "@${PLUGIN_ZIP_PATH}"
 ```
 
 Here is a Windows example of how to deploy your SDK connector to Fusion which uses `powershell`:
 
 ```powershell
-$fusion_proxy_url="http://127.0.0.1:8764"
-$plugin_name="feed-connector"
+$fusion_proxy_url="http://127.0.0.1:6764/connectors/plugins"
 $plugin_zip_path="./feed-connector/build/libs/feed-connector.zip"
 $fusion_username = "admin"
 $fusion_password = "password"
 $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $fusion_username,$fusion_password)))
-Invoke-RestMethod -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Method PUT -ContentType "application/zip" "${FUSION_PROXY_URL}/api/blobs/${PLUGIN_NAME}?resourceType=plugin:connector" -InFile "${PLUGIN_ZIP_PATH}"
+Invoke-RestMethod -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Method PUT -ContentType "application/zip" "${FUSION_PROXY_URL}" -InFile "${PLUGIN_ZIP_PATH}"
 ```
 
 ## Start
@@ -93,12 +91,13 @@ Alternatively, when proper configuration is done in the `gradle.properties` file
 After running this, logging should show that it either was able to connect to Fusion, or not. If not, be sure you're using the right Fusion address/port. If not, the client jar can accept various related settings.
 
 ## Fusion
+
 After the client process successfully connects to Fusion, you should see connector available in Fusion as a new connector type.
 
 
 ## Upgrade Connector implementation to Fusion 5
 
-For `connector-plugin-sdk:1.4.0` version, the way to implement the plugin definition class has changed.
+In order to upgrade to Fusion 5, the sdk dependency to be upgraded to `connector-plugin-sdk:2.0.0` version. The way to implement the plugin definition class has changed.
 Below is an example on how to implement the plugin definition class:
 
 
