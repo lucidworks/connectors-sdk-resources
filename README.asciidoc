@@ -11,7 +11,7 @@ which wraps each https://github.com/lucidworks/connectors-sdk-resources/blob/mas
 
 See the link:java-sdk/connectors/random-connector/README.asciidoc[Random Content Connector] example for instructions on how to build, deploy and run.
 
-== Fusion 4 Connectors Overview
+== Fusion SDK Connectors Overview
 
 The connectors architecture in Fusion 4 and later is designed to be scalable. Depending on the connector, jobs can be scaled by adding instances of just the connector.
 The fetching process for these types also supports distributed fetching, so that many instances can contribute to the same job.
