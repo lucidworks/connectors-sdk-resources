@@ -1,4 +1,4 @@
-## Connectors
+# Connectors
 
 This is a Gradle project that wraps each [known plugin](settings.gradle) with a common set of tasks
 and dependencies.
@@ -20,22 +20,12 @@ dependencies {
 }
 ```
  For example, the random-connector [build](random-connector/build.gradle) project is including the `shared-lib` project.
-## Building
 
-**Important**
+## Building the Plugin Zip file
 
-
-As a first step, change the _fusionHome_ property in the [`gradle.properties` ](gradle.properties) file
-
-The _fusionHome_ property is the full path of your local Fusion installation. The path should include Fusion's version.
-
-The _fusionHome_ is needed to import the code to an IDE.
-
-### Building the Plugin Zip file
-
-From `java-sdk/connectors`, execute
+From `java-sdk/connectors`, execute the assemblePlugins task
 ```bash
-./gradlew clean build :assemblePlugins
+./gradlew clean assemblePlugins
 ```
 
 This produces the zip files, e.g. `random-connector.zip` located in the `build/libs` directory.
@@ -44,6 +34,11 @@ At this point, the generated zip could be uploaded directly to Fusion, but follo
 
 
 ## Deploy to Fusion
+
+From `java-sdk/connectors/random-connector`, execute the deploy task to automatically deploy the connector to a Fusion, the url can be configurated as show. By default points to localhost.
+```bash
+./gradlew deploy -PrestService=http://127.0.0.1:6764/connectors
+```
 
 While developing the plugin, you will need a way to deploy your changes quick and easy to Fusion.
 
@@ -67,32 +62,6 @@ $fusion_password = "password"
 $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $fusion_username,$fusion_password)))
 Invoke-RestMethod -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Method PUT -ContentType "application/zip" "${FUSION_PROXY_URL}" -InFile "${PLUGIN_ZIP_PATH}"
 ```
-
-## Start
-
-Connect to Fusion plugin by using the client jar plus the plugin zip:
-
-```bash
-java  -jar ${fusionHome}/apps/connectors/connectors-rpc/client/connector-plugin-client-${fusionVersion}-uberjar.jar build/plugins/random-connector.zip
-+```
-
-Start with debugging enabled:
-
-```bash
-java -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5010 -jar ${fusionHome}/apps/connectors/connectors-rpc/client/connector-plugin-client-${fusionVersion}-uberjar.jar build/plugins/random-connector.zip
-```
-
-Alternatively, when proper configuration is done in the `gradle.properties` file (fusionHome, fusionVersion and fusionRpcTarget properties), the plugin can also be run using a simple gradle task:
-
-```bash
-./gradlew connect
-```
-
-After running this, logging should show that it either was able to connect to Fusion, or not. If not, be sure you're using the right Fusion address/port. If not, the client jar can accept various related settings.
-
-## Fusion
-
-After the client process successfully connects to Fusion, you should see connector available in Fusion as a new connector type.
 
 
 ## Upgrade Connector implementation to Fusion 5
