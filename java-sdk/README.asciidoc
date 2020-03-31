@@ -187,6 +187,82 @@ Errors are recorded in the data store, but are not sent to the associated `Index
 ===== Delete
 `Deletes` tell the controller service to remove a specific item from the data store and associated Fusion collection.
 
+==== Item state transitions and corresponding action
+
+[cols="1,1,1",options="header",subs=attributes+]
+|===
+|Input Item |Current Item State |Action
+
+.7+a|*FetchInput* |Not-stored |Store FetchInput
+|FetchInput |Discard
+|Document |Discard
+|Skip |Discard
+|Error |Discard
+|Checkpoint |Discard
+|ACI |Discard
+
+.7+a|*Skip* |Not-stored |Store Skip
+|FetchInput |Store Skip
+|Document |Store Skip
+|Skip |Discard
+|Error |Discard
+|Checkpoint |Store Skip^*^
+|ACI |Store Skip^**^
+
+.7+a|*Checkpoint* |Not-stored |Store Checkpoint
+|FetchInput |Store Checkpoint
+|Document |Store Checkpoint^*^
+|Skip |Discard
+|Error |Discard
+|Checkpoint |Discard
+|ACI |Store Checkpoint^*^
+
+.7+a|*Delete* |Not-stored |Discard
+|FetchInput |Delete Item
+|Document |Delete Document
+|Skip |Discard
+|Error |Discard
+|Checkpoint |Delete Checkpoint^*^
+|ACI |Delete ACI^*^
+
+.7+a|*Document* |Not-stored |Discard
+|FetchInput |Store Document
+|Document |Discard
+|Skip |Discard
+|Error |Discard
+|Checkpoint |Store Document^*^
+|ACI |Store Document^**^
+
+.7+a|*Error* |Not-stored |Store Error
+|FetchInput |Store Error
+|Document |Store Error
+|Skip |Discard
+|Error |Discard
+|Checkpoint |Store Error^*^
+|ACI |Store Error^**^
+
+.7+a|*ACI* |Not-stored |Discard
+|FetchInput |Store ACI
+|Document |Store ACI^*^
+|Skip |Discard
+|Error |Discard
+|Checkpoint |Store ACI^*^
+|ACI |Discard
+
+.7+a|*FetchResult* |Not-stored |Discard
+|FetchInput |Mark as Completed or Delete Transient
+|Document |Mark as Completed or Delete Transient
+|Skip |Discard
+|Error |Discard
+|Checkpoint |Mark as Completed
+|ACI |Mark as Completed
+
+3+a|^*^These cases can happen, but they don't make sense.
+
+^**^Double-check the `AccessControlItem` cases. 
+
+|===
+
 === Understanding when and when not to make a Candidate "transient"
 
 The term `transient` refers to a Candidate's persistance with respect to the Crawl-db.
