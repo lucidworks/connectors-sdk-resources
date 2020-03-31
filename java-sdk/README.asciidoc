@@ -189,7 +189,7 @@ Errors are recorded in the data store, but are not sent to the associated `Index
 
 ==== Item state transitions and corresponding action
 
-[cols="1,1,1",options="header",subs=attributes+]
+[width=100%,cols="1,1,1",options="header",subs=attributes+]
 |===
 |Input Item |Current Item State |Action
 
@@ -206,47 +206,47 @@ Errors are recorded in the data store, but are not sent to the associated `Index
 |Document |Store Skip
 |Skip |Discard
 |Error |Discard
-|Checkpoint |Store Skip^*^
-|ACI |Store Skip^**^
+|Checkpoint |Store Skip
+|ACI |Store Skip
 
 .7+a|*Checkpoint* |Not-stored |Store Checkpoint
 |FetchInput |Store Checkpoint
-|Document |Store Checkpoint^*^
+|Document |Store Checkpoint
 |Skip |Discard
 |Error |Discard
 |Checkpoint |Discard
-|ACI |Store Checkpoint^*^
+|ACI |Store Checkpoint
 
 .7+a|*Delete* |Not-stored |Discard
 |FetchInput |Delete Item
 |Document |Delete Document
 |Skip |Discard
 |Error |Discard
-|Checkpoint |Delete Checkpoint^*^
-|ACI |Delete ACI^*^
+|Checkpoint |Delete Checkpoint
+|ACI |Delete ACI
 
 .7+a|*Document* |Not-stored |Discard
 |FetchInput |Store Document
 |Document |Discard
 |Skip |Discard
 |Error |Discard
-|Checkpoint |Store Document^*^
-|ACI |Store Document^**^
+|Checkpoint |Store Document
+|ACI |Store Document
 
 .7+a|*Error* |Not-stored |Store Error
 |FetchInput |Store Error
 |Document |Store Error
 |Skip |Discard
 |Error |Discard
-|Checkpoint |Store Error^*^
-|ACI |Store Error^**^
+|Checkpoint |Store Error
+|ACI |Store Error
 
 .7+a|*ACI* |Not-stored |Discard
 |FetchInput |Store ACI
-|Document |Store ACI^*^
+|Document |Store ACI
 |Skip |Discard
 |Error |Discard
-|Checkpoint |Store ACI^*^
+|Checkpoint |Store ACI
 |ACI |Discard
 
 .7+a|*FetchResult* |Not-stored |Discard
@@ -256,10 +256,6 @@ Errors are recorded in the data store, but are not sent to the associated `Index
 |Error |Discard
 |Checkpoint |Mark as Completed
 |ACI |Mark as Completed
-
-3+a|^*^These cases can happen, but they don't make sense.
-
-^**^Double-check the `AccessControlItem` cases. 
 
 |===
 
