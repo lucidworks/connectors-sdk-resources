@@ -1,21 +1,45 @@
 # Feed Connector
 
-'Feed Connector' fetches the entries of a feed file. The file must to be a json file with [this format](../../resources/feed-simple-small.json). 
+## Connector Description
 
-The connector has the following properties:
-- "Feed file path": Feed file path location. If empty, the connector will generate random entries.
-
-Generate Properties:
-The following properties generate entries when a feed file is not provided:
-- "Total to generate first crawl": Total number of total entries to generate in the first crawl. It will be ignored if 'Feed file path' is provided
-- "Total incremental to remove": Total number of entries to remove from the second and subsequent crawls. It will be ignored if 'Feed file path' is provided
-- "Total incremental to add": Total number of entries to add from the second and subsequent crawls. It will be ignored if 'Feed file path' is provided
+Feed Connector fetches the entries of a feed file. The file must to be a json file with [this format](../../resources/feed-simple-small.json). If no file is specified, then the connector will generate random contents, following the configurations in the `Generated properties` section.
 
 This connector emits checkpoints, emits candidates as transient=true, and enables the 'Purge Stray Items' feature.
 
 Crawls are incremental.
 
-### How to use 'Feed Connector'
+## Quick start
+
+1. Clone the repo:
+```
+git clone https://github.com/lucidworks/connectors-sdk-resources.git
+cd connectors-sdk-resources/java-sdk/connectors/
+./gradlew assemblePlugins
+```
+2. This produces the zip file, named `feed-connector.zip`, located in the `build/plugins` directory.
+This artifact is now ready to be uploaded directly to Fusion as a connector plugin.
+
+3. See the following [instructions](../README.md) on how to build, deploy, and run the plugin
+
+## Connector properties
+
+### Main properties
+|Property Name| Property description|
+|---|---|
+|Feed file path | the path to the file containing entries in the [format](../../resources/feed-simple-small.json) |
+
+### Generate Properties
+
+The following properties will be taken if no `Feed file path` was provided.
+
+|Property Name| Property description|
+|---|---|
+| Total to generate first crawl | the number of documents to generate for the first crawl |
+| Total incremental to add | the number of documents to generate in the second and following jobs |
+| Total incremental to remove | the number of documents to delete in the second and following jobs |
+
+## How to use the connector
+
 #### Using a local json file
 - Set 'Feed file path' property
 - Start a crawl. Let it finishes. All the entries are indexed.
@@ -41,16 +65,3 @@ Note: If after some subsequent crawls, all the documents are removed:
  - clear the datasource (checkpoint wil be removed)
  - change some properties if desired and save the datasource. 
  - Start crawling again
-
-## Quick start
-
-1. Clone the repo:
-```
-git clone https://github.com/lucidworks/connectors-sdk-resources.git
-cd connectors-sdk-resources/java-sdk/connectors/
-./gradlew assemblePlugins
-```
-2. This produces the zip file, named `feed-connector.zip`, located in the `build/plugins` directory.
-This artifact is now ready to be uploaded directly to Fusion as a connector plugin.
-
-3. See the following [instructions](../README.md) on how to build, deploy, and run the plugin

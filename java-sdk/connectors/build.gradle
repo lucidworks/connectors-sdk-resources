@@ -1,3 +1,5 @@
+ext.connectorprojects = subprojects - project("shared-lib")
+
 subprojects {
 
   apply plugin: 'java'
@@ -22,10 +24,13 @@ subprojects {
   }
 
   dependencies {
-    provided ("com.lucidworks-connector.sdk:connector-plugin-sdk:${connectorsSDKVersion}")
+    provided("com.lucidworks-connector.sdk:connector-plugin-sdk:${connectorsSDKVersion}")
     provided "org.slf4j:slf4j-api:${slf4jVersion}"
     testCompile group: 'junit', name: 'junit', version: '4.12'
   }
+}
+
+configure(connectorprojects) { p ->
 
   jar {
     baseName = "${project.name}"
@@ -37,7 +42,7 @@ subprojects {
       attributes 'Plugin-Class': "${pluginClass}",
           'Plugin-Type': "connector",
           'Plugin-Id': "${pluginId}",
-          'Plugin-Version': "${fusionVersion}",
+          'Plugin-Version': "${version}",
           'Plugin-Provider': "${pluginProvider}",
           'Plugin-Connectors-SDK-Version': "${connectorsSDKVersion}"
     }
@@ -55,17 +60,29 @@ subprojects {
   }
 
   task deploy(type: Exec, dependsOn: ["assemblePlugin"]) {
-    commandLine "curl", "-X", "PUT", "-H", "content-type:application/zip",
-            "http://${fusionApiTarget}/api/v1/blobs/lucidworks.sdk.${project.name}.zip?resourceType=plugin:connector",
-            "--data-binary",
-            "@${pluginsDir}/${plugin.outputs.files.singleFile.getName()}"
+    def service = "${restService}"
+    if (!service.endsWith("/")) {
+      service += "/"
+    }
+    service += "plugins"
+    commandLine "curl",
+        "-m ${maxTimeout}",
+        "-u",
+        "${userPass}",
+        "-X",
+        "PUT",
+        "-H",
+        "content-type:application/zip",
+        "${service}",
+        "--data-binary",
+        "@${pluginsDir}/${plugin.outputs.files.singleFile.getName()}"
     doLast {
       logger.info("Curl result: ${standardOutput.toString().trim()}")
     }
   }
 
   task connect(type: Exec, dependsOn: ["assemblePlugin"]) {
-    def clientJar = "${fusionHome}/apps/connectors/connectors-rpc/client/connector-plugin-client-${fusionVersion}-uberjar.jar"
+    def clientJar = "${clientJarAbsolutePath}"
     def argsList = []
     argsList << "java"
     argsList << "-Dcom.lucidworks.fusion.plugin.hosts=${fusionRpcTarget}"
@@ -86,10 +103,7 @@ subprojects {
   }
 }
 
-task assemblePlugins(type: Copy) {
-  dependsOn subprojects.assemblePlugin
-}
 
-wrapper {
-  gradleVersion '5.3.1'
+task assemblePlugins(type: Copy) {
+  dependsOn connectorprojects.assemblePlugin
 }

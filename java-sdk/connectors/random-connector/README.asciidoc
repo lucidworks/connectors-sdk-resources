@@ -1,10 +1,10 @@
-== Random Content Connector
+== Random Connector
+
+=== Connector Description
 
 This connector generates a configurable number of documents, all with random titles and body fields.
 
-## Quick start
-
-NOTE: This quick start assumes that Fusion is installed on the `/opt` path.
+=== Quick start
 
 1. Clone the repo:
 ```
@@ -17,3 +17,20 @@ cd connectors-sdk-resources/java-sdk/connectors/
 This artifact is now ready to be uploaded directly to Fusion as a connector plugin.
 
 3. See the following [instructions](../README.md) on how to build, deploy, and run the plugi
+
+=== Connector properties
+
+==== Random content generator properties
+
+[width="80%",cols="2, 6",options="header"]
+|=========================================================
+|Property Name |Property description
+|Total |The total number of documents to generate
+|Minimum number of sentences |The minimum number of sentences to generate per document, the random generator will use this value as lower bound to calculate a random number of sentences
+| maximum number of sentences | The maximum number of sentences to generate per document, the random generator will use this value as upper bound to calculate a random number of sentences
+|=========================================================
+
+=== How to use the connector
+
+- Create a configuration with the properties listed above.
+- After the first job is completed, the connector will index the same number of documents as defined in the `Randon content generator properties.Total` property.

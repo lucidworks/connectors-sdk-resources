@@ -1,5 +1,8 @@
-include 'random-connector'
-include 'imap-connector'
-include 'security-filtering-connector'
+rootProject.name = 'example-connectors'
+
 include 'feed-connector'
-include 'random-connector-incremental'
+include 'imap-connector'
+include 'incremental-connector'
+include 'random-connector'
+include 'security-filtering-connector'
+include 'shared-lib'
