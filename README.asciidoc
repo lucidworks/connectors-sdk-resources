@@ -27,6 +27,21 @@ The communication of messages between Fusion and a remote connector or hosted co
 This means you can implement a connector locally, connect to a remote Fusion for initial testing, and when done,
 upload the exact same artifact (a zip file) into Fusion, so Fusion can host it for you. The ability to run the connector remotely makes the development process much quicker.
 
+== Connectors SDK support matrix
+
+|====================================================
+| Fusion release | SDK version
+| 5.1.0 | 2.0.0
+| 5.0.2 | 2.0.0-pre-release
+| 4.2.6 | 1.5.0
+| 4.2.5 | 1.4.0
+| 4.2.4 | 1.4.0
+| 4.2.3 | 1.3.0
+| 4.2.2 | 1.3.0
+| 4.2.1 | 1.2.0
+| 4.2.0 | 1.1.0
+|====================================================
+
 == Java SDK
 
 The Java SDK provides components for making it simple to build a connector in Java. Whether the plugin is a true crawler or a simple iterative fetcher,
