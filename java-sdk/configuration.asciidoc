@@ -57,7 +57,6 @@ It also generates the schema, and sends it along to Fusion when it connects to F
 The `com.lucidworks.schema` library, which is exposed by the connectors SDK, aims to simplify the process of creating JSON Schemas.
 
 The basic idea here is that you create an interface that extends `Model`, add property getters, and then add a few annotations.
-Once your interface has been built, you can generate an `ObjectType` instance, which is the object that contains all of the JSON schema metadata.
 By then combining that schema object with a `Map<String,Object>`, you can create instances of your interface to use as configuration objects.
 
 The configuration objects are based on `java.lang.reflect.Proxy`, which is what the `ModelGenerator` returns.
