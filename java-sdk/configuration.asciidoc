@@ -56,7 +56,11 @@ It also generates the schema, and sends it along to Fusion when it connects to F
 === About com.lucidworks.schema
 The `com.lucidworks.schema` library, which is exposed by the connectors SDK, aims to simplify the process of creating JSON Schemas.
 
-The basic idea here is that you create an interface that extends `Model`, add property getters, and then add a few annotations.
+The main idea is that you create an interface that extends `Model`, add property getter methods, and a few annotations to describe property constraints and validation rules.
+
+A configuration type is associated to a connector by calling `ConnectorPlugin.builder(MyConnectorConfig.class)`, you can see an example link:java-sdk/connectors/random-connector/src/main/java/com/lucidworks/connector/plugins/random/RandomContentPlugin.java#L27[here]. This is what makes it possible for the runtime framework to create and provide instances of the configuration, or datasource, when the connector runs.
+
+The connector runtime also uses these `Model` based interfaces to generate plugin specific schemas. Schemas are used by Fusion in many different ways, but perhaps the most useful is the Fusion Admin UI. The HTML forms used for creating and updating Fusion datasources are dynamically generated from plugin schemas.
 By then combining that schema object with a `Map<String,Object>`, you can create instances of your interface to use as configuration objects.
 
 Here is a simple example:
