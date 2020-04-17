@@ -59,17 +59,6 @@ The `com.lucidworks.schema` library, which is exposed by the connectors SDK, aim
 The basic idea here is that you create an interface that extends `Model`, add property getters, and then add a few annotations.
 By then combining that schema object with a `Map<String,Object>`, you can create instances of your interface to use as configuration objects.
 
-The configuration objects are based on `java.lang.reflect.Proxy`, which is what the `ModelGenerator` returns.
-Most method calls to these proxy instances result in method calls to the underlying `Map<String,Object>`.
-For example, if the interface defines a `id` method, then a runtime call results in a call to the `Map<String,Object>`: `data.get("id")`.
-
-A few special cases exist:
-
-* `toString` is proxied directly to the `Map<String,Object>`
-* `getClass` returns the class of the interface provided to `ModelGenerator#generate()`
-* `_data` returns the underlying `Map<String,Object>` object
-* If the method starts with `set`, the arguments are captured and sent to the underlying map via `put()`
-
 Here is a simple example:
 
 ```java
