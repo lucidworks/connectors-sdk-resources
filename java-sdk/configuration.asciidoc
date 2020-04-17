@@ -55,7 +55,6 @@ It also generates the schema, and sends it along to Fusion when it connects to F
 
 === About com.lucidworks.schema
 The `com.lucidworks.schema` project (included in the connectors SDK) aims to simplify the process of creating JSON Schemas.
-It also provides utilities for building type-safe POJOs from schema definitions.
 
 The basic idea here is that you create an interface that extends `Model`, add property getters, and then add a few annotations.
 Once your interface has been built, you can generate an `ObjectType` instance, which is the object that contains all of the JSON schema metadata.
