@@ -4,14 +4,14 @@ To build a valid connector configuration, you must:
 
 * Define an interface.
 * Extend `ConnectorConfig`.
-* Apply a few annotations.
 * Define connector "getter" methods and annotations.
+* Apply property related annotations.
 
 All methods that are annotated with `@Property` and are considered to be configuration properties.
 For example, `@Property() String name();` results in a String property called `name`.
 This property would then be present in the generated schema.
 
-Here is an example of the most basic configuration, along with required annotations and a sample property access methods:
+Here is an example of the most basic configuration, along with required annotations and sample property access methods:
 
 ```java
 @RootSchema(
@@ -53,3 +53,36 @@ Once a connector configuration has been defined, it can be associated with the `
 From that point, the framework takes care of providing the configuration instances to your connector.
 It also generates the schema, and sends it along to Fusion when it connects to Fusion.
 
+=== About com.lucidworks.schema
+The `com.lucidworks.schema` library, which is exposed by the connectors SDK, aims to simplify the process of creating JSON schemas and typed configurations.
+
+The main idea is that you create an interface that extends `Model`, add property getter methods, and a few annotations to describe property constraints and validation rules. The connector SDK provides a base interface, `ConnectorConfig`, which extends `Model`.
+
+A configuration type is associated to a connector by calling `ConnectorPlugin.builder(MyConnectorConfig.class)`, you can see an example link:java-sdk/connectors/random-connector/src/main/java/com/lucidworks/connector/plugins/random/RandomContentPlugin.java#L27[here]. This is what makes it possible for the runtime framework to create and provide instances of the configuration, or datasource, when the connector runs.
+
+The connector runtime also uses these `Model` based interfaces to generate plugin specific schemas. Schemas are used by Fusion in many different ways, but perhaps the most useful is the Fusion Admin UI. The HTML forms used for creating and updating Fusion datasources are dynamically generated from plugin schemas.
+
+Here is a simple example:
+
+```java
+interface MyConfig extends Model {
+
+  @Property
+  @StringSchema(minLength=1)
+  String id();
+
+}
+```
+
+Schema metadata can be applied to properties using additional annotations. For example, applying limits to the min/max length of a string, or describing the types of items in an array.
+
+Nested schema metadata can also be applied to a single field by using "stacked" schema based annotations:
+
+```java
+interface MySetConfig extends Model {
+    @SchemaAnnotations.Property(title = "My Set")
+    @SchemaAnnotations.ArraySchema(defaultValue = "[\"a\"]")
+    @SchemaAnnotations.StringSchema(defaultValue = "some-set-value", minLength = 1, maxLength = 1)
+    Set<String> mySet();
+  }
+```
