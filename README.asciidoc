@@ -72,6 +72,13 @@ The gRPC framework provides flexibility in the way services and their methods ar
 The data persisted by the connectors framework is distributed across the Fusion cluster. Each node holds its primary partition of the data, as well as backups of other partitions.
 If a node goes down during a crawl, the data store remains intact and usable. Connector implementations do not need to be concerned with this layer, because it is all handled by Fusion.
 
+== Server Side Processing
+Important point to be considered on server side when building a connector using a sdk:
+* Connector server does not guarantee the order of processing of items such as Candidate, Document, Delete, etc, which are emitted from the connector plugin, therefore,
+any logic that assumes the item is processed and proceeds to process the same item immediately based upon previous processing results may produce incorrect results.
+For example, when a document replace is immediately followed by a delete by query, and, delete by query depends upon the result of document replace which was just before issued
+to the connector server, may produce incorrect results, if delete by query is processed before a document replace by the connector server.
+
 == CrawlDB fields
 * Core fields required for any connector include: id and state_s.
 
