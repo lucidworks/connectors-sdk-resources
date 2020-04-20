@@ -73,8 +73,7 @@ The data persisted by the connectors framework is distributed across the Fusion 
 If a node goes down during a crawl, the data store remains intact and usable. Connector implementations do not need to be concerned with this layer, because it is all handled by Fusion.
 
 == Server Side Processing
-Important point to be considered on server side when building a connector using a sdk:
-* Connector server does not guarantee the order of processing of items such as Candidate, Document, Delete, etc, which are emitted from the connector plugin, therefore,
+An important point to consider when building a connector is that the server does not guarantee ordering of emitted items such as Candidates, Documents, Deletes, etc., when processing. Therefore,
 any logic that assumes the item is processed and proceeds to process the same item immediately based upon previous processing results may produce incorrect results.
 For example, when a document replace is immediately followed by a delete by query, and, delete by query depends upon the result of document replace which was just before issued
 to the connector server, may produce incorrect results, if delete by query is processed before a document replace by the connector server.
