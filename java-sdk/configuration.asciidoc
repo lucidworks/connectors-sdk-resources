@@ -4,14 +4,14 @@ To build a valid connector configuration, you must:
 
 * Define an interface.
 * Extend `ConnectorConfig`.
-* Apply a few annotations.
 * Define connector "getter" methods and annotations.
+* Apply property related annotations.
 
-All methods that are annotated with `@Property` and start with "get" are considered to be configuration properties.
-For example, `@Property() String getName();` results in a String property called `name`.
+All methods that are annotated with `@Property` and are considered to be configuration properties.
+For example, `@Property() String name();` results in a String property called `name`.
 This property would then be present in the generated schema.
 
-Here is an example of the most basic configuration, along with required annotations and a sample "getter" method:
+Here is an example of the most basic configuration, along with required annotations and sample property access methods:
 
 ```java
 @RootSchema(
@@ -26,7 +26,7 @@ public interface MyConfig extends ConnectorConfig<MyConfig.Properties> {
       title = "Properties",
       required = true
   )
-  public Properties getProperties();
+  public Properties properties();
 
   /**
    * Connector specific settings
@@ -37,7 +37,7 @@ public interface MyConfig extends ConnectorConfig<MyConfig.Properties> {
         title = "My custom property",
         description = "My custom property description"
     )
-    public Integer getMyCustomProperty();
+    public Integer myCustomProperty();
 
   }
 
@@ -54,23 +54,13 @@ From that point, the framework takes care of providing the configuration instanc
 It also generates the schema, and sends it along to Fusion when it connects to Fusion.
 
 === About com.lucidworks.schema
-The `com.lucidworks.schema` project (included in the connectors SDK) aims to simplify the process of creating JSON Schemas.
-It also provides utilities for building type-safe POJOs from schema definitions.
+The `com.lucidworks.schema` library, which is exposed by the connectors SDK, aims to simplify the process of creating JSON schemas and typed configurations.
 
-The basic idea here is that you create an interface that extends `Model`, add property getters, and then add a few annotations.
-Once your interface has been built, you can generate an `ObjectType` instance, which is the object that contains all of the JSON schema metadata.
-By then combining that schema object with a `Map<String,Object>`, you can create instances of your interface to use as configuration objects.
+The main idea is that you create an interface that extends `Model`, add property getter methods, and a few annotations to describe property constraints and validation rules. The connector SDK provides a base interface, `ConnectorConfig`, which extends `Model`.
 
-The configuration objects are based on `java.lang.reflect.Proxy`, which is what the `ModelGenerator` returns.
-Most method calls to these proxy instances result in method calls to the underlying `Map<String,Object>`.
-For example, if the interface defines a `getId` method, then a runtime call results in a call to the `Map<String,Object>`: `data.get("id")`.
+A configuration type is associated to a connector by calling `ConnectorPlugin.builder(MyConnectorConfig.class)`, you can see an example link:java-sdk/connectors/random-connector/src/main/java/com/lucidworks/connector/plugins/random/RandomContentPlugin.java#L27[here]. This is what makes it possible for the runtime framework to create and provide instances of the configuration, or datasource, when the connector runs.
 
-A few special cases exist:
-
-* `toString` is proxied directly to the `Map<String,Object>`
-* `getClass` returns the class of the interface provided to `ModelGenerator#generate()`
-* `_data` returns the underlying `Map<String,Object>` object
-* If the method starts with `set`, the arguments are captured and sent to the underlying map via `put()`
+The connector runtime also uses these `Model` based interfaces to generate plugin specific schemas. Schemas are used by Fusion in many different ways, but perhaps the most useful is the Fusion Admin UI. The HTML forms used for creating and updating Fusion datasources are dynamically generated from plugin schemas.
 
 Here is a simple example:
 
@@ -79,31 +69,8 @@ interface MyConfig extends Model {
 
   @Property
   @StringSchema(minLength=1)
-  String getId();
+  String id();
 
-}
-```
-
-Create the schema:
-
-```java
-class Runner {
-  public static void main(String[] args){
-    ObjectType schema = SchemaGenerator.generate(MyConfig.class);
-  }
-}
-```
-
-Generate an instance of the `MyConfig` class:
-
-```java
-class Runner {
-  public static void main(String[] args){
-    Map<String,Object> data = new java.util.HashMap<>();
-    data.put("id", 100);
-    MyConfig config = ModelGenerator.generate(MyConfig.class, data);
-    System.out.println("id -> " + config.getId());
-  }
 }
 ```
 
@@ -116,6 +83,6 @@ interface MySetConfig extends Model {
     @SchemaAnnotations.Property(title = "My Set")
     @SchemaAnnotations.ArraySchema(defaultValue = "[\"a\"]")
     @SchemaAnnotations.StringSchema(defaultValue = "some-set-value", minLength = 1, maxLength = 1)
-    Set<String> getMySet();
+    Set<String> mySet();
   }
 ```
