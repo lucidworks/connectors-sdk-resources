@@ -11,9 +11,7 @@ import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInpu
 
 import javax.inject.Inject;
 import java.time.Instant;
-import java.util.Collections;
 import java.util.Date;
-import java.util.Map;
 import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
@@ -48,9 +46,10 @@ public class RandomContentFetcher implements ContentFetcher {
         .asLongStream()
         .forEach(i -> {
           logger.info("Emitting candidate -> number {}", i);
-          Map<String, Object> data = Collections.singletonMap(COUNTER_FIELD, i);
           preFetchContext.newCandidate(String.valueOf(i))
-              .metadata(m -> m.merge(data))
+              .metadata(m -> {
+                m.setLong(COUNTER_FIELD, i);
+              })
               .emit();
         });
     // Simulating an error item here... because we're emitting an item without a "number",
@@ -75,6 +74,10 @@ public class RandomContentFetcher implements ContentFetcher {
     try {
       long num = (Long) input.getMetadata().get(COUNTER_FIELD);
 
+      input.getMetadata()
+          .forEach(
+              (k, v) -> logger.info("Input [{}:{}[{}]]", k, v, v.getClass())
+          );
       logger.info("Emitting Document -> number {}", num);
 
       int min = randomContentProperties.minimumNumberSentences();
