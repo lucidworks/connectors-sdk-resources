@@ -19,7 +19,7 @@ dependencies {
   compile project(":shared-lib")
 }
 ```
- For example, the random-connector [build](random-connector/build.gradle) project is including the `shared-lib` project.
+ For example, the simple-connector [build](simple-connector/build.gradle) project is including the `shared-lib` project.
 
 ## Building the Plugin Zip file
 
@@ -28,14 +28,14 @@ From `java-sdk/connectors`, execute the assemblePlugins task
 ./gradlew clean assemblePlugins
 ```
 
-This produces the zip files, e.g. `random-connector.zip` located in the `build/libs` directory.
+This produces the zip files, e.g. `simple-connector.zip` located in the `build/libs` directory.
 
 At this point, the generated zip could be uploaded directly to Fusion, but follow the steps below to run as a remote plugin.
 
 
 ## Deploy to Fusion
 
-From `java-sdk/connectors/random-connector`, execute the deploy task to automatically deploy the connector to a Fusion, the url can be configurated as show. By default points to localhost.
+From `java-sdk/connectors/simple-connector`, execute the deploy task to automatically deploy the connector to a Fusion, the url can be configurated as show. By default points to localhost.
 ```bash
 ./gradlew deploy -PrestService=http://127.0.0.1:6764/connectors
 ```

@@ -13,7 +13,7 @@ cd connectors-sdk-resources/java-sdk/connectors/
 ./gradlew assemblePlugins
 ```
 
-2. This produces one zip file, named `random-connector.zip`, located in the `build/plugins` directory.
+2. This produces one zip file, named `simple-connector.zip`, located in the `build/plugins` directory.
 This artifact is now ready to be uploaded directly to Fusion as a connector plugin.
 
 3. See the following [instructions](../README.md) on how to build, deploy, and run the plugi
