@@ -68,15 +68,6 @@ public class FeedFetcher implements ContentFetcher {
     return fetchContext.newResult();
   }
 
-  @Override
-  public PostFetchResult postFetch(PostFetchContext postFetchContext) {
-    // Enabling 'purge stray items' allows deletion of stray content.
-    // An item is considered ‘stray’ if its last modified date in crawlDB (modifiedAt_l) is less than startJobTime of the
-    // current crawl, it means, items which were not emitted during the current crawl.
-    // Deletion will happen in postFetch time in the server side.
-    return postFetchContext.newResult().withPurgeStrayItems();
-  }
-
   private void processFeedEntry(FetchContext fetchContext, FetchInput input, Map<String, Object> metaData) {
     long lastJobRunDateTime = (Long) metaData.get(LAST_JOB_RUN_DATE_TIME);
     long entryLastUpdated = (Long) metaData.get(ENTRY_LAST_UPDATED);
@@ -114,9 +105,6 @@ public class FeedFetcher implements ContentFetcher {
             // add 'lastJobRunDateTime'.
             m.setLong(LAST_JOB_RUN_DATE_TIME, lastJobRunDateTime);
           })
-          // for feed-connector purposes, we do not want to reevaluate the crawlDb items in subsequent crawls (except checkpoints)
-          // so, we will emit candidates as transient=true
-          .withTransient(true)
           .emit();
       logger.info("Emit candidate {} to fetch", id);
     });
