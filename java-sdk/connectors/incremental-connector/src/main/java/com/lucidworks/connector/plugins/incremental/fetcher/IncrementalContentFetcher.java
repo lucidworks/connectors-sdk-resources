@@ -49,6 +49,7 @@ public class IncrementalContentFetcher implements ContentFetcher {
       // the fetch() call will attempt to convert the number into a long and throw an exception.
       // The item should be recorded as an error in the ConnectorJobStatus.
       fetchContext.newCandidate(ERROR_ID)
+          .withTransient(true)
           .emit();
       emitCheckpoint(fetchContext, totalNumDocs);
     } else if (input.getId().equals(CHECKPOINT_PREFIX)) {
