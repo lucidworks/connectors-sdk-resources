@@ -65,7 +65,7 @@
 
 ### Access controls / Document ACLs indexing
 
-- Normalized ACLs are stored in the access control collection.
+- Normalized ACLs are stored in the access control collection. It is neccessary that the incoming user ID matches the case of the User ID stored in the access control collection in order for the query-time join to work properly.
 
 ```java
     ctx.newAccessControlItem(<ACCESS_CONTROL_ID>, <TYPE>)
@@ -94,7 +94,7 @@
 ## Querying time
 
 - Graph and join query parsers are used together to build a security filter query.
-- The input for building the query is typically a user ID.
+- The input for building the query is typically a user ID. 
 - Using the input (user ID), the graph query parser traverses linked access control documents (groups, roles etc.)
 - The Join query parser is used to join the access control collection and the content collection.
 - ACLs produced by the query are used to select the associated content documents into the final query result.
