@@ -4,7 +4,7 @@
 
 Feed Connector fetches the entries of a feed file. The file must to be a json file with [this format](../../resources/feed-simple-small.json). If no file is specified, then the connector will generate random contents, following the configurations in the `Generated properties` section.
 
-This connector emits checkpoints, emits candidates as transient=true, and enables the 'Purge Stray Items' feature.
+This connector emits checkpoints, emits candidates as transient=false, and enables the 'Purge Stray Items' feature.
 
 Crawls are incremental.
 
@@ -65,3 +65,9 @@ Note: If after some subsequent crawls, all the documents are removed:
  - clear the datasource (checkpoint wil be removed)
  - change some properties if desired and save the datasource. 
  - Start crawling again
+
+## Upgrading a feed based connector to SDK version 2.0.1 
+
+The SDK version 2.0.1 brings changes to the tagging and removing of stray items. These are areas to update when upgrading your feed connector to SDK 2.0.1 or above.
+1. PostFetchResult - It is no longer necessary to override this method to perform the purging of stray items. If the PostFetch method uses `withPurgeStrayItems()`, it can be removed.
+2. When emitting candidates `fetchContext.newCandidate`, remove `withTransient(true)` or set the property to false `withTransient(false)`.
