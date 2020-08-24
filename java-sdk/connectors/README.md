@@ -32,6 +32,7 @@ This produces the zip files, e.g. `simple-connector.zip` located in the `build/l
 
 At this point, the generated zip could be uploaded directly to Fusion, but follow the steps below to run as a remote plugin.
 
+To target a specific SDK version, checkout the appropriate git tag version before bulding the plugin zip. 
 
 ## Deploy to Fusion
 
