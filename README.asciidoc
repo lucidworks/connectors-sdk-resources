@@ -31,7 +31,8 @@ upload the exact same artifact (a zip file) into Fusion, so Fusion can host it f
 
 |====================================================
 | Fusion release | SDK version
-| 5.1.2 | link:https://github.com/lucidworks/connectors-sdk-resources/releases/tag/v2.0.1[2.0.1]
+| 5.2.0 | link:https://github.com/lucidworks/connectors-sdk-resources/releases/tag/v2.0.2[2.0.2]
+| 5.1.2 - 5.1.4 | link:https://github.com/lucidworks/connectors-sdk-resources/releases/tag/v2.0.1[2.0.1]
 | 5.1.0 - 5.1.1 | link:https://github.com/lucidworks/connectors-sdk-resources/releases/tag/v2.0.0[2.0.0]
 | 5.0.2 | 2.0.0-pre-release
 | 4.2.6 | link:https://github.com/lucidworks/connectors-sdk-resources/releases/tag/v1.5.0[1.5.0]

@@ -5,7 +5,7 @@
 This connector generates a configurable number of documents all with random titles and body fields.
 In the first job, a number of documents are generated. In the second, and subsequent jobs, the connector will generate also an specific number of new documents.
 
-This connector emit checkpoints and emit candidates as transient=true.
+This connector emits checkpoints and emit candidates as transient=true.
 
 Crawls are incremental.
 
