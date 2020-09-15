@@ -11,7 +11,7 @@ ifdef::env-github[]
 link:plugin-client.asciidoc[Connector client utility].
 endif::[]
 ifndef::env-github[]
-link:/fusion-server/{version}/search-development/getting-data-in/connectors/sdk/java-sdk/java-connector-dev.html#plugin-client[Connector client utility].
+link:https://doc.lucidworks.com/how-to/java-connector-dev.html#plugin-client[Connector client utility].
 endif::[]
 
 === Examples
@@ -24,7 +24,7 @@ ifdef::env-github[]
 link:security.asciidoc[here].
 endif::[]
 ifndef::env-github[]
-link:/fusion-server/{version}/search-development/getting-data-in/connectors/sdk/java-sdk/java-connector-dev.html#security[here].
+link:https://doc.lucidworks.com/how-to/java-connector-dev.html#java-sdk-security[here].
 endif::[]
 
 == Java SDK Framework Overview
@@ -62,7 +62,7 @@ endif::[]
 ==== gradle.properties
 The build utility used for packaging up a connector depends on this file and contains required metadata about the connector,
 including its name, version, and the version of Fusion it can connect to.
-Have a look at the example https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/random-connector/gradle.properties[here^].
+Have a look at the example https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/simple-connector/gradle.properties[here^].
 
 ==== src/main/java
 This is where Java code lives by default. This location can be changed, but in this documentation we use the Gradle default.
@@ -74,7 +74,7 @@ The current set of subcomponents include the `Fetcher`, validation, security fil
 You can think of the `Plugin` class as the component that glues everything together for an implementation. It is also a place where fetch 'phases' are defined, by binding fetcher classes to phase names.
 
 You can see an example
-https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/random-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentPlugin.java[here^].
+https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/simple-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentPlugin.java[here^].
 Notice that each subcomponent can have a set of unique dependencies, or several subcomponents can share dependencies.
 
 === The Configuration
@@ -83,14 +83,14 @@ with `@Property` annotations, you can dynamically generate a type-safe configura
 Similarly, you can generate a Fusion-compatible JSON schema by implementing `Model`.
 
 You can see an example of a configuration implementation
-https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/random-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentConfig.java[here^].
+https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/simple-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentConfig.java[here^].
 
 More detailed information on the configuration and schema capabilities can be found
 ifdef::env-github[]
 link:configuration.asciidoc[here].
 endif::[]
 ifndef::env-github[]
-link:/fusion-server/{version}/search-development/getting-data-in/connectors/sdk/java-sdk/java-connector-dev.html#configuration[here].
+link:https://doc.lucidworks.com/how-to/java-connector-dev.html#java-sdk-configuration[here].
 endif::[]
 
 === The Fetcher
@@ -141,7 +141,7 @@ Phases are defined in the 'Plugin' class, by binding a fetcher class to a phase 
 For each phase, the `start`, `preFetch`, `fetch`, `postFetch` and `stop` methods are called on the fetcher instance bound to the phase.
 
 See the example
-https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/random-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentPlugin.java[here^].
+https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/simple-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentPlugin.java[here^].
 
 [[message-definitions]]
 ==== Message Type Definitions
@@ -197,7 +197,7 @@ There is a setting you can enable during the postFetch handler called purge stra
 
 == Developing a Connector
 
-The simplest way to get started developing a connector is to review the https://github.com/lucidworks/connectors-sdk-resources/tree/master/java-sdk/connectors/random-connector[examples^].
+The simplest way to get started developing a connector is to review the https://github.com/lucidworks/connectors-sdk-resources/tree/master/java-sdk/connectors/simple-connector[examples^].
 
 === Dependencies
 At a minimum, all plugins require the connector SDK dependency.
