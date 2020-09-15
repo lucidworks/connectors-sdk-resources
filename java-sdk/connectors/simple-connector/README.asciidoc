@@ -1,4 +1,4 @@
-== Random Connector
+== Simple Connector
 
 === Connector Description
 
