@@ -1,5 +1,6 @@
 package com.lucidworks.connector.plugins.security.config;
 
+import com.lucidworks.fusion.connector.plugin.api.config.AccessControlConfig;
 import com.lucidworks.fusion.connector.plugin.api.config.ConnectorConfig;
 import com.lucidworks.fusion.connector.plugin.api.config.ConnectorPluginProperties;
 import com.lucidworks.fusion.connector.plugin.api.config.SecurityTrimmingConfig;
@@ -24,7 +25,7 @@ public interface SecurityFilteringConfig extends ConnectorConfig<Properties> {
   )
   Properties properties();
 
-  interface Properties extends ConnectorPluginProperties, SecurityTrimmingConfig {
+  interface Properties extends ConnectorPluginProperties, SecurityTrimmingConfig, AccessControlConfig {
 
     @Property(
         title = "Number of Type A documents",
