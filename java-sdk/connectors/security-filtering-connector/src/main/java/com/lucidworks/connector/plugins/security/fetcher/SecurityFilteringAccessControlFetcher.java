@@ -3,8 +3,8 @@ package com.lucidworks.connector.plugins.security.fetcher;
 import com.google.common.base.Strings;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.PreFetchResult;
+import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
-import com.lucidworks.fusion.connector.plugin.api.fetcher.type.security.AccessControlFetcher;
 import com.lucidworks.connector.plugins.security.config.SecurityFilteringConfig;
 import com.lucidworks.connector.plugins.security.util.SecurityFilteringConstants;
 import org.slf4j.Logger;
@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class SecurityFilteringAccessControlFetcher implements AccessControlFetcher {
+public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
 
   private static final Logger logger = LoggerFactory.getLogger(SecurityFilteringAccessControlFetcher.class);
 

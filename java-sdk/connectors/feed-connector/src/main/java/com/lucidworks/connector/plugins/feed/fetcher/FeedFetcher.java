@@ -17,8 +17,6 @@ import javax.inject.Inject;
 import java.time.Instant;
 import java.util.Map;
 
-import static com.lucidworks.fusion.connector.plugin.api.validation.constants.FetchInputValidatorConstants.NOT_MODIFIED;
-
 public class FeedFetcher implements ContentFetcher {
 
   private static final Logger logger = LoggerFactory.getLogger(FeedFetcher.class);
@@ -89,7 +87,7 @@ public class FeedFetcher implements ContentFetcher {
       // purge process will remove unmodified items.
       logger.info("unmodified {}", input.getId());
       fetchContext.newSkip(input.getId())
-          .withConditions(Sets.newHashSet(NOT_MODIFIED))
+          .withConditions(Sets.newHashSet("not-modified"))
           .emit();
     }
   }
