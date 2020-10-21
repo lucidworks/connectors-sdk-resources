@@ -12,8 +12,6 @@ import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFe
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
 
 import javax.inject.Inject;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
@@ -70,12 +68,12 @@ public class SecurityFilteringContentFetcher implements ContentFetcher {
           .emit();
 
       for (Permission permission : securityDocument.getPermissions()) {
-        Map<String, Object> metadata = new HashMap<>();
-        metadata.put(SecurityFilteringConstants.ASSIGNED, permission.getAssigned());
-        metadata.put(SecurityFilteringConstants.TYPE, SecurityFilteringConstants.PERMISSION_TYPE);
         fetchContext.newCandidate(permission.getId())
             .withTargetPhase(ACCESS_CONTROL)
-            .metadata(m -> m.merge(metadata))
+            .metadata(m -> {
+              m.setString(SecurityFilteringConstants.ASSIGNED, permission.getAssigned());
+              m.setString(SecurityFilteringConstants.TYPE, SecurityFilteringConstants.PERMISSION_TYPE);
+            })
             .emit();
       }
     });
@@ -83,9 +81,11 @@ public class SecurityFilteringContentFetcher implements ContentFetcher {
   }
 
   private void emitCandidate(PreFetchContext preFetchContext, DocumentType documentType, int index) {
-    Map<String, Object> metadata = new HashMap<>();
-    metadata.put(SecurityFilteringConstants.TYPE, documentType.name());
-    metadata.put("index", index);
-    preFetchContext.newCandidate(String.format("item-%d", index)).metadata(m -> m.merge(metadata)).emit();
+    preFetchContext.newCandidate(String.format("item-%d", index))
+        .metadata(m -> {
+          m.setString(SecurityFilteringConstants.TYPE, documentType.name());
+          m.setInteger("index", index);
+        })
+        .emit();
   }
 }
