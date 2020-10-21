@@ -1,20 +1,21 @@
 package com.lucidworks.connector.plugins.security.fetcher;
 
 import com.google.common.base.Strings;
+import com.lucidworks.connector.plugins.security.config.SecurityFilteringConfig;
+import com.lucidworks.connector.plugins.security.util.SecurityFilteringConstants;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.PreFetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
-import com.lucidworks.connector.plugins.security.config.SecurityFilteringConfig;
-import com.lucidworks.connector.plugins.security.util.SecurityFilteringConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
 
@@ -51,37 +52,36 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
       case SecurityFilteringConstants.PERMISSION_TYPE:
         String assigned = (String) metadata.getOrDefault(SecurityFilteringConstants.ASSIGNED, null);
         if (!Strings.isNullOrEmpty(assigned)) {
-          context.newAccessControlItem(SecurityFilteringConstants.PERMISSION_TYPE)
-              .addAllInbound(Arrays.asList(assigned))
+          context.newAccessControl(input.getId())
+              .metadata(m -> m.setString("type", SecurityFilteringConstants.PERMISSION_TYPE))
+              .addAllInbound(Collections.singletonList(assigned))
               .emit();
         }
         break;
 
       case SecurityFilteringConstants.USER_TYPE:
         String parentGroup = (String) metadata.getOrDefault(SecurityFilteringConstants.PARENTS, null);
-        List<String> outbound = Arrays.asList();
+        List<String> outbound = Collections.emptyList();
         if (!Strings.isNullOrEmpty(parentGroup)) {
-          outbound = Arrays.asList(parentGroup);
+          outbound = Collections.singletonList(parentGroup);
         }
-        context.newAccessControlItem(SecurityFilteringConstants.USER_TYPE)
-            .addField("fullName", input.getId() + "FullName")
-            .addField("internalId", input.getId().hashCode())
-            .withUPN("someDomain@" + input.getId())
-            .withSID("111-222-333-" + input.getId())
-            .withSAM("someDomain\\" + input.getId())
-            .withDN("A=" + input.getId() + ",B=" + input.getId())
+        context.newAccessControl(input.getId())
+            .metadata(m -> m.setString("type", SecurityFilteringConstants.USER_TYPE))
+            .fields(f -> {
+              f.setString("fullName", input.getId() + "FullName");
+              f.setInteger("internalId", input.getId().hashCode());
+            })
             .addAllOutbound(outbound)
             .emit();
         break;
 
       case SecurityFilteringConstants.GROUP_TYPE:
-        context.newAccessControlItem(SecurityFilteringConstants.GROUP_TYPE)
-            .addField("fullName", input.getId() + "FullName")
-            .addField("internalId", input.getId().hashCode())
-            .withUPN("someDomain@" + input.getId())
-            .withSID("111-222-333-" + input.getId())
-            .withSAM("someDomain\\" + input.getId())
-            .withDN("A=" + input.getId() + ",B=" + input.getId())
+        context.newAccessControl(input.getId())
+            .metadata(m -> m.setString("type", SecurityFilteringConstants.GROUP_TYPE))
+            .fields(f -> {
+              f.setString("fullName", input.getId() + "FullName");
+              f.setInteger("internalId", input.getId().hashCode());
+            })
             .emit();
         break;
 

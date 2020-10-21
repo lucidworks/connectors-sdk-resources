@@ -1,9 +1,9 @@
 package com.lucidworks.connector.plugins.incremental.config;
 
 import com.lucidworks.connector.components.generator.config.RandomContentProperties;
+import com.lucidworks.connector.plugins.incremental.config.RandomIncrementalConfig.Properties;
 import com.lucidworks.fusion.connector.plugin.api.config.ConnectorConfig;
 import com.lucidworks.fusion.connector.plugin.api.config.ConnectorPluginProperties;
-import com.lucidworks.connector.plugins.incremental.config.RandomIncrementalConfig.Properties;
 import com.lucidworks.fusion.schema.SchemaAnnotations.NumberSchema;
 import com.lucidworks.fusion.schema.SchemaAnnotations.Property;
 import com.lucidworks.fusion.schema.SchemaAnnotations.RootSchema;

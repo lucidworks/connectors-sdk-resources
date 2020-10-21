@@ -7,7 +7,7 @@ import java.util.Map;
 
 public class Feed {
 
-  private Map<String, FeedEntry> entries;
+  private final Map<String, FeedEntry> entries;
 
   @JsonCreator
   public Feed(

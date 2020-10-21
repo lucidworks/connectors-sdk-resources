@@ -6,5 +6,3 @@ include 'incremental-connector'
 include 'simple-connector'
 include 'security-filtering-connector'
 include 'shared-lib'
-
-includeBuild '../../../fusion-connectors/libraries/sdk'

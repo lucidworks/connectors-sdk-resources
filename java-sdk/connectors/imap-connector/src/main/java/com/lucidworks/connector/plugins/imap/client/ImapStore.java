@@ -6,8 +6,11 @@ package com.lucidworks.connector.plugins.imap.client;
 public interface ImapStore<T> {
 
   void connect() throws MailException;
+
   T getFolder(String name) throws MailException;
+
   void close();
+
   boolean isConnected();
-  
+
 }

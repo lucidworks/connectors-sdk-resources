@@ -2,13 +2,11 @@ package com.lucidworks.connector.plugins.incremental.fetcher;
 
 import com.lucidworks.connector.components.generator.RandomContentGenerator;
 import com.lucidworks.connector.components.hostname.HostnameProvider;
+import com.lucidworks.connector.plugins.incremental.config.RandomIncrementalConfig;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.PreFetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
-import com.lucidworks.connector.plugins.incremental.config.RandomIncrementalConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.time.Instant;
@@ -16,6 +14,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.IntStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class IncrementalContentFetcher implements ContentFetcher {
 
@@ -77,9 +78,9 @@ public class IncrementalContentFetcher implements ContentFetcher {
     logger.info("Emit checkpoint");
     fetchContext.newCheckpoint(CHECKPOINT_PREFIX)
         .metadata(m -> {
-            m.setInteger(TOTAL_INDEXED, totalNumDocs);
-            m.setLong("lastJobRunDateTime", Instant.now().toEpochMilli());
-            m.setString("hostname", hostname);
+          m.setInteger(TOTAL_INDEXED, totalNumDocs);
+          m.setLong("lastJobRunDateTime", Instant.now().toEpochMilli());
+          m.setString("hostname", hostname);
         })
         .emit();
   }

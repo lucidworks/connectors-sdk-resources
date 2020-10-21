@@ -7,11 +7,12 @@ import com.lucidworks.fusion.connector.plugin.api.validation.ValidationComponent
 import com.lucidworks.fusion.connector.plugin.api.validation.ValidationContext;
 import com.lucidworks.fusion.connector.plugin.api.validation.result.ConnectorConfigValidationResult;
 import com.lucidworks.fusion.schema.ValidationError;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashSet;
 import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ImapConfigValidator implements ValidationComponent {
 

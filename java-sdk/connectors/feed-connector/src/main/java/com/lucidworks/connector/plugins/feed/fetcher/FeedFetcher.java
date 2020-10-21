@@ -2,20 +2,20 @@ package com.lucidworks.connector.plugins.feed.fetcher;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Sets;
-import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
-import com.lucidworks.fusion.connector.plugin.api.fetcher.result.PostFetchResult;
-import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
-import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
 import com.lucidworks.connector.plugins.feed.config.FeedConfig;
 import com.lucidworks.connector.plugins.feed.feed.Feed;
 import com.lucidworks.connector.plugins.feed.feed.FeedEntry;
 import com.lucidworks.connector.plugins.feed.feed.FeedGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
+import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
+import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
 
 import javax.inject.Inject;
 import java.time.Instant;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class FeedFetcher implements ContentFetcher {
 
@@ -74,10 +74,10 @@ public class FeedFetcher implements ContentFetcher {
     if (entryLastUpdated > lastJobRunDateTime) {
       fetchContext.newDocument(input.getId())
           .fields(f -> {
-              f.setString("title_s", (String) metaData.get("title"));
-              f.setLong("lastUpdatedEntry_l", entryLastUpdated);
-              // adding more fields with random values.
-              f.merge(generator.generateFieldsMap());
+            f.setString("title_s", (String) metaData.get("title"));
+            f.setLong("lastUpdatedEntry_l", entryLastUpdated);
+            // adding more fields with random values.
+            f.merge(generator.generateFieldsMap());
           })
           .emit();
       logger.info("Emit document id: {}, lastUpdatedEntry {}", input.getId(), entryLastUpdated);
@@ -119,12 +119,12 @@ public class FeedFetcher implements ContentFetcher {
     logger.info("Emit checkpoint with date {}", currentJobRunDateTime);
     fetchContext.newCheckpoint(CHECKPOINT_PREFIX)
         .metadata(m -> {
-            m.setLong(LAST_JOB_RUN_DATE_TIME, currentJobRunDateTime);
-            m.setString("requestInfoId", fetchContext.getRequestInfo().getId());
-            m.setInteger(ENTRY_INDEX_START,
-                entryIndexStart); // needed when generating entries (entries are not get from a json file)
-            m.setInteger(ENTRY_INDEX_END,
-                entryIndexEnd); // needed when generating entries (  entries are not get from a json file)
+          m.setLong(LAST_JOB_RUN_DATE_TIME, currentJobRunDateTime);
+          m.setString("requestInfoId", fetchContext.getRequestInfo().getId());
+          m.setInteger(ENTRY_INDEX_START,
+              entryIndexStart); // needed when generating entries (entries are not get from a json file)
+          m.setInteger(ENTRY_INDEX_END,
+              entryIndexEnd); // needed when generating entries (  entries are not get from a json file)
         })
         .emit();
   }

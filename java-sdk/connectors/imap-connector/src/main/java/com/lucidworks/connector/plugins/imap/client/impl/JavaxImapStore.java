@@ -48,8 +48,7 @@ public class JavaxImapStore implements ImapStore<Folder> {
 
     try {
       this.delegate.connect(host, username, password);
-    }
-    catch (MessagingException e) {
+    } catch (MessagingException e) {
       throw new MailException(e);
     }
   }
