@@ -32,7 +32,7 @@ public class SecurityFilteringPlugin implements ConnectorPluginProvider {
         .withFetcher(ACCESS_CONTROL, SecurityFilteringAccessControlFetcher.class, fetchModule)
         .withSecuritySpec(sf -> sf
             .staticSpec(spec -> spec
-                .withPrincipal("fullName")))
+                .withPrincipal("AC_SAM_s")))
         .withValidator(SecurityFilteringValidationComponent.class, fetchModule)
         .build();
   }

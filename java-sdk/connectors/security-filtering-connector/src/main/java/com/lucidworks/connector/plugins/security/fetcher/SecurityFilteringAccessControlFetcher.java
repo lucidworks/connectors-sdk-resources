@@ -70,6 +70,10 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
             .fields(f -> {
               f.setString("fullName", input.getId() + "FullName");
               f.setInteger("internalId", input.getId().hashCode());
+              f.setString("AC_UPN", "someDomain@" + input.getId());
+              f.setString("AC_SID", "111-222-333-" + input.getId());
+              f.setString("AC_SAM", "someDomain\\" + input.getId());
+              f.setString("AC_DN", "A=" + input.getId() + ",B=" + input.getId());
             })
             .addAllOutbound(outbound)
             .emit();
@@ -81,6 +85,10 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
             .fields(f -> {
               f.setString("fullName", input.getId() + "FullName");
               f.setInteger("internalId", input.getId().hashCode());
+              f.setString("AC_UPN", "someDomain@" + input.getId());
+              f.setString("AC_SID", "111-222-333-" + input.getId());
+              f.setString("AC_SAM", "someDomain\\" + input.getId());
+              f.setString("AC_DN", "A=" + input.getId() + ",B=" + input.getId());
             })
             .emit();
         break;
