@@ -187,6 +187,39 @@ Errors are recorded in the data store, but are not sent to the associated `Index
 ===== Delete
 `Deletes` tell the controller service to remove a specific item from the data store and associated Fusion collection.
 
+===== AccessControlItem
+`AccessControlItem` message represent group, user, role, etc. used for security filtering.
+
+==== Item state transitions
+
+[width=100%,cols="1,1,1",options="header",subs=attributes+]
+|===
+|Initial Item state |Valid transition state | Comment
+
+.1+a|*Candidate* |FetchInput | Candidates emitted are stored as FetchInput
+
+.4+a|*FetchInput* |Document |
+|Skip |
+|Error |
+|AccessControlItem |
+
+.2+a|*Document* |Skip |
+|Error |
+
+.2+a|*Skip* |Document |
+|Error |
+
+.2+a|*Error* |Document |
+|Skip |
+
+.1+a|*Checkpoint* |Checkpoint | Checkpoint should not transition to any other state
+
+.1+a|*Delete* |No transition state |
+
+.1+a|*AccessControlItem* |No transition state |
+
+|===
+
 === Understanding when and when not to make a Candidate "transient"
 
 The term `transient` refers to a Candidate's persistance with respect to the Crawl-db.
