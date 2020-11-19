@@ -1,9 +1,6 @@
 package com.lucidworks.connector.plugins.imap.client;
 
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.inject.Inject;
 import javax.mail.Address;
 import javax.mail.Flags;
@@ -21,11 +18,14 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class ImapClient {
 
   private static final Logger logger = LoggerFactory.getLogger(ImapClient.class);
 
-  private ImapStore<Folder> store;
+  private final ImapStore<Folder> store;
 
   @Inject
   public ImapClient(ImapStore store) throws MailException {
@@ -51,8 +51,7 @@ public class ImapClient {
       folder.close(false);
 
       return emails;
-    }
-    catch(MessagingException e) {
+    } catch (MessagingException e) {
       throw new MailException(e);
     }
   }
@@ -75,8 +74,7 @@ public class ImapClient {
       String id;
       if (ids != null && ids.length > 0) {
         id = ids[0];
-      }
-      else {
+      } else {
         id = UUID.randomUUID().toString();
       }
 

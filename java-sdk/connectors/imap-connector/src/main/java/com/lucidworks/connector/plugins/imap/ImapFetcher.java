@@ -1,18 +1,19 @@
 package com.lucidworks.connector.plugins.imap;
 
-import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
-import com.lucidworks.fusion.connector.plugin.api.fetcher.result.StopResult;
-import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
 import com.lucidworks.connector.plugins.imap.client.Email;
 import com.lucidworks.connector.plugins.imap.client.ImapClient;
 import com.lucidworks.connector.plugins.imap.client.MailException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
+import com.lucidworks.fusion.connector.plugin.api.fetcher.result.StopResult;
+import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
 
 import javax.inject.Inject;
 import javax.mail.MessagingException;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static com.lucidworks.connector.plugins.imap.ImapConstants.BODY_FIELD;
 import static com.lucidworks.connector.plugins.imap.ImapConstants.CC_FIELD;
@@ -24,14 +25,13 @@ import static com.lucidworks.connector.plugins.imap.ImapConstants.SUBJECT_FIELD;
 import static com.lucidworks.connector.plugins.imap.ImapConstants.TO_FIELD;
 
 
-
 public class ImapFetcher implements ContentFetcher {
 
   private static final Logger logger = LoggerFactory.getLogger(ImapFetcher.class);
 
   private final ImapConfig config;
 
-  private ImapClient imapClient;
+  private final ImapClient imapClient;
 
   @Inject
   public ImapFetcher(
@@ -58,23 +58,23 @@ public class ImapFetcher implements ContentFetcher {
         data.put(SUBJECT_FIELD, message.getSubject());
         data.put(BODY_FIELD, message.getBody());
 
-        for(Map.Entry<String, Object> entry: data.entrySet()) {
-          if(entry.getValue() == null) {
+        for (Map.Entry<String, Object> entry : data.entrySet()) {
+          if (entry.getValue() == null) {
             data.remove(entry.getKey());
-          };
+          }
         }
 
         fetchContext.newDocument(fetchContext.getFetchInput().getId())
-          .fields(f -> f.merge(data))
-          .emit();
+            .fields(f -> f.merge(data))
+            .emit();
       }
 
     } catch (MailException e) {
       String message = "Failed to parse message.";
       logger.error(message, e);
       fetchContext.newError(fetchContext.getFetchInput().getId())
-        .withError(message)
-        .emit();
+          .withError(message)
+          .emit();
     }
 
     return fetchContext.newResult();

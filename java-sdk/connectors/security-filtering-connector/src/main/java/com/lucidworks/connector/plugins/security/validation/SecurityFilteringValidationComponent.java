@@ -1,10 +1,10 @@
 package com.lucidworks.connector.plugins.security.validation;
 
+import com.lucidworks.connector.plugins.security.config.SecurityFilteringConfig;
+import com.lucidworks.connector.plugins.security.util.SecurityFilteringConstants;
 import com.lucidworks.fusion.connector.plugin.api.validation.ValidationComponent;
 import com.lucidworks.fusion.connector.plugin.api.validation.ValidationContext;
 import com.lucidworks.fusion.connector.plugin.api.validation.result.ConnectorConfigValidationResult;
-import com.lucidworks.connector.plugins.security.config.SecurityFilteringConfig;
-import com.lucidworks.connector.plugins.security.util.SecurityFilteringConstants;
 import com.lucidworks.fusion.schema.ValidationError;
 
 import javax.inject.Inject;

@@ -5,9 +5,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class FeedEntry {
 
-  private String id;
-  private String title;
-  private long lastUpdated;
+  private final String id;
+  private final String title;
+  private final long lastUpdated;
 
   @JsonCreator
   public FeedEntry(

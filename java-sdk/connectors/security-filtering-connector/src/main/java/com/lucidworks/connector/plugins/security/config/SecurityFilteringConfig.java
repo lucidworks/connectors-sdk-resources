@@ -1,9 +1,9 @@
 package com.lucidworks.connector.plugins.security.config;
 
+import com.lucidworks.connector.plugins.security.config.SecurityFilteringConfig.Properties;
 import com.lucidworks.fusion.connector.plugin.api.config.ConnectorConfig;
 import com.lucidworks.fusion.connector.plugin.api.config.ConnectorPluginProperties;
-import com.lucidworks.fusion.connector.plugin.api.config.SecurityTrimmingConfig;
-import com.lucidworks.connector.plugins.security.config.SecurityFilteringConfig.Properties;
+import com.lucidworks.fusion.connector.plugin.api.config.security.StaticSecurityConfig;
 import com.lucidworks.fusion.schema.SchemaAnnotations.NumberSchema;
 import com.lucidworks.fusion.schema.SchemaAnnotations.Property;
 import com.lucidworks.fusion.schema.SchemaAnnotations.RootSchema;
@@ -24,7 +24,7 @@ public interface SecurityFilteringConfig extends ConnectorConfig<Properties> {
   )
   Properties properties();
 
-  interface Properties extends ConnectorPluginProperties, SecurityTrimmingConfig {
+  interface Properties extends ConnectorPluginProperties, StaticSecurityConfig {
 
     @Property(
         title = "Number of Type A documents",

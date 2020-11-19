@@ -10,7 +10,6 @@ import com.lucidworks.connector.plugins.security.fetcher.SecurityFilteringConten
 import com.lucidworks.connector.plugins.security.validation.SecurityFilteringValidationComponent;
 import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPlugin;
 import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPluginProvider;
-import com.lucidworks.connector.plugins.security.component.ExampleSecurityFilterFieldsComponent;
 
 import static com.lucidworks.connector.plugins.security.util.SecurityFilteringConstants.ACCESS_CONTROL;
 import static com.lucidworks.connector.plugins.security.util.SecurityFilteringConstants.CONTENT;
@@ -31,7 +30,9 @@ public class SecurityFilteringPlugin implements ConnectorPluginProvider {
     return ConnectorPlugin.builder(SecurityFilteringConfig.class)
         .withFetcher(CONTENT, SecurityFilteringContentFetcher.class, fetchModule)
         .withFetcher(ACCESS_CONTROL, SecurityFilteringAccessControlFetcher.class, fetchModule)
-        .withSecurityFilterFields(ExampleSecurityFilterFieldsComponent.class)
+        .withSecuritySpec(sf -> sf
+            .staticSpec(spec -> spec
+                .withPrincipal("fullName_s")))
         .withValidator(SecurityFilteringValidationComponent.class, fetchModule)
         .build();
   }
