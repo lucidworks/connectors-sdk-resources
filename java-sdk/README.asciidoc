@@ -20,12 +20,7 @@ Have a look at the https://github.com/lucidworks/connectors-sdk-resources/blob/m
 
 === Security
 Read more on how to set up a secure environment for Java SDK connectors
-ifdef::env-github[]
-link:security.asciidoc[here].
-endif::[]
-ifndef::env-github[]
 link:https://doc.lucidworks.com/how-to/java-connector-dev.html#java-sdk-security[here].
-endif::[]
 
 == Java SDK Framework Overview
 Only a few components must be implemented to compile and build a functioning plugin.
