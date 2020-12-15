@@ -60,18 +60,6 @@ The Fusion Admin UI also takes care of the view or presentation, by making use o
 
 This client-based approach decouples connectors from Fusion, which allows hot deployment of connectors through a simple connect call.
 
-== Security
-Fusion connectors support SSL/TLS. See the link:security.asciidoc[security README] for setup.
-
-=== gRPC
-The underlying client/server technology used by these connectors is a fast and efficient framework from Google called https://grpc.io/[gRPC^].
-The gRPC framework provides flexibility in the way services and their methods are defined. Other benefits of this framework include:
-
-* HTTP/2 based transport
-* Provides an efficient serialization format for data handling (protocol buffers)
-* Allows bi-directional/multiplexed streams
-* Flow control, also known as back pressure
-
 == Distributed Data Store
 The data persisted by the connectors framework is distributed across the Fusion cluster. Each node holds its primary partition of the data, as well as backups of other partitions.
 If a node goes down during a crawl, the data store remains intact and usable. Connector implementations do not need to be concerned with this layer, because it is all handled by Fusion.
