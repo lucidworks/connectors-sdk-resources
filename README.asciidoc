@@ -60,9 +60,6 @@ The Fusion Admin UI also takes care of the view or presentation, by making use o
 
 This client-based approach decouples connectors from Fusion, which allows hot deployment of connectors through a simple connect call.
 
-== Security
-Fusion connectors support SSL/TLS. See the link:security.asciidoc[security README] for setup.
-
 == Distributed Data Store
 The data persisted by the connectors framework is distributed across the Fusion cluster. Each node holds its primary partition of the data, as well as backups of other partitions.
 If a node goes down during a crawl, the data store remains intact and usable. Connector implementations do not need to be concerned with this layer, because it is all handled by Fusion.
