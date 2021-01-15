@@ -7,7 +7,6 @@ import com.lucidworks.connector.plugins.security.model.SecurityDocument;
 import com.lucidworks.connector.plugins.security.util.DocumentType;
 import com.lucidworks.connector.plugins.security.util.SecurityFilteringConstants;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
-import com.lucidworks.fusion.connector.plugin.api.fetcher.result.PreFetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
 
@@ -36,27 +35,21 @@ public class SecurityFilteringContentFetcher implements ContentFetcher {
   }
 
   @Override
-  public PreFetchResult preFetch(PreFetchContext preFetchContext) {
-    AtomicInteger index = new AtomicInteger(1);
-
-    IntStream.rangeClosed(1, config.properties().typeADocuments())
-        .forEach(indexA -> emitCandidate(preFetchContext, DocumentType.DOCUMENT_TYPE_A, index.getAndIncrement()));
-
-    IntStream.rangeClosed(1, config.properties().typeBDocuments())
-        .forEach(indexB -> emitCandidate(preFetchContext, DocumentType.DOCUMENT_TYPE_B, index.getAndIncrement()));
-
-    IntStream.rangeClosed(1, config.properties().typeCDocuments())
-        .forEach(indexC -> emitCandidate(preFetchContext, DocumentType.DOCUMENT_TYPE_C, index.getAndIncrement()));
-
-    IntStream.rangeClosed(1, config.properties().typeDDocuments())
-        .forEach(indexD -> emitCandidate(preFetchContext, DocumentType.DOCUMENT_TYPE_D, index.getAndIncrement()));
-    logger.info("Generated [{}] candidates", index.get());
-    return preFetchContext.newResult();
-  }
-
-  @Override
   public FetchResult fetch(FetchContext fetchContext) {
     FetchInput input = fetchContext.getFetchInput();
+    if(!input.hasId()){
+      AtomicInteger index = new AtomicInteger(1);
+      IntStream.rangeClosed(1, config.properties().typeADocuments())
+          .forEach(indexA -> emitCandidate(preFetchContext, DocumentType.DOCUMENT_TYPE_A, index.getAndIncrement()));
+      IntStream.rangeClosed(1, config.properties().typeBDocuments())
+          .forEach(indexB -> emitCandidate(preFetchContext, DocumentType.DOCUMENT_TYPE_B, index.getAndIncrement()));
+      IntStream.rangeClosed(1, config.properties().typeCDocuments())
+          .forEach(indexC -> emitCandidate(preFetchContext, DocumentType.DOCUMENT_TYPE_C, index.getAndIncrement()));
+      IntStream.rangeClosed(1, config.properties().typeDDocuments())
+          .forEach(indexD -> emitCandidate(preFetchContext, DocumentType.DOCUMENT_TYPE_D, index.getAndIncrement()));
+      logger.info("Generated [{}] candidates", index.get());
+      return fetchContext.newResult();
+    }
     Optional<SecurityDocument> document = documentGenerator.generate(input.getId(), input.getMetadata());
     document.ifPresent(securityDocument -> {
       fetchContext.newDocument()
