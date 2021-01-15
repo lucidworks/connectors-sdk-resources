@@ -4,7 +4,6 @@ import com.lucidworks.connector.components.generator.RandomContentGenerator;
 import com.lucidworks.connector.components.hostname.HostnameProvider;
 import com.lucidworks.connector.plugins.incremental.config.RandomIncrementalConfig;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
-import com.lucidworks.fusion.connector.plugin.api.fetcher.result.PreFetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
 
@@ -38,11 +37,6 @@ public class IncrementalContentFetcher implements ContentFetcher {
     this.incrementalContentConfig = incrementalContentConfig;
     this.generator = generator;
     this.hostname = hostnameProvider.get();
-  }
-
-  @Override
-  public PreFetchResult preFetch(PreFetchContext preFetchContext) {
-    return preFetchContext.newResult();
   }
 
   @Override
