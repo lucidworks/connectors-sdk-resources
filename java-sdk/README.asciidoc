@@ -100,29 +100,19 @@ that contain metadata and content. See the link:#message-definitions[message def
 The `Fetcher` has a simple lifecycle for dealing with fetching content.
 The flow outline is as follows:
 ```
-    start()           - called once for each fetcher when the Job is started
-        preFetch()    - called once for each fetcher after start() and before any invocation to fetch()
-            fetch()   - called for each input to fetch
-        postFetch()   - called once for each fetcher after all invocations to fetch()
-    stop()            - called once for each fetcher when the Job is stopped
+    start()       - called once for each fetcher when the Job is started
+        fetch()   - called for each input to fetch
+    stop()        - called once for each fetcher when the Job is stopped
 ```
 
 ====== start()
 When a `ConnectorJob` starts, the Fetcher's `start()` method is called. The main use case for a start() call
 is to run setup code. This method is called on every fetcher bound to a phase once per job run.
 
-====== preFetch()
-This method is called once for every fetcher bound to a phase and allows a connector to emit data, that will eventually be
-sent to the fetch() method. A common use case for this is to emit a large amount of metadata, which the controller service
-later distributes across the cluster to perform the real fetch work.
-
 ====== fetch()
 This is the primary fetch method for a crawler-like connector (for example, a file system or web connector). Messages emitted here
 can include `Documents`, which are indexed directly into the associated content collection. There are several other
 types of messages; see link:#message-definitions[Message Definitions].
-
-====== postFetch()
-Called on each fetcher after it finishes fetching all emitted candidates for a given job run.
 
 ====== stop()
 Called once per job run, at the end, on every fetcher bound to a phase.
@@ -133,7 +123,7 @@ fetching into steps, so that (for example), the first phase may fetch only metad
 
 Phases are defined in the 'Plugin' class, by binding a fetcher class to a phase name. A single fetcher class can be bound to multiple phases.
 
-For each phase, the `start`, `preFetch`, `fetch`, `postFetch` and `stop` methods are called on the fetcher instance bound to the phase.
+For each phase, the `start`, `fetch`, and `stop` methods are called on the fetcher instance bound to the phase.
 
 See the example
 https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/simple-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentPlugin.java[here^].
