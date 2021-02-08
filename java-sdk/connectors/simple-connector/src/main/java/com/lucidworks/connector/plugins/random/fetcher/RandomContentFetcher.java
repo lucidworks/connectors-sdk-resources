@@ -5,7 +5,6 @@ import com.lucidworks.connector.components.generator.config.RandomContentPropert
 import com.lucidworks.connector.components.hostname.HostnameProvider;
 import com.lucidworks.connector.plugins.random.config.RandomContentConfig;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
-import com.lucidworks.fusion.connector.plugin.api.fetcher.result.PreFetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
 
@@ -40,30 +39,25 @@ public class RandomContentFetcher implements ContentFetcher {
   }
 
   @Override
-  public PreFetchResult preFetch(PreFetchContext preFetchContext) {
-    int totalNumberOfDocs = randomContentProperties.totalNumDocs();
-    IntStream.range(0, totalNumberOfDocs)
-        .asLongStream()
-        .forEach(i -> {
-          logger.info("Emitting candidate -> number {}", i);
-          preFetchContext.newCandidate(String.valueOf(i))
-              .metadata(m -> {
-                m.setLong(COUNTER_FIELD, i);
-              })
-              .emit();
-        });
-    // Simulating an error item here... because we're emitting an item without a "number",
-    // the fetch() call will attempt to convert the number into a long and throw an exception.
-    // The item should be recorded as an error in the ConnectorJobStatus.
-    preFetchContext.newCandidate(ERROR_ID)
-        .emit();
-    return preFetchContext.newResult();
-  }
-
-  @Override
   public FetchResult fetch(FetchContext fetchContext) {
     FetchInput input = fetchContext.getFetchInput();
     logger.info("Received FetchInput -> {}", input);
+    if (!input.hasId()) {
+      int totalNumberOfDocs = randomContentProperties.totalNumDocs();
+      IntStream.range(0, totalNumberOfDocs)
+          .asLongStream()
+          .forEach(i -> {
+            logger.info("Emitting candidate -> number {}", i);
+            fetchContext.newCandidate(String.valueOf(i))
+                .metadata(m -> m.setLong(COUNTER_FIELD, i))
+                .emit();
+          });
+      // Simulating an error item here... because we're emitting an item without a "number",
+      // the fetch() call will attempt to convert the number into a long and throw an exception.
+      // The item should be recorded as an error in the ConnectorJobStatus.
+      fetchContext.newCandidate(ERROR_ID).emit();
+      return fetchContext.newResult();
+    }
 
     emitDocument(fetchContext, input);
 
@@ -99,7 +93,8 @@ public class RandomContentFetcher implements ContentFetcher {
     } catch (NullPointerException npe) {
       if (ERROR_ID.equals(input.getId())) {
         logger.error("The following error is expected, as means to demonstrate how errors are emitted");
-        fetchContext.newError(input.getId()).withError("Expected exception").emit();
+        fetchContext.newError(input.getId())
+            .withError("Expected exception").emit();
         return;
       }
       throw npe;

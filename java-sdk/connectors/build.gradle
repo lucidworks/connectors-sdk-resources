@@ -5,8 +5,6 @@ subprojects {
   apply plugin: 'java'
   apply plugin: 'idea'
 
-  sourceCompatibility = 1.8
-
   // Folder where the plugins are built
   ext.pluginsDir = "${rootProject.buildDir}/plugins"
 
@@ -103,7 +101,13 @@ configure(connectorprojects) { p ->
   }
 }
 
-
+// Assemble all the plugins
 task assemblePlugins(type: Copy) {
   dependsOn connectorprojects.assemblePlugin
+}
+
+// Deploy all plugins
+// ./gradlew deployPlugins -PrestService=https://<fusion-proxy>/connectors -PuserPass=<user>:<password>
+task deployPlugins {
+  dependsOn connectorprojects.deploy
 }
