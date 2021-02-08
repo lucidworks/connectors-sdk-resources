@@ -73,8 +73,8 @@ public class SecurityFilteringContentFetcher implements ContentFetcher {
     return fetchContext.newResult();
   }
 
-  private void emitCandidate(FetchContext preFetchContext, DocumentType documentType, int index) {
-    preFetchContext.newCandidate(String.format("item-%d", index))
+  private void emitCandidate(FetchContext fetchContext, DocumentType documentType, int index) {
+    fetchContext.newCandidate(String.format("item-%d", index))
         .metadata(m -> {
           m.setString(SecurityFilteringConstants.TYPE, documentType.name());
           m.setInteger("index", index);
