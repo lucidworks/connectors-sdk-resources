@@ -42,20 +42,20 @@ public class RandomContentFetcher implements ContentFetcher {
   public FetchResult fetch(FetchContext fetchContext) {
     FetchInput input = fetchContext.getFetchInput();
     logger.info("Received FetchInput -> {}", input);
-    if(!input.hasId()){
+    if (!input.hasId()) {
       int totalNumberOfDocs = randomContentProperties.totalNumDocs();
       IntStream.range(0, totalNumberOfDocs)
           .asLongStream()
           .forEach(i -> {
             logger.info("Emitting candidate -> number {}", i);
-            preFetchContext.newCandidate(String.valueOf(i))
-                .metadata(m -> {m.setLong(COUNTER_FIELD, i);})
+            fetchContext.newCandidate(String.valueOf(i))
+                .metadata(m -> m.setLong(COUNTER_FIELD, i))
                 .emit();
-      });
+          });
       // Simulating an error item here... because we're emitting an item without a "number",
       // the fetch() call will attempt to convert the number into a long and throw an exception.
       // The item should be recorded as an error in the ConnectorJobStatus.
-      preFetchContext.newCandidate(ERROR_ID).emit();
+      fetchContext.newCandidate(ERROR_ID).emit();
       return fetchContext.newResult();
     }
 
@@ -93,7 +93,8 @@ public class RandomContentFetcher implements ContentFetcher {
     } catch (NullPointerException npe) {
       if (ERROR_ID.equals(input.getId())) {
         logger.error("The following error is expected, as means to demonstrate how errors are emitted");
-        fetchContext.newError(input.getId()).withError("Expected exception").emit();
+        fetchContext.newError(input.getId())
+            .withError("Expected exception").emit();
         return;
       }
       throw npe;

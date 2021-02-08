@@ -37,16 +37,16 @@ public class SecurityFilteringContentFetcher implements ContentFetcher {
   @Override
   public FetchResult fetch(FetchContext fetchContext) {
     FetchInput input = fetchContext.getFetchInput();
-    if(!input.hasId()){
+    if (!input.hasId()) {
       AtomicInteger index = new AtomicInteger(1);
       IntStream.rangeClosed(1, config.properties().typeADocuments())
-          .forEach(indexA -> emitCandidate(preFetchContext, DocumentType.DOCUMENT_TYPE_A, index.getAndIncrement()));
+          .forEach(indexA -> emitCandidate(fetchContext, DocumentType.DOCUMENT_TYPE_A, index.getAndIncrement()));
       IntStream.rangeClosed(1, config.properties().typeBDocuments())
-          .forEach(indexB -> emitCandidate(preFetchContext, DocumentType.DOCUMENT_TYPE_B, index.getAndIncrement()));
+          .forEach(indexB -> emitCandidate(fetchContext, DocumentType.DOCUMENT_TYPE_B, index.getAndIncrement()));
       IntStream.rangeClosed(1, config.properties().typeCDocuments())
-          .forEach(indexC -> emitCandidate(preFetchContext, DocumentType.DOCUMENT_TYPE_C, index.getAndIncrement()));
+          .forEach(indexC -> emitCandidate(fetchContext, DocumentType.DOCUMENT_TYPE_C, index.getAndIncrement()));
       IntStream.rangeClosed(1, config.properties().typeDDocuments())
-          .forEach(indexD -> emitCandidate(preFetchContext, DocumentType.DOCUMENT_TYPE_D, index.getAndIncrement()));
+          .forEach(indexD -> emitCandidate(fetchContext, DocumentType.DOCUMENT_TYPE_D, index.getAndIncrement()));
       logger.info("Generated [{}] candidates", index.get());
       return fetchContext.newResult();
     }
@@ -73,7 +73,7 @@ public class SecurityFilteringContentFetcher implements ContentFetcher {
     return fetchContext.newResult();
   }
 
-  private void emitCandidate(PreFetchContext preFetchContext, DocumentType documentType, int index) {
+  private void emitCandidate(FetchContext preFetchContext, DocumentType documentType, int index) {
     preFetchContext.newCandidate(String.format("item-%d", index))
         .metadata(m -> {
           m.setString(SecurityFilteringConstants.TYPE, documentType.name());

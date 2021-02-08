@@ -64,6 +64,9 @@ $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0
 Invoke-RestMethod -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Method PUT -ContentType "application/zip" "${FUSION_PROXY_URL}" -InFile "${PLUGIN_ZIP_PATH}"
 ```
 
+## Java version
+
+Since Fusion 5.2 connectors services use java 11.
 
 ## Upgrade Connector implementation to Fusion 5
 

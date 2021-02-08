@@ -4,17 +4,17 @@ import com.google.common.base.Strings;
 import com.lucidworks.connector.plugins.security.config.SecurityFilteringConfig;
 import com.lucidworks.connector.plugins.security.util.SecurityFilteringConstants;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
-import com.lucidworks.fusion.connector.plugin.api.fetcher.result.PreFetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
 
@@ -28,19 +28,16 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
   }
 
   @Override
-  public PreFetchResult preFetch(PreFetchContext context) {
-    //emit the default users and group
-    emit(context, SecurityFilteringConstants.USER_A, SecurityFilteringConstants.USER_TYPE, null);
-    emit(context, SecurityFilteringConstants.USER_B, SecurityFilteringConstants.USER_TYPE,
-        SecurityFilteringConstants.GROUP_B);
-    emit(context, SecurityFilteringConstants.USER_C, SecurityFilteringConstants.USER_TYPE, null);
-    emit(context, SecurityFilteringConstants.GROUP_B, SecurityFilteringConstants.GROUP_TYPE, null);
-    return context.newResult();
-  }
-
-  @Override
   public FetchResult fetch(FetchContext context) {
     FetchInput input = context.getFetchInput();
+    if (!input.hasId()) {
+      //emit the default users and group
+      emit(context, SecurityFilteringConstants.USER_A, SecurityFilteringConstants.USER_TYPE, null);
+      emit(context, SecurityFilteringConstants.USER_B, SecurityFilteringConstants.USER_TYPE,
+          SecurityFilteringConstants.GROUP_B);
+      emit(context, SecurityFilteringConstants.USER_C, SecurityFilteringConstants.USER_TYPE, null);
+      emit(context, SecurityFilteringConstants.GROUP_B, SecurityFilteringConstants.GROUP_TYPE, null);
+    }
     String type = (String) input.getMetadata().getOrDefault(SecurityFilteringConstants.TYPE, null);
     if (Strings.isNullOrEmpty(type)) {
       return context.newResult();
@@ -90,7 +87,7 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
     return context.newResult();
   }
 
-  private void emit(PreFetchContext context, String id, String type, String parentId) {
+  private void emit(FetchContext context, String id, String type, String parentId) {
     Map<String, Object> metadata = new HashMap<>();
     metadata.put(SecurityFilteringConstants.TYPE, type);
     if (!Strings.isNullOrEmpty(parentId)) {
