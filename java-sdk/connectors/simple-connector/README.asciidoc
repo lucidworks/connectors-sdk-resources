@@ -33,4 +33,4 @@ This artifact is now ready to be uploaded directly to Fusion as a connector plug
 === How to use the connector
 
 - Create a configuration with the properties listed above.
-- After the first job is completed, the connector will index the same number of documents as defined in the `Randon content generator properties.Total` property.
+- After the first job is completed, the connector will index the same number of documents as defined in the `Random content generator properties.Total` property.
