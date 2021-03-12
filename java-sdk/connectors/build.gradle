@@ -11,6 +11,7 @@ subprojects {
   configurations {
     provided
     compile.extendsFrom(provided)
+    remoteConnector
   }
 
   repositories {
@@ -19,12 +20,30 @@ subprojects {
     maven {
       url "https://artifactory.lucidworks.com/artifactory/public-artifacts/"
     }
+
+    repositories {
+      def pluginsLucidworks =  ivy {
+        url 'https://plugins.lucidworks.com/'
+
+        patternLayout {
+          artifact '/[organisation]/5.3/[module]-[revision].[ext]'
+          artifact '/[organisation]/5.4/[module]-[revision].[ext]'
+        }
+
+        metadataSources { artifact() }
+      }
+      exclusiveContent {
+        forRepositories(pluginsLucidworks)
+        filter { includeGroup("remote-connector") }
+      }
+    }
   }
 
   dependencies {
     provided("com.lucidworks-connector.sdk:connector-plugin-sdk:${connectorsSDKVersion}")
     provided "org.slf4j:slf4j-api:${slf4jVersion}"
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile 'junit:junit:4.12'
+    remoteConnector "remote-connector:connector-plugin-standalone:${fusionVersion}"
   }
 }
 
@@ -79,24 +98,16 @@ configure(connectorprojects) { p ->
     }
   }
 
-  task connect(type: Exec, dependsOn: ["assemblePlugin"]) {
-    def clientJar = "${clientJarAbsolutePath}"
-    def argsList = []
-    argsList << "java"
-    argsList << "-Dcom.lucidworks.fusion.plugin.hosts=${fusionRpcTarget}"
-    argsList << "-Dcom.lucidworks.fusion.plugin.stop.port=${stopPort}"
-    if (project.hasProperty("debug")) {
-      argsList << "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5010"
-    }
-    argsList << "-jar"
-    argsList << clientJar
-    argsList << "${project.buildDir}/libs/${project.name}.zip"
-
-    commandLine argsList
-
+  task connect(type: JavaExec, dependsOn: assemblePlugin) {
+    main = 'com.lucidworks.connectors.ConnectorPluginStandaloneApp'
+    classpath = configurations.remoteConnector
+    File configYamlFile = file("${configYamlPath}")
+    String zipFile = "" + project.buildDir + "/libs/" + project.name + ".zip"
+    jvmArgs "-Dplugin.path=${zipFile}"
+    args configYamlFile.path
     doFirst {
-      println "   -- Using client-jar ${clientJar}"
-      println "   -- Connecting plugin ${project.buildDir}/libs/${project.name}.zip to ${fusionRpcTarget}"
+      println " >> Using plugin zip from: ${zipFile}"
+      println " >> Using the config file from: ${configYamlFile.path}"
     }
   }
 }

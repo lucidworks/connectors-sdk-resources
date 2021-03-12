@@ -38,7 +38,7 @@ To target a specific SDK version, checkout the appropriate git tag version befor
 
 From `java-sdk/connectors/simple-connector`, execute the deploy task to automatically deploy the connector to a Fusion, the url can be configurated as show. By default points to localhost.
 ```bash
-./gradlew deploy -PrestService=http://127.0.0.1:6764/connectors
+./gradlew deploy -PrestService=http://127.0.0.1:6764/connectors -PuserPass=<user>:<password>
 ```
 
 While developing the plugin, you will need a way to deploy your changes quick and easy to Fusion.
@@ -63,6 +63,35 @@ $fusion_password = "password"
 $base64AuthInfo = [Convert]::ToBase64String([Text.Encoding]::ASCII.GetBytes(("{0}:{1}" -f $fusion_username,$fusion_password)))
 Invoke-RestMethod -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Method PUT -ContentType "application/zip" "${FUSION_PROXY_URL}" -InFile "${PLUGIN_ZIP_PATH}"
 ```
+
+## Connect to Fusion Remotely
+
+Before trying to run plugins remotely, please go to [lucidworks](https://doc.lucidworks.com) to check how to configure fusion to run plugins remotely.
+
+A configuration file `config.yaml` holding the cluster information is needed in order to connect remotely to a fusion cluster.
+
+```bash
+pulsar:
+  service-url: <Pulsar Service URL>
+  admin-url: <Pulsar Admin URL>
+  tenant-name: <Pulsar Tenant Name (kube namespace)>
+  authenticationEnabled: <Pulsar authentication enabled flag>
+  tlsEnabled: <TLS enabled flag>
+proxy:
+  user: <Fusion proxy user>
+  password: <Fusion proxy password>
+  url: <Fusion proxy url>
+```
+NOTE: The `plugin.path` is not needed since the gradle task injects the plugin zip.
+
+The steps to use the `connect` tasks are the following:
+1. Create a `config.yaml` with your cluster information.
+2. Verify that the fusionVersion is correct on the gradle.properties file.
+3. Execute the `connect` task providing the plugin name and, the path to the configuration file.
+```bash
+./gradlew -p simple-connector connect -PconfigYamlPath=/path/to/config.yaml
+```
+4. After connecting to the cluster you should be able to see the plugin in Fusion's UI.
 
 ## Java version
 
