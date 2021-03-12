@@ -66,7 +66,7 @@ Invoke-RestMethod -Headers @{Authorization=("Basic {0}" -f $base64AuthInfo)} -Me
 
 ## Connect to Fusion Remotely
 
-Before trying to run plugins remotely, please go to [lucidworks](https://doc.lucidworks.com) to check how to configure fusion to run plugins remotely.
+Before trying to run plugins remotely, please go to [remote-connector documentation](https://doc.lucidworks.com/how-to/8869/use-a-remote-connector-with-pulsar-proxy) to check how to configure fusion to run plugins remotely.
 
 A configuration file `config.yaml` holding the cluster information is needed in order to connect remotely to a fusion cluster.
 
