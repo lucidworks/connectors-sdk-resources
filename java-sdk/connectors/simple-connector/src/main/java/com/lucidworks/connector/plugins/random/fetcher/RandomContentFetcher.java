@@ -9,8 +9,10 @@ import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFe
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
 
 import javax.inject.Inject;
+import java.io.BufferedInputStream;
 import java.time.Instant;
 import java.util.Date;
+import java.util.Objects;
 import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
@@ -20,6 +22,7 @@ public class RandomContentFetcher implements ContentFetcher {
 
   private static final Logger logger = LoggerFactory.getLogger(RandomContentFetcher.class);
 
+  private static final String CONTENT_ID = "content-example";
   private static final String ERROR_ID = "no-number-this-should-fail";
   private static final String COUNTER_FIELD = "number";
 
@@ -43,6 +46,7 @@ public class RandomContentFetcher implements ContentFetcher {
     FetchInput input = fetchContext.getFetchInput();
     logger.info("Received FetchInput -> {}", input);
     if (!input.hasId()) {
+      // Emit initial set of candidates
       int totalNumberOfDocs = randomContentProperties.totalNumDocs();
       IntStream.range(0, totalNumberOfDocs)
           .asLongStream()
@@ -56,10 +60,16 @@ public class RandomContentFetcher implements ContentFetcher {
       // the fetch() call will attempt to convert the number into a long and throw an exception.
       // The item should be recorded as an error in the ConnectorJobStatus.
       fetchContext.newCandidate(ERROR_ID).emit();
+      // Emits an item indicating that will produce a Content Item
+      fetchContext.newCandidate(CONTENT_ID).emit();
       return fetchContext.newResult();
     }
 
-    emitDocument(fetchContext, input);
+    if (CONTENT_ID.equals(fetchContext.getFetchInput().getId())) {
+      emitContent(fetchContext, input);
+    } else {
+      emitDocument(fetchContext, input);
+    }
 
     return fetchContext.newResult();
   }
@@ -99,5 +109,18 @@ public class RandomContentFetcher implements ContentFetcher {
       }
       throw npe;
     }
+  }
+
+  private void emitContent(FetchContext fetchContext, FetchInput input) {
+    logger.info("Emitting content of input={}", input);
+    // For Example purpose - the connector is getting a file from the resources folder and emit it as a Content.
+    // In the real world, this should be a network call to some system.
+    fetchContext.newContent(input.getId(), () -> RandomContentFetcher.class.getClassLoader().getResourceAsStream("example.pdf"))
+        .fields(f -> {
+          f.setLong("timestamp", Instant.now().toEpochMilli());
+          f.setString("hostname", hostname);
+          f.setDate("crawl_date", new Date());
+        })
+        .emit();
   }
 }
