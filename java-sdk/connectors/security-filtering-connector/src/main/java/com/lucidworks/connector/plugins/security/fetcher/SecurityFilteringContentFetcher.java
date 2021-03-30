@@ -7,6 +7,8 @@ import com.lucidworks.connector.plugins.security.model.SecurityDocument;
 import com.lucidworks.connector.plugins.security.util.DocumentType;
 import com.lucidworks.connector.plugins.security.util.SecurityFilteringConstants;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
+import com.lucidworks.fusion.connector.plugin.api.fetcher.result.StartResult;
+import com.lucidworks.fusion.connector.plugin.api.fetcher.result.StopResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
 
@@ -38,6 +40,7 @@ public class SecurityFilteringContentFetcher implements ContentFetcher {
   public FetchResult fetch(FetchContext fetchContext) {
     FetchInput input = fetchContext.getFetchInput();
     if (!input.hasId()) {
+      logger.info("Initial crawl");
       AtomicInteger index = new AtomicInteger(1);
       IntStream.rangeClosed(1, config.properties().typeADocuments())
           .forEach(indexA -> emitCandidate(fetchContext, DocumentType.DOCUMENT_TYPE_A, index.getAndIncrement()));
@@ -47,7 +50,31 @@ public class SecurityFilteringContentFetcher implements ContentFetcher {
           .forEach(indexC -> emitCandidate(fetchContext, DocumentType.DOCUMENT_TYPE_C, index.getAndIncrement()));
       IntStream.rangeClosed(1, config.properties().typeDDocuments())
           .forEach(indexD -> emitCandidate(fetchContext, DocumentType.DOCUMENT_TYPE_D, index.getAndIncrement()));
+
       logger.info("Generated [{}] candidates", index.get());
+      //emit the default users and group
+      fetchContext.newCandidate(SecurityFilteringConstants.USER_A)
+          .withTargetPhase(ACCESS_CONTROL)
+          .metadata(m -> m.setString(SecurityFilteringConstants.TYPE, SecurityFilteringConstants.USER_TYPE))
+          .emit();
+
+      fetchContext.newCandidate(SecurityFilteringConstants.USER_B)
+          .withTargetPhase(ACCESS_CONTROL)
+          .metadata(m -> {
+            m.setString(SecurityFilteringConstants.TYPE, SecurityFilteringConstants.USER_TYPE);
+            m.setString(SecurityFilteringConstants.PARENTS, SecurityFilteringConstants.GROUP_B);
+          })
+          .emit();
+
+      fetchContext.newCandidate(SecurityFilteringConstants.USER_C)
+          .withTargetPhase(ACCESS_CONTROL)
+          .metadata(m -> m.setString(SecurityFilteringConstants.TYPE, SecurityFilteringConstants.USER_TYPE))
+          .emit();
+
+      fetchContext.newCandidate(SecurityFilteringConstants.GROUP_B)
+          .withTargetPhase(ACCESS_CONTROL)
+          .metadata(m -> m.setString(SecurityFilteringConstants.TYPE, SecurityFilteringConstants.GROUP_TYPE))
+          .emit();
       return fetchContext.newResult();
     }
     Optional<SecurityDocument> document = documentGenerator.generate(input.getId(), input.getMetadata());

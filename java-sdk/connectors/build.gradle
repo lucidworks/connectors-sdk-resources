@@ -40,9 +40,11 @@ subprojects {
   }
 
   dependencies {
-    provided("com.lucidworks-connector.sdk:connector-plugin-sdk:${connectorsSDKVersion}")
+    provided "com.lucidworks-connector.sdk:connector-plugin-sdk:${connectorsSDKVersion}"
     provided "org.slf4j:slf4j-api:${slf4jVersion}"
+
     testCompile 'junit:junit:4.12'
+
     remoteConnector "remote-connector:connector-plugin-standalone:${fusionVersion}"
   }
 }

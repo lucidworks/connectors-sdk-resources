@@ -3,17 +3,13 @@
 ## Connector Description
 
 - This connector generates a configurable number of documents, all with random titles and body fields.
-- Also document ACLs, groups and users will be generated using the connector configurations.
+- The connector also generates ACL Documents.
+- Groups and users will be generated using the connector configurations.
 
 ### Access Control Fetcher behavior
 
-- This fetcher was implemented in SecurityFilteringAccessControlFetcher class
-- `numberOfNestedGroups` represents the number of nested groups levels, for each level, the same number of groups will be created, and a user who will own them will be created too.
-    - Group ID format `group_<level>_<group_count>`
-    - User ID format `user_<level>`
-    - Groups in a higher level will be parent group of the next groups level
-    - Groups level threshold will be `1 <= X <= numberOfNestedGroups`
-- For each document, a document ACL will be emitted, document ACLs will randomly own groups as part of their inbound field
+- The fetcher was implemented in SecurityFilteringAccessControlFetcher class
+- For each document, a document ACL will be emitted.
 - The documents indexed by the access control fetcher will be stored in the collection: `{DATASOURCE_ID}_access_control_hierarchy`. There the `DATASOURCE_ID` is the id of the configuration.
 
 ## Quick start
@@ -28,7 +24,7 @@ cd connectors-sdk-resources/java-sdk/connectors/
 2. This produces one zip file, named `security-filtering-connector.zip`, located in the `security-filtering-connector/build/plugins` directory.
 This artifact is now ready to be uploaded directly to Fusion as a connector plugin.
 
-3. See the following [instructions](../README.md) on how to build, deploy, and run the plugin
+3. See the following [instructions](../README.md) on how to build, deploy, and run the plugin.
 
 
 ## Connector properties
@@ -58,6 +54,5 @@ This artifact is now ready to be uploaded directly to Fusion as a connector plug
 
 After index documents in the content and access control collections, we can run a search query to filter the results based on a username.
 First, we need to add the `Security Trimming` query stage to the query pipeline and configure it.
-Then, we can run a search query using any user: `user_X`, where `1 <= X <= numberOfNestedGroups`.
 
 Check the access control collection to review which users and groups where indexed.

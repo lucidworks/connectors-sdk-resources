@@ -1,4 +1,4 @@
 dependencies {
-  // Note: Fusion libraries are added by parent project.
+  // Note: The sdk dependency is added by parent project.
   compile project(":shared-lib")
 }
