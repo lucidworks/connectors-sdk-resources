@@ -1,8 +1,8 @@
 package com.lucidworks.connector.plugins.security.util;
 
-public class SecurityFilteringConstants {
+public class SecurityConstants {
 
-  private SecurityFilteringConstants() {
+  private SecurityConstants() {
   }
 
   public static final String ACCESS_CONTROL = "access-control";

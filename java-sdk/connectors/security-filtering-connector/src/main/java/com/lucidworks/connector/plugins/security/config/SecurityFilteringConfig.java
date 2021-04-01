@@ -10,7 +10,7 @@ import com.lucidworks.fusion.schema.SchemaAnnotations.RootSchema;
 
 @RootSchema(
     title = "Security Filtering Generator (v2)",
-    description = "A connector that generates different types of documents(Type A, B, C and D), permissions for those documents and user/groups.",
+    description = "A connector that generates different types of documents(Type A, B, C and D), permissions for those documents and users/groups.",
     category = "Generator"
 )
 public interface SecurityFilteringConfig extends ConnectorConfig<Properties> {

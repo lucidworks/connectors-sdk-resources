@@ -4,13 +4,13 @@ import com.lucidworks.connector.plugins.security.config.SecurityFilteringConfig;
 import com.lucidworks.connector.plugins.security.generator.DocumentGenerator;
 import com.lucidworks.connector.plugins.security.model.Permission;
 import com.lucidworks.connector.plugins.security.model.SecurityDocument;
+import com.lucidworks.connector.plugins.security.util.SecurityConstants;
 import com.lucidworks.connector.plugins.security.util.DocumentType;
-import com.lucidworks.connector.plugins.security.util.SecurityFilteringConstants;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
-import com.lucidworks.fusion.connector.plugin.api.fetcher.result.StartResult;
-import com.lucidworks.fusion.connector.plugin.api.fetcher.result.StopResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.util.Optional;
@@ -18,10 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import static com.lucidworks.connector.plugins.security.util.SecurityFilteringConstants.ACCESS_CONTROL;
+import static com.lucidworks.connector.plugins.security.util.SecurityConstants.ACCESS_CONTROL;
 
 public class SecurityFilteringContentFetcher implements ContentFetcher {
 
@@ -39,44 +36,12 @@ public class SecurityFilteringContentFetcher implements ContentFetcher {
   @Override
   public FetchResult fetch(FetchContext fetchContext) {
     FetchInput input = fetchContext.getFetchInput();
-    if (!input.hasId()) {
+    if (isInitialCrawl(input)) {
       logger.info("Initial crawl");
-      AtomicInteger index = new AtomicInteger(1);
-      IntStream.rangeClosed(1, config.properties().typeADocuments())
-          .forEach(indexA -> emitCandidate(fetchContext, DocumentType.DOCUMENT_TYPE_A, index.getAndIncrement()));
-      IntStream.rangeClosed(1, config.properties().typeBDocuments())
-          .forEach(indexB -> emitCandidate(fetchContext, DocumentType.DOCUMENT_TYPE_B, index.getAndIncrement()));
-      IntStream.rangeClosed(1, config.properties().typeCDocuments())
-          .forEach(indexC -> emitCandidate(fetchContext, DocumentType.DOCUMENT_TYPE_C, index.getAndIncrement()));
-      IntStream.rangeClosed(1, config.properties().typeDDocuments())
-          .forEach(indexD -> emitCandidate(fetchContext, DocumentType.DOCUMENT_TYPE_D, index.getAndIncrement()));
-
-      logger.info("Generated [{}] candidates", index.get());
-      //emit the default users and group
-      fetchContext.newCandidate(SecurityFilteringConstants.USER_A)
-          .withTargetPhase(ACCESS_CONTROL)
-          .metadata(m -> m.setString(SecurityFilteringConstants.TYPE, SecurityFilteringConstants.USER_TYPE))
-          .emit();
-
-      fetchContext.newCandidate(SecurityFilteringConstants.USER_B)
-          .withTargetPhase(ACCESS_CONTROL)
-          .metadata(m -> {
-            m.setString(SecurityFilteringConstants.TYPE, SecurityFilteringConstants.USER_TYPE);
-            m.setString(SecurityFilteringConstants.PARENTS, SecurityFilteringConstants.GROUP_B);
-          })
-          .emit();
-
-      fetchContext.newCandidate(SecurityFilteringConstants.USER_C)
-          .withTargetPhase(ACCESS_CONTROL)
-          .metadata(m -> m.setString(SecurityFilteringConstants.TYPE, SecurityFilteringConstants.USER_TYPE))
-          .emit();
-
-      fetchContext.newCandidate(SecurityFilteringConstants.GROUP_B)
-          .withTargetPhase(ACCESS_CONTROL)
-          .metadata(m -> m.setString(SecurityFilteringConstants.TYPE, SecurityFilteringConstants.GROUP_TYPE))
-          .emit();
+      seedCandidates(fetchContext);
       return fetchContext.newResult();
     }
+
     Optional<SecurityDocument> document = documentGenerator.generate(input.getId(), input.getMetadata());
     document.ifPresent(securityDocument -> {
       fetchContext.newDocument()
@@ -91,8 +56,8 @@ public class SecurityFilteringContentFetcher implements ContentFetcher {
         fetchContext.newCandidate(permission.getId())
             .withTargetPhase(ACCESS_CONTROL)
             .metadata(m -> {
-              m.setString(SecurityFilteringConstants.ASSIGNED, permission.getAssigned());
-              m.setString(SecurityFilteringConstants.TYPE, SecurityFilteringConstants.PERMISSION_TYPE);
+              m.setString(SecurityConstants.ASSIGNED, permission.getAssigned());
+              m.setString(SecurityConstants.TYPE, SecurityConstants.PERMISSION_TYPE);
             })
             .emit();
       }
@@ -100,10 +65,52 @@ public class SecurityFilteringContentFetcher implements ContentFetcher {
     return fetchContext.newResult();
   }
 
-  private void emitCandidate(FetchContext fetchContext, DocumentType documentType, int index) {
+  private boolean isInitialCrawl(final FetchInput input) {
+    return !input.hasId();
+  }
+
+  private void seedCandidates(final FetchContext fetchContext) {
+    logger.info("Emitting content candidates");
+    AtomicInteger index = new AtomicInteger(1);
+    IntStream.rangeClosed(1, config.properties().typeADocuments())
+        .forEach(indexA -> emitDocumentCandidate(fetchContext, DocumentType.DOCUMENT_TYPE_A, index.getAndIncrement()));
+    IntStream.rangeClosed(1, config.properties().typeBDocuments())
+        .forEach(indexB -> emitDocumentCandidate(fetchContext, DocumentType.DOCUMENT_TYPE_B, index.getAndIncrement()));
+    IntStream.rangeClosed(1, config.properties().typeCDocuments())
+        .forEach(indexC -> emitDocumentCandidate(fetchContext, DocumentType.DOCUMENT_TYPE_C, index.getAndIncrement()));
+    IntStream.rangeClosed(1, config.properties().typeDDocuments())
+        .forEach(indexD -> emitDocumentCandidate(fetchContext, DocumentType.DOCUMENT_TYPE_D, index.getAndIncrement()));
+    logger.info("Generated [{}] candidates", index.get());
+
+    logger.info("Emitting ACL hierarchy candidates: users and a group");
+    fetchContext.newCandidate(SecurityConstants.USER_A)
+                .withTargetPhase(ACCESS_CONTROL)
+                .metadata(m -> m.setString(SecurityConstants.TYPE, SecurityConstants.USER_TYPE))
+                .emit();
+
+    fetchContext.newCandidate(SecurityConstants.USER_B)
+                .withTargetPhase(ACCESS_CONTROL)
+                .metadata(m -> {
+                  m.setString(SecurityConstants.TYPE, SecurityConstants.USER_TYPE);
+                  m.setString(SecurityConstants.PARENTS, SecurityConstants.GROUP_B);
+                })
+                .emit();
+
+    fetchContext.newCandidate(SecurityConstants.USER_C)
+                .withTargetPhase(ACCESS_CONTROL)
+                .metadata(m -> m.setString(SecurityConstants.TYPE, SecurityConstants.USER_TYPE))
+                .emit();
+
+    fetchContext.newCandidate(SecurityConstants.GROUP_B)
+                .withTargetPhase(ACCESS_CONTROL)
+                .metadata(m -> m.setString(SecurityConstants.TYPE, SecurityConstants.GROUP_TYPE))
+                .emit();
+  }
+
+  private void emitDocumentCandidate(FetchContext fetchContext, DocumentType documentType, int index) {
     fetchContext.newCandidate(String.format("item-%d", index))
         .metadata(m -> {
-          m.setString(SecurityFilteringConstants.TYPE, documentType.name());
+          m.setString(SecurityConstants.TYPE, documentType.name());
           m.setInteger("index", index);
         })
         .emit();

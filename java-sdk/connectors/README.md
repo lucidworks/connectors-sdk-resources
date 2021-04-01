@@ -36,9 +36,9 @@ To target a specific SDK version, checkout the appropriate git tag version befor
 
 ## Deploy to Fusion
 
-From `java-sdk/connectors/simple-connector`, execute the deploy task to automatically deploy the connector to a Fusion, the url can be configurated as show. By default points to localhost.
+From `java-sdk/connectors`, execute the deploy task to automatically deploy the connector to the Fusion, the url can be configured as shown. By default, it points to localhost.
 ```bash
-./gradlew deploy -PrestService=http://127.0.0.1:6764/connectors -PuserPass=<user>:<password>
+./gradlew -p simple-connector deploy -PrestService=http://127.0.0.1:6764/connectors -PuserPass=<user>:<password>
 ```
 
 While developing the plugin, you will need a way to deploy your changes quick and easy to Fusion.

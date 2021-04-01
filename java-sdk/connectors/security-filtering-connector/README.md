@@ -2,15 +2,24 @@
 
 ## Connector Description
 
-- This connector generates a configurable number of documents, all with random titles and body fields.
-- The connector also generates ACL Documents.
-- Groups and users will be generated using the connector configurations.
+- This connector generates a configurable number of content collection documents and a static ACL hierarchy.
+- The ACL Documents fetcher is implemented in `SecurityFilteringAccessControlFetcher` class.
+- The documents indexed by the access control fetcher are stored in the collection: `{DATASOURCE_ID}_access_control_hierarchy` where the `DATASOURCE_ID` is the id of the configuration.
 
 ### Access Control Fetcher behavior
 
-- The fetcher was implemented in SecurityFilteringAccessControlFetcher class
-- For each document, a document ACL will be emitted.
-- The documents indexed by the access control fetcher will be stored in the collection: `{DATASOURCE_ID}_access_control_hierarchy`. There the `DATASOURCE_ID` is the id of the configuration.
+Access control hierarchy used here is static and structured in the following way:
+
+![ACL hierarchy](/docs/acl_hierarchy.png)
+
+Every content document consists of fields (your regular data) and permissions (ACL information).
+
+![Document structure](/docs/document_structure.png)
+
+Every permission is emitted as a separate ACL document which connects content documents to access control hierarchy. For this trivial example this is not required, and you could just include the principal name (user/group) in the content document ACL field.
+
+![ACL final hierarchy](/docs/acl_final_hierarchy.png)
+
 
 ## Quick start
 
@@ -52,7 +61,7 @@ This artifact is now ready to be uploaded directly to Fusion as a connector plug
 
 ## Security trimming stage (Query time)
 
-After index documents in the content and access control collections, we can run a search query to filter the results based on a username.
+After indexing documents in the content and access control collections, we can run a search query to filter the results based on a username.
 First, we need to add the `Security Trimming` query stage to the query pipeline and configure it.
 
-Check the access control collection to review which users and groups where indexed.
+Check the access control collection to review which users and groups were indexed.

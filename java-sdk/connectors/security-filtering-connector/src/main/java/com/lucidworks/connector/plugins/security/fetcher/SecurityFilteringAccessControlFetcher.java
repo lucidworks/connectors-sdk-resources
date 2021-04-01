@@ -1,7 +1,7 @@
 package com.lucidworks.connector.plugins.security.fetcher;
 
 import com.google.common.base.Strings;
-import com.lucidworks.connector.plugins.security.util.SecurityFilteringConstants;
+import com.lucidworks.connector.plugins.security.util.SecurityConstants;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
@@ -20,7 +20,7 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
   @Override
   public FetchResult fetch(FetchContext context) {
     FetchInput input = context.getFetchInput();
-    String type = (String) input.getMetadata().getOrDefault(SecurityFilteringConstants.TYPE, null);
+    String type = (String) input.getMetadata().getOrDefault(SecurityConstants.TYPE, null);
     logger.info("Access-control input={}, type={}", input, type);
     if (Strings.isNullOrEmpty(type)) {
       return context.newResult();
@@ -28,26 +28,26 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
 
     Map<String, Object> metadata = input.getMetadata();
     switch (type) {
-      case SecurityFilteringConstants.PERMISSION_TYPE:
-        String assigned = (String) metadata.getOrDefault(SecurityFilteringConstants.ASSIGNED, null);
+      case SecurityConstants.PERMISSION_TYPE:
+        String assigned = (String) metadata.getOrDefault(SecurityConstants.ASSIGNED, null);
         logger.info("Access-control type={}, metadata={}", type, metadata);
         if (!Strings.isNullOrEmpty(assigned)) {
           context.newAccessControl(input.getId())
-              .metadata(m -> m.setString(SecurityFilteringConstants.TYPE, SecurityFilteringConstants.PERMISSION_TYPE))
+              .metadata(m -> m.setString(SecurityConstants.TYPE, SecurityConstants.PERMISSION_TYPE))
               .addAllInbound(Collections.singletonList(assigned))
               .emit();
         }
         break;
 
-      case SecurityFilteringConstants.USER_TYPE:
-        String parentGroup = (String) metadata.getOrDefault(SecurityFilteringConstants.PARENTS, null);
+      case SecurityConstants.USER_TYPE:
+        String parentGroup = (String) metadata.getOrDefault(SecurityConstants.PARENTS, null);
         logger.info("Access-control type={}, metadata={}", type, metadata);
         List<String> outbound = Collections.emptyList();
         if (!Strings.isNullOrEmpty(parentGroup)) {
           outbound = Collections.singletonList(parentGroup);
         }
         context.newAccessControl(input.getId())
-            .metadata(m -> m.setString(SecurityFilteringConstants.TYPE, SecurityFilteringConstants.USER_TYPE))
+            .metadata(m -> m.setString(SecurityConstants.TYPE, SecurityConstants.USER_TYPE))
             .fields(f -> {
               f.setString("fullName", input.getId() + "FullName");
               f.setInteger("internalId", input.getId().hashCode());
@@ -56,9 +56,9 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
             .emit();
         break;
 
-      case SecurityFilteringConstants.GROUP_TYPE:
+      case SecurityConstants.GROUP_TYPE:
         context.newAccessControl(input.getId())
-            .metadata(m -> m.setString(SecurityFilteringConstants.TYPE, SecurityFilteringConstants.GROUP_TYPE))
+            .metadata(m -> m.setString(SecurityConstants.TYPE, SecurityConstants.GROUP_TYPE))
             .fields(f -> {
               f.setString("fullName", input.getId() + "FullName");
               f.setInteger("internalId", input.getId().hashCode());

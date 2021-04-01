@@ -12,8 +12,8 @@ import com.lucidworks.connector.plugins.security.validation.SecurityFilteringVal
 import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPlugin;
 import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPluginProvider;
 
-import static com.lucidworks.connector.plugins.security.util.SecurityFilteringConstants.ACCESS_CONTROL;
-import static com.lucidworks.connector.plugins.security.util.SecurityFilteringConstants.CONTENT;
+import static com.lucidworks.connector.plugins.security.util.SecurityConstants.ACCESS_CONTROL;
+import static com.lucidworks.connector.plugins.security.util.SecurityConstants.CONTENT;
 
 public class SecurityFilteringPlugin implements ConnectorPluginProvider {
 
