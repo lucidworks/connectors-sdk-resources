@@ -10,15 +10,15 @@
 
 Access control hierarchy used here is static and structured in the following way:
 
-![ACL hierarchy](/docs/acl_hierarchy.png)
+![ACL hierarchy](docs/acl_hierarchy.png)
 
 Every content document consists of fields (your regular data) and permissions (ACL information).
 
-![Document structure](/docs/document_structure.png)
+![Document structure](docs/document_structure.png)
 
 Every permission is emitted as a separate ACL document which connects content documents to access control hierarchy. For this trivial example this is not required, and you could just include the principal name (user/group) in the content document ACL field.
 
-![ACL final hierarchy](/docs/acl_final_hierarchy.png)
+![ACL final hierarchy](docs/acl_final_hierarchy.png)
 
 
 ## Quick start
