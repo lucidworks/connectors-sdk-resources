@@ -1,8 +1,8 @@
 package com.lucidworks.connector.plugins.security.util;
 
-public class SecurityFilteringConstants {
+public class SecurityConstants {
 
-  private SecurityFilteringConstants() {
+  private SecurityConstants() {
   }
 
   public static final String ACCESS_CONTROL = "access-control";
@@ -10,7 +10,6 @@ public class SecurityFilteringConstants {
   public static final String TYPE = "type";
   public static final String ASSIGNED = "assigned";
   public static final String PARENTS = "parents";
-  public static final String INVALID_VALUE = "Invalid value";
 
   public static final String USER_A = "userA";
   public static final String USER_B = "userB";

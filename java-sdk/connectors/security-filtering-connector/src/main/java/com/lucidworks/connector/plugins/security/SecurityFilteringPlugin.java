@@ -2,6 +2,7 @@ package com.lucidworks.connector.plugins.security;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Module;
+import com.google.inject.Singleton;
 import com.lucidworks.connector.components.generator.RandomContentGenerator;
 import com.lucidworks.connector.components.generator.impl.DefaultRandomContentGenerator;
 import com.lucidworks.connector.plugins.security.config.SecurityFilteringConfig;
@@ -11,8 +12,8 @@ import com.lucidworks.connector.plugins.security.validation.SecurityFilteringVal
 import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPlugin;
 import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPluginProvider;
 
-import static com.lucidworks.connector.plugins.security.util.SecurityFilteringConstants.ACCESS_CONTROL;
-import static com.lucidworks.connector.plugins.security.util.SecurityFilteringConstants.CONTENT;
+import static com.lucidworks.connector.plugins.security.util.SecurityConstants.ACCESS_CONTROL;
+import static com.lucidworks.connector.plugins.security.util.SecurityConstants.CONTENT;
 
 public class SecurityFilteringPlugin implements ConnectorPluginProvider {
 
@@ -23,7 +24,7 @@ public class SecurityFilteringPlugin implements ConnectorPluginProvider {
       protected void configure() {
         bind(RandomContentGenerator.class)
             .to(DefaultRandomContentGenerator.class)
-            .asEagerSingleton();
+            .in(Singleton.class);
       }
     };
 

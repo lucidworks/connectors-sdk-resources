@@ -10,9 +10,7 @@ import com.lucidworks.fusion.schema.SchemaAnnotations.RootSchema;
 
 @RootSchema(
     title = "Security Filtering Generator (v2)",
-    description =
-        "A connector that generates different types of documents(Type A, B, C and D), permissions for those documents "
-            + "and user/groups.",
+    description = "A connector that generates different types of documents(Type A, B, C and D), permissions for those documents and users/groups.",
     category = "Generator"
 )
 public interface SecurityFilteringConfig extends ConnectorConfig<Properties> {
@@ -39,7 +37,7 @@ public interface SecurityFilteringConfig extends ConnectorConfig<Properties> {
         description = "The number of the Type B documents to be generated",
         order = 2
     )
-    @NumberSchema(defaultValue = 5, minimum = 1)
+    @NumberSchema(defaultValue = 10, minimum = 1)
     Integer typeBDocuments();
 
     @Property(
@@ -47,7 +45,7 @@ public interface SecurityFilteringConfig extends ConnectorConfig<Properties> {
         description = "The number of the Type C documents to be generated",
         order = 3
     )
-    @NumberSchema(defaultValue = 5, minimum = 1)
+    @NumberSchema(defaultValue = 15, minimum = 1)
     Integer typeCDocuments();
 
     @Property(
@@ -55,7 +53,7 @@ public interface SecurityFilteringConfig extends ConnectorConfig<Properties> {
         description = "The number of the Type D documents to be generated",
         order = 4
     )
-    @NumberSchema(defaultValue = 5, minimum = 1)
+    @NumberSchema(defaultValue = 20, minimum = 1)
     Integer typeDDocuments();
   }
 }
