@@ -105,7 +105,7 @@ configure(connectorprojects) { p ->
     classpath = configurations.remoteConnector
     File configYamlFile = file("${configYamlPath}")
     String zipFile = "" + project.buildDir + "/libs/" + project.name + ".zip"
-    jvmArgs "-Dplugin.path=${zipFile}"
+    jvmArgs "-Dplugin.path=${zipFile}", "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=*:5031"
     args configYamlFile.path
     doFirst {
       println " >> Using plugin zip from: ${zipFile}"

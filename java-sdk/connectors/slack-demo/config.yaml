@@ -1,0 +1,12 @@
+pulsar:
+  service-url: pulsar://127.0.0.1:6650
+  admin-url: http://127.0.0.1:8080
+  tenant-name: fusion
+  authenticationEnabled: true
+  tlsEnabled: false
+proxy:
+  user: admin
+  password: password123
+  url: http://127.0.0.1:6764
+plugin:
+  path: /home/user/connector-plugin-standalone-5.4.0.jar
