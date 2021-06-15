@@ -80,5 +80,6 @@ For example, when a document replace is immediately followed by a delete-by-quer
 | modifiedAt_tdt  | ISO date value which is updated when item changes its state. It serves same purpose as modifiedAt_l.  | 2019-08-22T21:17:45.709Z
 | fetchInput_id_s  | FetchInput Id.  | /app
 |====================================================
+
 //:
 //Copyright 2020 https://lucidworks.com[Lucidworks^]
