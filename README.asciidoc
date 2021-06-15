@@ -82,4 +82,4 @@ For example, when a document replace is immediately followed by a delete-by-quer
 |====================================================
 
 //:
-//Copyright 2020 https://lucidworks.com[Lucidworks^]
+//Copyright 2021 https://lucidworks.com[Lucidworks^]
