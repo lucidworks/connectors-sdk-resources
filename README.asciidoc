@@ -6,8 +6,8 @@ Some of the resources include documentation and getting started guides, as well 
 
 For developing a Java SDK based connector, check out the link:https://github.com/lucidworks/connectors-sdk-resources/blob/v2.0.3/java-sdk/README.asciidoc[Java SDK^].
 
-The repository includes https://github.com/lucidworks/connectors-sdk-resources/tree/2.0.3/java-sdk/connectors[a Gradle project^],
-which wraps each https://github.com/lucidworks/connectors-sdk-resources/blob/2.0.3/java-sdk/connectors/settings.gradle[known plugin^] with a common set of tasks and dependencies.
+The repository includes https://github.com/lucidworks/connectors-sdk-resources/tree/v2.0.3/java-sdk/connectors[a Gradle project^],
+which wraps each https://github.com/lucidworks/connectors-sdk-resources/blob/v2.0.3/java-sdk/connectors/settings.gradle[known plugin^] with a common set of tasks and dependencies.
 
 See the link:https://github.com/lucidworks/connectors-sdk-resources/blob/v2.0.3/java-sdk/connectors/simple-connector/README.asciidoc[Simple Connector^] example for instructions on how to build, deploy and run.
 
