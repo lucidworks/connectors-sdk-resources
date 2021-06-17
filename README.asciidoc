@@ -4,12 +4,12 @@ The https://github.com/lucidworks/connectors-sdk-resources[connectors SDK public
 https://lucidworks.com/products/fusion-server/[Fusion^] SDK connectors.
 Some of the resources include documentation and getting started guides, as well as example connectors.
 
-For developing a Java SDK based connector, check out the link:java-sdk/README.asciidoc[Java SDK README].
+For developing a Java SDK based connector, check out the link:https://github.com/lucidworks/connectors-sdk-resources/blob/v1.5.0/java-sdk/README.asciidoc[Java SDK README^].
 
-The repository includes https://github.com/lucidworks/connectors-sdk-resources/tree/master/java-sdk/connectors[a Gradle project^],
-which wraps each https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/settings.gradle[known plugin^] with a common set of tasks and dependencies.
+The repository includes https://github.com/lucidworks/connectors-sdk-resources/tree/v1.5.0/java-sdk/connectors/README.md[a Gradle project^],
+which wraps each https://github.com/lucidworks/connectors-sdk-resources/blob/v1.5.0/java-sdk/connectors/settings.gradle[known plugin^] with a common set of tasks and dependencies.
 
-See the link:java-sdk/connectors/random-connector/README.asciidoc[Random Content Connector] example for instructions on how to build, deploy and run.
+See the link:https://github.com/lucidworks/connectors-sdk-resources/blob/v1.5.0/java-sdk/connectors/random-connector/README.asciidoc[Random Content Connector] example for instructions on how to build, deploy and run.
 
 == Fusion SDK Connectors Overview
 
@@ -27,12 +27,19 @@ The communication of messages between Fusion and a remote connector or hosted co
 This means you can implement a connector locally, connect to a remote Fusion for initial testing, and when done,
 upload the exact same artifact (a zip file) into Fusion, so Fusion can host it for you. The ability to run the connector remotely makes the development process much quicker.
 
+== Connectors SDK support matrix
+
+|====================================================
+| Fusion release | SDK version
+| 4.2.6 | link:https://github.com/lucidworks/connectors-sdk-resources/tree/v1.5.0[1.5.0^]
+|====================================================
+
 == Java SDK
 
 The Java SDK provides components for making it simple to build a connector in Java. Whether the plugin is a true crawler or a simple iterative fetcher,
 the SDK supports both.
 
-The link:./java-sdk/README.asciidoc[Java SDK] includes a set of base classes and interfaces. It also provides the Gradle build utilities for packaging up a connector,
+The link:https://github.com/lucidworks/connectors-sdk-resources/blob/v1.5.0/java-sdk/README.asciidoc[Java SDK^] includes a set of base classes and interfaces. It also provides the Gradle build utilities for packaging up a connector,
 and a connector client application that can run your connector remotely.
 
 Many of the base features needed for a connector are provided by Fusion itself. When a connector first connects to Fusion, it sends along its name, type, schema,
@@ -44,7 +51,7 @@ The Fusion Admin UI also takes care of the view or presentation, by making use o
 This client-based approach decouples connectors from Fusion, which allows hot deployment of connectors through a simple connect call.
 
 == Security
-Fusion connectors support SSL/TLS. See the link:security.asciidoc[security README] for setup.
+Fusion connectors support SSL/TLS. See the link:https://github.com/lucidworks/connectors-sdk-resources/blob/v1.5.0/security.asciidoc[security README^] for setup.
 
 === gRPC
 The underlying client/server technology used by these connectors is a fast and efficient framework from Google called https://grpc.io/[gRPC^].
@@ -60,4 +67,4 @@ The data persisted by the connectors framework is distributed across the Fusion 
 If a node goes down during a crawl, the data store remains intact and usable. Connector implementations do not need to be concerned with this layer, because it is all handled by Fusion.
 
 
-Copyright 2019 https://lucidworks.com[Lucidworks^]
+//Copyright 2021 https://lucidworks.com[Lucidworks^]
