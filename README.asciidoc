@@ -4,12 +4,12 @@ The https://github.com/lucidworks/connectors-sdk-resources[connectors SDK public
 https://lucidworks.com/products/fusion-server/[Fusion^] SDK connectors.
 Some of the resources include documentation and getting started guides, as well as example connectors.
 
-For developing a Java SDK based connector, check out the link:java-sdk/README.asciidoc[Java SDK README].
+For developing a Java SDK based connector, check out the link:https://github.com/lucidworks/connectors-sdk-resources/blob/v2.0.0/java-sdk/README.asciidoc[Java SDK^].
 
-The repository includes https://github.com/lucidworks/connectors-sdk-resources/tree/master/java-sdk/connectors[a Gradle project^],
-which wraps each https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/settings.gradle[known plugin^] with a common set of tasks and dependencies.
+The repository includes https://github.com/lucidworks/connectors-sdk-resources/tree/v2.0.0/java-sdk/connectors/README.md[a Gradle project^],
+which wraps each https://github.com/lucidworks/connectors-sdk-resources/blob/v2.0.0/java-sdk/connectors/settings.gradle[known plugin^] with a common set of tasks and dependencies.
 
-See the link:java-sdk/connectors/random-connector/README.asciidoc[Random Content Connector] example for instructions on how to build, deploy and run.
+See the link:https://github.com/lucidworks/connectors-sdk-resources/blob/v2.0.0/java-sdk/connectors/random-connector/README.asciidoc[Random Connector^] example for instructions on how to build, deploy and run.
 
 == Fusion SDK Connectors Overview
 
@@ -31,13 +31,7 @@ upload the exact same artifact (a zip file) into Fusion, so Fusion can host it f
 
 |====================================================
 | Fusion release | SDK version
-| 5.1.0 | link:https://github.com/lucidworks/connectors-sdk-resources/releases/tag/v2.0.0[2.0.0]
-| 5.0.2 | 2.0.0-pre-release
-| 4.2.6 | link:https://github.com/lucidworks/connectors-sdk-resources/releases/tag/v1.5.0[1.5.0]
-| 4.2.4 - 4.2.5 | link:https://github.com/lucidworks/connectors-sdk-resources/releases/tag/v1.4.0[1.4.0]
-| 4.2.2 - 4.2.3 | link:https://github.com/lucidworks/connectors-sdk-resources/releases/tag/v1.3.0[1.3.0]
-| 4.2.1 | link:https://github.com/lucidworks/connectors-sdk-resources/releases/tag/v1.2.0[1.2.0]
-| 4.2.0 | link:https://github.com/lucidworks/connectors-sdk-resources/releases/tag/v1.1.0[1.1.0]
+| 5.1.0 - 5.1.1 | link:https://github.com/lucidworks/connectors-sdk-resources/releases/tag/v2.0.0[2.0.0^]
 |====================================================
 
 == Java SDK
@@ -45,7 +39,7 @@ upload the exact same artifact (a zip file) into Fusion, so Fusion can host it f
 The Java SDK provides components for making it simple to build a connector in Java. Whether the plugin is a true crawler or a simple iterative fetcher,
 the SDK supports both.
 
-The link:./java-sdk/README.asciidoc[Java SDK] includes a set of base classes and interfaces. It also provides the Gradle build utilities for packaging up a connector,
+The link:https://github.com/lucidworks/connectors-sdk-resources/blob/v2.0.0/java-sdk/README.asciidoc[Java SDK^] includes a set of base classes and interfaces. It also provides the Gradle build utilities for packaging up a connector,
 and a connector client application that can run your connector remotely.
 
 Many of the base features needed for a connector are provided by Fusion itself. When a connector first connects to Fusion, it sends along its name, type, schema,
@@ -57,7 +51,7 @@ The Fusion Admin UI also takes care of the view or presentation, by making use o
 This client-based approach decouples connectors from Fusion, which allows hot deployment of connectors through a simple connect call.
 
 == Security
-Fusion connectors support SSL/TLS. See the link:security.asciidoc[security README] for setup.
+Fusion connectors support SSL/TLS. See the link:https://github.com/lucidworks/connectors-sdk-resources/blob/v3.0.0/security.asciidoc[security README^] for setup.
 
 === gRPC
 The underlying client/server technology used by these connectors is a fast and efficient framework from Google called https://grpc.io/[gRPC^].
@@ -93,5 +87,5 @@ If a node goes down during a crawl, the data store remains intact and usable. Co
 | modifiedAt_tdt  | ISO date value which is updated when item changes its state. It serves same purpose as modifiedAt_l.  | 2019-08-22T21:17:45.709Z
 | fetchInput_id_s  | FetchInput Id.  | /app
 |====================================================
-:
-Copyright 2019 https://lucidworks.com[Lucidworks^]
+//:
+//Copyright 2021 https://lucidworks.com[Lucidworks^]
