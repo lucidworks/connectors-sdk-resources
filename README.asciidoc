@@ -29,10 +29,10 @@ upload the exact same artifact (a zip file) into Fusion, so Fusion can host it f
 
 == Connectors SDK support matrix
 
-=====
+| =====
 | Fusion release | SDK version
 | 5.2.1 - 5.2.x | link:https://github.com/lucidworks/connectors-sdk-resources/releases/tag/v2.0.3[2.0.3^]
-=====
+| =====
 
 == Java SDK
 
