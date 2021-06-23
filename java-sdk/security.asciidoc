@@ -1,13 +1,6 @@
 = Java SDK Connector SSL Support
 
-See  
-ifdef::env-github[]
-link:https://github.com/lucidworks/connectors-sdk-resources/blob/v4.0.0/java-sdk/security.asciidoc[Java SDK Connector SSL Support^] 
-endif::[]
-ifndef::env-github[]
-link:https://github.com/lucidworks/connectors-sdk-resources/blob/v4.0.0/java-sdk/security.asciidoc[Java SDK Connector SSL Support^] 
-endif::[]
-for instructions on how to configure SSL/TLS support for a Fusion custom connector.
+Fusion connectors support SSL/TLS.
 
 == Java Plugin Client
 The information here is specific to running a Java SDK plugin outside of Fusion.

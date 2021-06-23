@@ -19,7 +19,7 @@ The example connectors are a great place to start understanding how to build a J
 Have a look at the https://github.com/lucidworks/connectors-sdk-resources/blob/v4.0.0/java-sdk/connectors/README.md[example connectors documentation^].
 
 === Security
-Read more on how to set up a secure environment for Java SDK connectors
+Read more about security for Java SDK connectors
 link:https://github.com/lucidworks/connectors-sdk-resources/blob/v4.0.0/java-sdk/security.asciidoc[here^].
 
 == Java SDK Framework Overview
