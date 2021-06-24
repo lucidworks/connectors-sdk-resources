@@ -8,19 +8,19 @@ Connectors can be deployed directly within a Fusion cluster or outside Fusion as
 To deploy a connector into Fusion, upload the build artifact (as a zip file) to the Fusion blob API.
 To deploy remotely, you can use the
 ifdef::env-github[]
-link:https://github.com/lucidworks/connectors-sdk-resources/blob/v4.0.0/java-sdk/plugin-client.asciidoc[Fusion Connector Plugin Client^].
+link:plugin-client.asciidoc[Connector client utility].
 endif::[]
 ifndef::env-github[]
-link:https://github.com/lucidworks/connectors-sdk-resources/blob/v4.0.0/java-sdk/plugin-client.asciidoc[Fusion Connector Plugin Client^].
+link:https://doc.lucidworks.com/how-to/java-connector-dev.html#plugin-client[Connector client utility].
 endif::[]
 
 === Examples
 The example connectors are a great place to start understanding how to build a Java SDK Connector.
-Have a look at the https://github.com/lucidworks/connectors-sdk-resources/blob/v4.0.0/java-sdk/connectors/README.md[example connectors documentation^].
+Have a look at the https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/README.md[example connectors documentation^].
 
 === Security
-Read more about security for Java SDK connectors
-link:https://github.com/lucidworks/connectors-sdk-resources/blob/v4.0.0/java-sdk/security.asciidoc[here^].
+Read more on how to set up a secure environment for Java SDK connectors
+link:https://doc.lucidworks.com/how-to/java-connector-dev.html#java-sdk-security[here].
 
 == Java SDK Framework Overview
 Only a few components must be implemented to compile and build a functioning plugin.
@@ -48,16 +48,16 @@ The minimal project layout is as follows:
 This is a typical Gradle build file. A few important settings are required. You can have a look
 at an example
 ifdef::env-github[]
-link:https://github.com/lucidworks/connectors-sdk-resources/blob/v4.0.0/java-sdk/connectors/build.gradle[here^].
+link:connectors/build.gradle[here^].
 endif::[]
 ifndef::env-github[]
-https://github.com/lucidworks/connectors-sdk-resources/blob/v4.0.0/java-sdk/connectors/build.gradle[here^].
+https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/build.gradle[here^].
 endif::[]
 
 ==== gradle.properties
 The build utility used for packaging up a connector depends on this file and contains required metadata about the connector,
 including its name, version, and the version of Fusion it can connect to.
-Have a look at the example https://github.com/lucidworks/connectors-sdk-resources/blob/v4.0.0/java-sdk/connectors/simple-connector/gradle.properties[here^].
+Have a look at the example https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/simple-connector/gradle.properties[here^].
 
 ==== src/main/java
 This is where Java code lives by default. This location can be changed, but in this documentation we use the Gradle default.
@@ -69,7 +69,7 @@ The current set of subcomponents include the `Fetcher`, validation, security fil
 You can think of the `Plugin` class as the component that glues everything together for an implementation. It is also a place where fetch 'phases' are defined, by binding fetcher classes to phase names.
 
 You can see an example
-https://github.com/lucidworks/connectors-sdk-resources/blob/v4.0.0/java-sdk/connectors/simple-connector/src/main/java/com/lucidworks/connector/plugins/random/RandomContentPlugin.java[here^].
+https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/simple-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentPlugin.java[here^].
 Notice that each subcomponent can have a set of unique dependencies, or several subcomponents can share dependencies.
 
 === The Configuration
@@ -78,14 +78,14 @@ with `@Property` annotations, you can dynamically generate a type-safe configura
 Similarly, you can generate a Fusion-compatible JSON schema by implementing `Model`.
 
 You can see an example of a configuration implementation
-https://github.com/lucidworks/connectors-sdk-resources/blob/v4.0.0/java-sdk/connectors/simple-connector/src/main/java/com/lucidworks/connector/plugins/random/config/RandomContentConfig.java[here^].
+https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/simple-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentConfig.java[here^].
 
 More detailed information on the configuration and schema capabilities can be found
 ifdef::env-github[]
-link:https://github.com/lucidworks/connectors-sdk-resources/blob/v4.0.0/java-sdk/configuration.asciidoc[here].
+link:configuration.asciidoc[here].
 endif::[]
 ifndef::env-github[]
-link:https://github.com/lucidworks/connectors-sdk-resources/blob/v4.0.0/java-sdk/configuration.asciidoc[here].
+link:https://doc.lucidworks.com/how-to/java-connector-dev.html#java-sdk-configuration[here].
 endif::[]
 
 === The Fetcher
@@ -126,7 +126,7 @@ Phases are defined in the 'Plugin' class, by binding a fetcher class to a phase 
 For each phase, the `start`, `fetch`, and `stop` methods are called on the fetcher instance bound to the phase.
 
 See the example
-https://github.com/lucidworks/connectors-sdk-resources/blob/v4.0.0/java-sdk/connectors/simple-connector/src/main/java/com/lucidworks/connector/plugins/random/RandomContentPlugin.java[here^].
+https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/simple-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentPlugin.java[here^].
 
 [[message-definitions]]
 ==== Message Type Definitions
@@ -214,7 +214,7 @@ The term `transient` refers to a Candidate's persistance with respect to the Cra
 
 == Developing a Connector
 
-The simplest way to get started developing a connector is to review link:https://github.com/lucidworks/connectors-sdk-resources/tree/v4.0.0/java-sdk/connectors/simple-connector/README.asciidoc[Simple Connector^].
+The simplest way to get started developing a connector is to review the https://github.com/lucidworks/connectors-sdk-resources/tree/master/java-sdk/connectors/simple-connector[examples^].
 
 === Dependencies
 At a minimum, all plugins require the connector SDK dependency.
