@@ -192,7 +192,7 @@ There is a setting you can enable during the postFetch handler called purge stra
 
 == Developing a Connector
 
-The simplest way to get started developing a connector is to review the link:https://github.com/lucidworks/connectors-sdk-resources/tree/v4.0.0/java-sdk/connectors/simple-connector/README.asciidoc[Simple Connector^].
+The simplest way to get started developing a connector is to review the link:https://github.com/lucidworks/connectors-sdk-resources/tree/v2.3.0/java-sdk/connectors/simple-connector/README.asciidoc[Simple Connector^].
 
 === Dependencies
 At a minimum, all plugins require the connector SDK dependency.
@@ -213,5 +213,3 @@ A general guideline to follow when determining if something should be injected o
 
 The connectors use the https://github.com/google/guice[Guice^] framework for dependency injection and can be directly used when defining a connector plugin.
 
-==== Repositories
-The Fusion connectors SDK is currently not published to any public repositories.
