@@ -225,7 +225,7 @@ There is a setting you can enable during the postFetch handler called purge stra
 
 == Developing a Connector
 
-The simplest way to get started developing a connector is to review the https://github.com/lucidworks/connectors-sdk-resources/tree/v3.0.0/java-sdk/connectors/simple-connector[Simple Connector^].
+The simplest way to get started developing a connector is to review the https://github.com/lucidworks/connectors-sdk-resources/tree/v3.0.0/java-sdk/connectors/simple-connector/README.asciidoc[Simple Connector^].
 
 === Dependencies
 At a minimum, all plugins require the connector SDK dependency.
