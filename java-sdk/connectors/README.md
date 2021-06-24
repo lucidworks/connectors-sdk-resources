@@ -3,7 +3,7 @@
 This is a Gradle project that wraps each [known plugin](settings.gradle) with a common set of tasks
 and dependencies.
 
-See the following instructions on how to build, deploy, and run the plugins
+See the following instructions on how to build, deploy, and run the plugins.
 
 ## Sub-projects
 
