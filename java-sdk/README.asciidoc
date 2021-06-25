@@ -246,5 +246,3 @@ A general guideline to follow when determining if something should be injected o
 
 The connectors use the https://github.com/google/guice[Guice^] framework for dependency injection and can be directly used when defining a connector plugin.
 
-==== Repositories
-The Fusion connectors SDK is currently not published to any public repositories.
