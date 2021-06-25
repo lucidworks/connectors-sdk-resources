@@ -234,6 +234,3 @@ A general guideline to follow when determining if something should be injected o
 2. Is the component a third-party library that has either difficult to control side effects?
 
 The connectors use the https://github.com/google/guice[Guice^] framework for dependency injection and can be directly used when defining a connector plugin.
-
-==== Repositories
-The Fusion connectors SDK is currently not published to any public repositories.
