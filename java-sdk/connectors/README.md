@@ -3,7 +3,7 @@
 This is a Gradle project that wraps each [known plugin](settings.gradle) with a common set of tasks
 and dependencies.
 
-See the following instructions on how to build, deploy, and run the plugins
+See the following instructions on how to build, deploy, and run the plugins.
 
 ## Sub-projects
 
@@ -107,4 +107,4 @@ public class MyPlugin implements ConnectorPluginProvider { // <1>
 6. Set other components to the plugin definition. See the `com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPlugin.Builder` class for more details.
 7. Call the `build()` method on the build instance.
 
-See more examples of the plugin definition classes in the [example connectors](https://github.com/lucidworks/connectors-sdk-resources/tree/master/java-sdk/connectors) project.
+See more examples of the plugin definition classes in the [example connectors](https://github.com/lucidworks/connectors-sdk-resources/tree/v2.0.2/java-sdk/connectors/README.md)  project.
