@@ -16,4 +16,4 @@ cd connectors-sdk-resources/java-sdk/connectors/
 . This produces one zip file, named `random-connector.zip`, located in the `build/plugins` directory.
 This artifact is now ready to be uploaded directly to Fusion as a connector plugin.
 
-. See the following link:https://github.com/lucidworks/connectors-sdk-resources/blob/v1.5.0/java-sdk/connectors/README.md[instructions] on how to build, deploy, and run the plugi
+. See the following link:https://github.com/lucidworks/connectors-sdk-resources/blob/v1.5.0/java-sdk/connectors/README.md[instructions] on how to build, deploy, and run the plugin.
