@@ -9,7 +9,7 @@ For developing a Java SDK based connector, check out the link:https://github.com
 The repository includes https://github.com/lucidworks/connectors-sdk-resources/tree/v1.5.0/java-sdk/connectors/README.md[a Gradle project^],
 which wraps each https://github.com/lucidworks/connectors-sdk-resources/blob/v1.5.0/java-sdk/connectors/settings.gradle[known plugin^] with a common set of tasks and dependencies.
 
-See the link:https://github.com/lucidworks/connectors-sdk-resources/blob/v1.5.0/java-sdk/connectors/random-connector/README.asciidoc[Random Content Connector] example for instructions on how to build, deploy and run.
+See the link:https://github.com/lucidworks/connectors-sdk-resources/blob/v1.5.0/java-sdk/connectors/random-connector/README.asciidoc[Random Content Connector^] example for instructions on how to build, deploy and run.
 
 == Fusion SDK Connectors Overview
 
