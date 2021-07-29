@@ -3,6 +3,6 @@ dependencies {
 
   implementation 'com.sun.mail:javax.mail:1.6.1'
 
-  testCompile group: 'org.mockito', name: 'mockito-core', version: '2.23.4'
-  testCompile "com.lucidworks-schema:schema:${connectorsSDKVersion}"
+  testImplementation group: 'org.mockito', name: 'mockito-core', version: '2.23.4'
+  testImplementation "com.lucidworks-schema:schema:${connectorsSDKVersion}"
 }
