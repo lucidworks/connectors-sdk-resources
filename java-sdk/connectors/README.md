@@ -16,7 +16,7 @@ To include the shared library in a connector project, add it as a dependency in 
 
 ```
 dependencies {
-  compile project(":shared-lib")
+  implementation project(":shared-lib")
 }
 ```
  For example, the simple-connector [build](simple-connector/build.gradle) project is including the `shared-lib` project.

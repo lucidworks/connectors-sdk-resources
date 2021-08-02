@@ -10,7 +10,7 @@ subprojects {
 
   configurations {
     provided
-    compile.extendsFrom(provided)
+    compileClasspath.extendsFrom(provided)
     remoteConnector
   }
 
@@ -43,7 +43,7 @@ subprojects {
     provided "com.lucidworks-connector.sdk:connector-plugin-sdk:${connectorsSDKVersion}"
     provided "org.slf4j:slf4j-api:${slf4jVersion}"
 
-    testCompile 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.12'
 
     remoteConnector "remote-connector:connector-plugin-standalone:${fusionVersion}"
   }
@@ -66,7 +66,7 @@ configure(connectorprojects) { p ->
           'Plugin-Connectors-SDK-Version': "${connectorsSDKVersion}"
     }
     into('lib') {
-      from configurations.compile - configurations.provided
+      from configurations.compileClasspath - configurations.provided
       // Copy the plugin
       from jar
     }
