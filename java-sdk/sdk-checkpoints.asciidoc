@@ -58,7 +58,7 @@ When a job is stopped, the current state of the job is stored so that it can be 
 
 The SDK controller will keep track of the incomplete/complete items during a job. An incomplete item is an item that was emitted as a candidate but has not been sent to the fetcher to be processed. Alternatively, the fetch implementation may not have emitted the FetchResult message for that item. The incomplete item is stored in the SDK CrawlDB and marked as incomplete.
 
-A complete item is an item that was emitted first as a candidate and sent to the fetcher to be processed. The fetcher completes the process by sending a FetchResult message to indicate the process is finished. This item is then marked as complete by the SDK controllers by setting the `blockID` field in the item metadata to match the blockID of the current job.
+A completed item is one that was emitted first as a candidate and also sent to the fetcher to be processed. The fetcher completes the process by sending back a FetchResult. This item is then marked as complete by the SDK controller by setting the `blockID` field in the item metadata to match the `blockID` of the current job.
 
 The blockId is used to quickly identify items in the CrawlDB which may not have been fully processed (completed). A blockId identifies a series of one or more Jobs. The lifetime of a blockId spans from the start of a crawl to the completion. The SDK controller will generate and use a new blockId when:
 
