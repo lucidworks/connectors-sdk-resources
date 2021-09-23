@@ -60,7 +60,9 @@ The SDK controller will keep track of the incomplete/complete items during a job
 
 A completed item is one that was emitted first as a candidate and also sent to the fetcher to be processed. The fetcher completes the process by sending back a FetchResult. This item is then marked as complete by the SDK controller by setting the `blockID` field in the item metadata to match the `blockID` of the current job.
 
-The blockId is used to quickly identify items in the CrawlDB which may not have been fully processed (completed). A blockId identifies a series of one or more Jobs. The lifetime of a blockId spans from the start of a crawl to the completion. The SDK controller will generate and use a new blockId when:
+A `blockId` is used to quickly identify items in the CrawlDB which may not have been fully processed, or completed. A completed job is one that naturally stops due to source data being fully processed, as opposed to jobs that are manually stopped or fail.
+
+`blockId`'s identify a series of one or more jobs. The lifetime of a `blockId` spans from either the start of the initial crawl (or immediately after a completed one), all the way to completion. The SDK controller will generate and use a new `blockId` when:
 
 * The current job is the first job.
 * The previous job’s state is `FINISHED`.
