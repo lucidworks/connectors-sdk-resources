@@ -89,3 +89,7 @@ image:/assets/images/sdkcheck-itemcomplete.png[Item Completion Flow]
 . The SDK controller receives both the Document and the FetchResult.
 .. If processing the Document, the item status is updated to Document in SDK CrawlDB.
 .. If processing the FetchResult, the item's blockId is set to the current job's blockId.
+
+=== Transient candidates
+
+Some connector plugins require that a new job start from the latest checkpoints _and_ _not_ attempt to reprocess incomplete candidates. For that purpose, emit those candidates with `Transient=true`. The `IncrementalContentFetcher` is an example. 
