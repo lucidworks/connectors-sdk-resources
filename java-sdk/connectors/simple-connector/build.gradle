@@ -1,0 +1,5 @@
+
+dependencies {
+  // Note: Fusion libraries are added by parent project.
+  implementation project(":shared-lib")
+}

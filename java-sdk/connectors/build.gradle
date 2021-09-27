@@ -1,27 +1,55 @@
+ext.connectorprojects = subprojects - project("shared-lib")
+
 subprojects {
 
   apply plugin: 'java'
   apply plugin: 'idea'
-
-  sourceCompatibility = 1.8
 
   // Folder where the plugins are built
   ext.pluginsDir = "${rootProject.buildDir}/plugins"
 
   configurations {
     provided
-    compile.extendsFrom(provided)
+    compileClasspath.extendsFrom(provided)
+    remoteConnector
   }
 
   repositories {
     mavenCentral()
     mavenLocal()
+    maven {
+      url "https://artifactory.lucidworks.com/artifactory/public-artifacts/"
+    }
+
+    repositories {
+      def pluginsLucidworks =  ivy {
+        url 'https://plugins.lucidworks.com/'
+
+        patternLayout {
+          artifact '/[organisation]/5.3/[module]-[revision].[ext]'
+          artifact '/[organisation]/5.4/[module]-[revision].[ext]'
+        }
+
+        metadataSources { artifact() }
+      }
+      exclusiveContent {
+        forRepositories(pluginsLucidworks)
+        filter { includeGroup("remote-connector") }
+      }
+    }
   }
 
   dependencies {
-    provided(fileTree(dir: "${fusionHome}/apps/connectors/connectors-rpc/libs", include: '*.jar'))
-    testCompile group: 'junit', name: 'junit', version: '4.12'
+    provided "com.lucidworks-connector.sdk:connector-plugin-sdk:${connectorsSDKVersion}"
+    provided "org.slf4j:slf4j-api:${slf4jVersion}"
+
+    testImplementation 'junit:junit:4.12'
+
+    remoteConnector "remote-connector:connector-plugin-standalone:${fusionVersion}"
   }
+}
+
+configure(connectorprojects) { p ->
 
   jar {
     baseName = "${project.name}"
@@ -33,12 +61,12 @@ subprojects {
       attributes 'Plugin-Class': "${pluginClass}",
           'Plugin-Type': "connector",
           'Plugin-Id': "${pluginId}",
-          'Plugin-Version': "${fusionVersion}",
+          'Plugin-Version': "${version}",
           'Plugin-Provider': "${pluginProvider}",
           'Plugin-Connectors-SDK-Version': "${connectorsSDKVersion}"
     }
     into('lib') {
-      from configurations.compile - configurations.provided
+      from configurations.compileClasspath - configurations.provided
       // Copy the plugin
       from jar
     }
@@ -51,37 +79,48 @@ subprojects {
   }
 
   task deploy(type: Exec, dependsOn: ["assemblePlugin"]) {
-    commandLine "curl", "-X", "PUT", "-H", "content-type:application/zip",
-            "http://${fusionApiTarget}/api/v1/blobs/lucidworks.sdk.${project.name}.zip?resourceType=plugin:connector",
-            "--data-binary",
-            "@${pluginsDir}/${plugin.outputs.files.singleFile.getName()}"
+    def service = "${restService}"
+    if (!service.endsWith("/")) {
+      service += "/"
+    }
+    service += "plugins"
+    commandLine "curl",
+        "-m ${maxTimeout}",
+        "-u",
+        "${userPass}",
+        "-X",
+        "PUT",
+        "-H",
+        "content-type:application/zip",
+        "${service}",
+        "--data-binary",
+        "@${pluginsDir}/${plugin.outputs.files.singleFile.getName()}"
     doLast {
       logger.info("Curl result: ${standardOutput.toString().trim()}")
     }
   }
 
-  task connect(type: Exec, dependsOn: ["assemblePlugin"]) {
-    def clientJar = "${fusionHome}/apps/connectors/connectors-rpc/client/connector-plugin-client-${fusionVersion}-uberjar.jar"
-    def argsList = []
-    argsList << "java"
-    argsList << "-Dcom.lucidworks.fusion.plugin.hosts=${fusionRpcTarget}"
-    argsList << "-Dcom.lucidworks.fusion.plugin.stop.port=${stopPort}"
-    if (project.hasProperty("debug")) {
-      argsList << "-agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5010"
-    }
-    argsList << "-jar"
-    argsList << clientJar
-    argsList << "${project.buildDir}/libs/${project.name}.zip"
-
-    commandLine argsList
-
+  task connect(type: JavaExec, dependsOn: assemblePlugin) {
+    main = 'com.lucidworks.connectors.ConnectorPluginStandaloneApp'
+    classpath = configurations.remoteConnector
+    File configYamlFile = file("${configYamlPath}")
+    String zipFile = "" + project.buildDir + "/libs/" + project.name + ".zip"
+    jvmArgs "-Dplugin.path=${zipFile}"
+    args configYamlFile.path
     doFirst {
-      println "   -- Using client-jar ${clientJar}"
-      println "   -- Connecting plugin ${project.buildDir}/libs/${project.name}.zip to ${fusionRpcTarget}"
+      println " >> Using plugin zip from: ${zipFile}"
+      println " >> Using the config file from: ${configYamlFile.path}"
     }
   }
 }
 
+// Assemble all the plugins
 task assemblePlugins(type: Copy) {
-  dependsOn subprojects.assemblePlugin
+  dependsOn connectorprojects.assemblePlugin
+}
+
+// Deploy all plugins
+// ./gradlew deployPlugins -PrestService=https://<fusion-proxy>/connectors -PuserPass=<user>:<password>
+task deployPlugins {
+  dependsOn connectorprojects.deploy
 }

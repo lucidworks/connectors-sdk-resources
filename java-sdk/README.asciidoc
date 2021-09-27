@@ -11,7 +11,7 @@ ifdef::env-github[]
 link:plugin-client.asciidoc[Connector client utility].
 endif::[]
 ifndef::env-github[]
-link:/fusion-server/{version}/search-development/getting-data-in/connectors/sdk/java-sdk/java-connector-dev.html#plugin-client[Connector client utility].
+link:https://doc.lucidworks.com/how-to/java-connector-dev.html#plugin-client[Connector client utility].
 endif::[]
 
 === Examples
@@ -20,12 +20,7 @@ Have a look at the https://github.com/lucidworks/connectors-sdk-resources/blob/m
 
 === Security
 Read more on how to set up a secure environment for Java SDK connectors
-ifdef::env-github[]
-link:security.asciidoc[here].
-endif::[]
-ifndef::env-github[]
-link:/fusion-server/{version}/search-development/getting-data-in/connectors/sdk/java-sdk/java-connector-dev.html#security[here].
-endif::[]
+link:https://doc.lucidworks.com/how-to/java-connector-dev.html#java-sdk-security[here].
 
 == Java SDK Framework Overview
 Only a few components must be implemented to compile and build a functioning plugin.
@@ -62,7 +57,7 @@ endif::[]
 ==== gradle.properties
 The build utility used for packaging up a connector depends on this file and contains required metadata about the connector,
 including its name, version, and the version of Fusion it can connect to.
-Have a look at the example https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/random-connector/gradle.properties[here^].
+Have a look at the example https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/simple-connector/gradle.properties[here^].
 
 ==== src/main/java
 This is where Java code lives by default. This location can be changed, but in this documentation we use the Gradle default.
@@ -74,7 +69,7 @@ The current set of subcomponents include the `Fetcher`, validation, security fil
 You can think of the `Plugin` class as the component that glues everything together for an implementation. It is also a place where fetch 'phases' are defined, by binding fetcher classes to phase names.
 
 You can see an example
-https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/random-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentPlugin.java[here^].
+https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/simple-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentPlugin.java[here^].
 Notice that each subcomponent can have a set of unique dependencies, or several subcomponents can share dependencies.
 
 === The Configuration
@@ -83,14 +78,14 @@ with `@Property` annotations, you can dynamically generate a type-safe configura
 Similarly, you can generate a Fusion-compatible JSON schema by implementing `Model`.
 
 You can see an example of a configuration implementation
-https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/random-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentConfig.java[here^].
+https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/simple-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentConfig.java[here^].
 
 More detailed information on the configuration and schema capabilities can be found
 ifdef::env-github[]
 link:configuration.asciidoc[here].
 endif::[]
 ifndef::env-github[]
-link:/fusion-server/{version}/search-development/getting-data-in/connectors/sdk/java-sdk/java-connector-dev.html#configuration[here].
+link:https://doc.lucidworks.com/how-to/java-connector-dev.html#java-sdk-configuration[here].
 endif::[]
 
 === The Fetcher
@@ -105,29 +100,19 @@ that contain metadata and content. See the link:#message-definitions[message def
 The `Fetcher` has a simple lifecycle for dealing with fetching content.
 The flow outline is as follows:
 ```
-    start()           - called once for each fetcher when the Job is started
-        preFetch()    - called once for each fetcher after start() and before any invocation to fetch()
-            fetch()   - called for each input to fetch
-        postFetch()   - called once for each fetcher after all invocations to fetch()
-    stop()            - called once for each fetcher when the Job is stopped
+    start()       - called once for each fetcher when the Job is started
+        fetch()   - called for each input to fetch
+    stop()        - called once for each fetcher when the Job is stopped
 ```
 
 ====== start()
 When a `ConnectorJob` starts, the Fetcher's `start()` method is called. The main use case for a start() call
 is to run setup code. This method is called on every fetcher bound to a phase once per job run.
 
-====== preFetch()
-This method is called once for every fetcher bound to a phase and allows a connector to emit data, that will eventually be
-sent to the fetch() method. A common use case for this is to emit a large amount of metadata, which the controller service
-later distributes across the cluster to perform the real fetch work.
-
 ====== fetch()
 This is the primary fetch method for a crawler-like connector (for example, a file system or web connector). Messages emitted here
 can include `Documents`, which are indexed directly into the associated content collection. There are several other
 types of messages; see link:#message-definitions[Message Definitions].
-
-====== postFetch()
-Called on each fetcher after it finishes fetching all emitted candidates for a given job run.
 
 ====== stop()
 Called once per job run, at the end, on every fetcher bound to a phase.
@@ -138,10 +123,10 @@ fetching into steps, so that (for example), the first phase may fetch only metad
 
 Phases are defined in the 'Plugin' class, by binding a fetcher class to a phase name. A single fetcher class can be bound to multiple phases.
 
-For each phase, the `start`, `preFetch`, `fetch`, `postFetch` and `stop` methods are called on the fetcher instance bound to the phase.
+For each phase, the `start`, `fetch`, and `stop` methods are called on the fetcher instance bound to the phase.
 
 See the example
-https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/random-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentPlugin.java[here^].
+https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/simple-connector/src/main/java/com/lucidworks/fusion/connector/plugin/RandomContentPlugin.java[here^].
 
 [[message-definitions]]
 ==== Message Type Definitions
@@ -187,9 +172,49 @@ Errors are recorded in the data store, but are not sent to the associated `Index
 ===== Delete
 `Deletes` tell the controller service to remove a specific item from the data store and associated Fusion collection.
 
+===== AccessControlItem
+`AccessControlItem` message represent group, user, role, etc. used for security filtering.
+
+==== Item state transitions
+
+[width=100%,cols="1,1,1",options="header",subs=attributes+]
+|===
+|Initial Item state |Valid transition state | Comment
+
+.1+a|*Candidate* |FetchInput | Candidates emitted are stored as FetchInput
+
+.4+a|*FetchInput* |Document |
+|Skip |
+|Error |
+|AccessControlItem |
+
+.2+a|*Document* |Skip |
+|Error |
+
+.2+a|*Skip* |Document |
+|Error |
+
+.2+a|*Error* |Document |
+|Skip |
+
+.1+a|*Checkpoint* |Checkpoint | Checkpoint should not transition to any other state
+
+.1+a|*Delete* |No transition state |
+
+.1+a|*AccessControlItem* |No transition state |
+
+|===
+
+=== Understanding when and when not to make a Candidate "transient"
+
+The term `transient` refers to a Candidate's persistance with respect to the Crawl-db.
+
+* When an emit candidate is `transient=true`, this means that we will clear the candidate from the Crawl-db after each crawl completes. Transient candidates will not be re-fetched in the next crawl. This means that subsequent crawls will need to create new candidates using the data source properties and checkpoints. An example of when you would want to do this is with a connector that has an "delta change" feature that can provide you the Created/Updated/Removed documents since you last crawled. You can avoid having to revisit every candidate from previous crawls because you have the means to know exactly what was changed. This is much faster than revisiting each candidate in the entire crawl database... so you should always prefer this option when it is a possibility.
+* When an emit candidate is `transient=false`, this means that we want to store the candidate in the CrawlDB, then we will send them to be fetched again so that they are reevaluated in each subsequent crawl. An example of when you want to do this is in a "Re-crawl Strategy" where you must revisit an item previously crawled explicitly each time subsequent crawls are run. Because revisiting each item is typically quite slow, you would only do this when the data source you are crawling provides no "delta change"  feature that can provide you the Created/Updated/Removed documents since you last crawled.
+
 == Developing a Connector
 
-The simplest way to get started developing a connector is to review the https://github.com/lucidworks/connectors-sdk-resources/tree/master/java-sdk/connectors/random-connector[examples^].
+The simplest way to get started developing a connector is to review the https://github.com/lucidworks/connectors-sdk-resources/tree/master/java-sdk/connectors/simple-connector[examples^].
 
 === Dependencies
 At a minimum, all plugins require the connector SDK dependency.

@@ -9,9 +9,9 @@ For developing a Java SDK based connector, check out the link:java-sdk/README.as
 The repository includes https://github.com/lucidworks/connectors-sdk-resources/tree/master/java-sdk/connectors[a Gradle project^],
 which wraps each https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/settings.gradle[known plugin^] with a common set of tasks and dependencies.
 
-See the link:java-sdk/connectors/random-connector/README.asciidoc[Random Content Connector] example for instructions on how to build, deploy and run.
+See the link:java-sdk/connectors/simple-connector/README.asciidoc[Simple Connector] example for instructions on how to build, deploy and run.
 
-== Fusion 4 Connectors Overview
+== Fusion SDK Connectors Overview
 
 The connectors architecture in Fusion 4 and later is designed to be scalable. Depending on the connector, jobs can be scaled by adding instances of just the connector.
 The fetching process for these types also supports distributed fetching, so that many instances can contribute to the same job.
@@ -26,6 +26,24 @@ This option makes it possible to put the connector wherever the data lives. In s
 The communication of messages between Fusion and a remote connector or hosted connector are identical; Fusion sees them as the same kind of connector.
 This means you can implement a connector locally, connect to a remote Fusion for initial testing, and when done,
 upload the exact same artifact (a zip file) into Fusion, so Fusion can host it for you. The ability to run the connector remotely makes the development process much quicker.
+
+== Connectors SDK support matrix
+
+|====================================================
+| Fusion release | SDK version
+| 5.4.0 | link:https://github.com/lucidworks/connectors-sdk-resources/tree/v4.0.0[4.0.0]
+| 5.3.0 - 5.3.x | link:https://github.com/lucidworks/connectors-sdk-resources/tree/v3.0.0[3.0.0]
+| 5.2.1 - 5.2.x | link:https://github.com/lucidworks/connectors-sdk-resources/tree/v2.0.3[2.0.3]
+| 5.2.0 | link:https://github.com/lucidworks/connectors-sdk-resources/tree/v2.0.2[2.0.2]
+| 5.1.2 - 5.1.5 | link:https://github.com/lucidworks/connectors-sdk-resources/tree/v2.0.1[2.0.1]
+| 5.1.0 - 5.1.1 | link:https://github.com/lucidworks/connectors-sdk-resources/tree/v2.0.0[2.0.0]
+| 5.0.2 | 2.0.0-pre-release
+| 4.2.6 | link:https://github.com/lucidworks/connectors-sdk-resources/tree/v1.5.0[1.5.0]
+| 4.2.4 - 4.2.5 | link:https://github.com/lucidworks/connectors-sdk-resources/tree/v1.4.0[1.4.0]
+| 4.2.2 - 4.2.3 | link:https://github.com/lucidworks/connectors-sdk-resources/tree/v1.3.0[1.3.0]
+| 4.2.1 | link:https://github.com/lucidworks/connectors-sdk-resources/tree/v1.2.0[1.2.0]
+| 4.2.0 | link:https://github.com/lucidworks/connectors-sdk-resources/tree/v1.1.0[1.1.0]
+|====================================================
 
 == Java SDK
 
@@ -43,21 +61,35 @@ The Fusion Admin UI also takes care of the view or presentation, by making use o
 
 This client-based approach decouples connectors from Fusion, which allows hot deployment of connectors through a simple connect call.
 
-== Security
-Fusion connectors support SSL/TLS. See the link:security.asciidoc[security README] for setup.
-
-=== gRPC
-The underlying client/server technology used by these connectors is a fast and efficient framework from Google called https://grpc.io/[gRPC^].
-The gRPC framework provides flexibility in the way services and their methods are defined. Other benefits of this framework include:
-
-* HTTP/2 based transport
-* Provides an efficient serialization format for data handling (protocol buffers)
-* Allows bi-directional/multiplexed streams
-* Flow control, also known as back pressure
-
 == Distributed Data Store
 The data persisted by the connectors framework is distributed across the Fusion cluster. Each node holds its primary partition of the data, as well as backups of other partitions.
 If a node goes down during a crawl, the data store remains intact and usable. Connector implementations do not need to be concerned with this layer, because it is all handled by Fusion.
 
+== Server Side Processing
+An important point to consider when building a connector is that the server does not guarantee ordering of emitted items such as Candidates, Documents, Deletes, etc., when processing. Therefore,
+any connector logic that depends on precise ordering of processing (including index-pipeline and Solr commits) may produce incorrect results.
+For example, when a document replace is immediately followed by a delete-by-query, and the delete-by-query depends on the document replace to be fully processed and committed. If the document commit has not yet occurred, then the delete-by-query may result in the wrong items being deleted.
 
-Copyright 2019 https://lucidworks.com[Lucidworks^]
+== CrawlDB fields
+* Core fields required for any connector include: id and state_s.
+
+* Connector specific values include the "fields" and "metadata" properties, which result in Solr document prefixed fields: field_ and meta_, respectively.
+
+|====================================================
+| Field Name | Field Description  | Example value  
+|  id  | Unique candidate indentifier  |  content:/app 
+|  jobId_s | Unique job identifier. All items processed in the new job will have a different jobId.  | KTPbmHYTqm 
+| blockId_s | A BlockId identifies a series of 1 or more Jobs, and the lifetime of a BlockId spans from the start of a crawl to the crawls completion.When a Job starts and the previous Job did not complete (failed or stopped), the previous Job's BlockId is reused. The same BlockId will be reused until the crawl successfully completes.BlockIds are used to quickly identify items in the CrawlDb which may not have been fully processed (complete).  | KwhuWW7wya 
+| state_s | State transition. Possible values (FetchInput, Document, Skip, Error, Checkpoint, ACI(AccessControItem), Delete, FetchResult).  | Document  
+| targetPhase_s  | Name of the phase this item is emitted to.  | content  
+| sourcePhase_s | Name of the phase an item was emitted from.  | content  
+| isTransient_b  | Flag to indicate that the item should be removed from CrawDB after it has been processed.  | false  
+| isLeafNode_b  | This flag is used to prioritize the processing leaf node instead of nested nodes to avoid emitting of too many Candidates.  | false  
+| createdAt_l  | Item created timestamp.  | 1566508663611  
+| createdAt_tdt  | Item created ISO date.  | 2019-08-22T21:17:43.611Z  
+|  modifiedAt_l |  Timestamp value which is updated when item changes its state. Also, if purge stray items feature is enabled in the connector plugin, this field is used to determine whether the item is stray or not, then the item is deleted if it's a stray item.  | 1566508665709
+| modifiedAt_tdt  | ISO date value which is updated when item changes its state. It serves same purpose as modifiedAt_l.  | 2019-08-22T21:17:45.709Z
+| fetchInput_id_s  | FetchInput Id.  | /app
+|====================================================
+:
+Copyright 2020 https://lucidworks.com[Lucidworks^]
