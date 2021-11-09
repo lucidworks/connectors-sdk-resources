@@ -72,10 +72,19 @@ configure(connectorprojects) { p ->
     }
     extension('zip')
   }
+  configure(plugin) {
+    group = 'connectors'
+    description = "Build the connector plugin in the build directory"
+  }
 
   task assemblePlugin(type: Copy) {
     from plugin
     into pluginsDir
+  }
+
+  configure(assemblePlugin) {
+    group = 'connectors'
+    description = "Creates a connector plugin zip file that can be deployed in Fusion"
   }
 
   task deploy(type: Exec, dependsOn: ["assemblePlugin"]) {
@@ -100,6 +109,11 @@ configure(connectorprojects) { p ->
     }
   }
 
+  configure(deploy) {
+    group = 'connectors'
+    description = "Deploys the plugin in Fusion"
+  }
+
   task connect(type: JavaExec, dependsOn: assemblePlugin) {
     main = 'com.lucidworks.connectors.ConnectorPluginStandaloneApp'
     classpath = configurations.remoteConnector
@@ -112,15 +126,30 @@ configure(connectorprojects) { p ->
       println " >> Using the config file from: ${configYamlFile.path}"
     }
   }
+  configure(connect) {
+    group = 'connectors'
+    description = "Runs the connector plugin remotely"
+  }
 }
 
 // Assemble all the plugins
 task assemblePlugins(type: Copy) {
   dependsOn connectorprojects.assemblePlugin
 }
+configure(assemblePlugins) {
+  group = 'connectors'
+  description = "Creates a plugin zip file for all the connector plugins "
+}
+
 
 // Deploy all plugins
 // ./gradlew deployPlugins -PrestService=https://<fusion-proxy>/connectors -PuserPass=<user>:<password>
 task deployPlugins {
   dependsOn connectorprojects.deploy
 }
+
+configure(deployPlugins) {
+  group = 'connectors'
+  description = "Deploy all the connector plugins in Fusion "
+}
+
