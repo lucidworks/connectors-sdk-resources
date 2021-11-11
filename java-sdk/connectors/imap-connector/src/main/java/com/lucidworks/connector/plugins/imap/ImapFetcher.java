@@ -72,8 +72,7 @@ public class ImapFetcher implements ContentFetcher {
     } catch (MailException e) {
       String message = "Failed to parse message.";
       logger.error(message, e);
-      fetchContext.newError(fetchContext.getFetchInput().getId())
-          .withError(message)
+      fetchContext.newError(fetchContext.getFetchInput().getId(), message)
           .emit();
     }
 
