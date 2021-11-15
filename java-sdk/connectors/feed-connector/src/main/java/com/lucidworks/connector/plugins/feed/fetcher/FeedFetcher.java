@@ -143,7 +143,7 @@ public class FeedFetcher implements ContentFetcher {
     } else if (!fetchInput.hasId()) {
       return connectorConfig.properties().generateProperties().entriesTotal();
     }
-    return Integer.valueOf(fetchInput.getMetadata().get(ENTRY_INDEX_END).toString()) +
+    return Integer.parseInt(fetchInput.getMetadata().get(ENTRY_INDEX_END).toString()) +
         connectorConfig.properties().generateProperties().entriesToAddIncremental();
   }
 
@@ -151,7 +151,7 @@ public class FeedFetcher implements ContentFetcher {
     if (!Strings.isNullOrEmpty(connectorConfig.properties().path()) || !fetchInput.hasId()) {
       return 0;
     }
-    return Integer.valueOf(fetchInput.getMetadata().get(ENTRY_INDEX_START).toString()) +
+    return Integer.parseInt(fetchInput.getMetadata().get(ENTRY_INDEX_START).toString()) +
         connectorConfig.properties().generateProperties().entriesToRemoveIncremental();
   }
 

@@ -6,13 +6,12 @@ import com.lucidworks.connector.plugins.incremental.config.RandomIncrementalConf
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.time.Instant;
 import java.util.stream.IntStream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class IncrementalContentFetcher implements ContentFetcher {
 
@@ -84,8 +83,7 @@ public class IncrementalContentFetcher implements ContentFetcher {
         if (ERROR_ID.equals(input.getId())) {
           // Simulating an error item here.
           logger.error("The following error is expected, as means to demonstrate how errors are emitted");
-          fetchContext.newError(input.getId())
-              .withError("Expected exception")
+          fetchContext.newError(input.getId(), "Expected exception")
               .emit();
         }
         throw npe;
