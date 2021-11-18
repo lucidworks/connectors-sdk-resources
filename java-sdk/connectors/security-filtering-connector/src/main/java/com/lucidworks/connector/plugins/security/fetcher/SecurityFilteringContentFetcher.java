@@ -43,6 +43,7 @@ public class SecurityFilteringContentFetcher implements ContentFetcher {
     }
 
     Optional<SecurityDocument> document = documentGenerator.generate(input.getId(), input.getMetadata());
+    logger.info("Emitting document {}", input.getId());
     document.ifPresent(securityDocument -> {
       fetchContext.newDocument()
           .fields(f -> f.merge(securityDocument.getFields()))
@@ -53,6 +54,7 @@ public class SecurityFilteringContentFetcher implements ContentFetcher {
           .emit();
 
       for (Permission permission : securityDocument.getPermissions()) {
+        logger.info("Emitting permission candidate {}", permission.getId());
         fetchContext.newCandidate(permission.getId())
             .withTargetPhase(ACCESS_CONTROL)
             .metadata(m -> {
