@@ -15,29 +15,29 @@
 - Contains users, groups and document ACLs.
 - The permission hierarchy is represented by a graph of normalized access control and document ACL entities.
 - Types of entities:
-    - Access control: Represents a group, user, role, etc.
-    - Document ACL: An entity which contains a reference to a content document, and associated permission hierarchy.
+    - Access control (A.K.A Principal): Represents a group, user, role, etc.
+    - Document ACL (A.K.A Permission): An entity which contains a reference to a content document, and associated permission hierarchy.
 
 ## Access Control collection - Data model
-### Access control entity
+### Access control (Principal) entity
 
 | Field | Description |
 | ------- | ------- |
 | id | ID of the access control |
-| type_s | Type of access control (group, user, role assignment, role definition,, etc) |
+| type_s | Type of access control (group, user, role assignment, role definition, etc) |
 | label_s | Description of the access control |
-| outbound_ss | Outbound edges, i.e. parent objects can be represented with this field |
-| inbound_ss | Inbound edges i.e. list of access controls which are owned by the current access control |
+| outbound_ss | Outbound edges, i.e. parent objects can be represented with this field. E.g. a group that contains this user |
+| inbound_ss | Inbound edges i.e. list of access controls which are owned by the this access control. E.g the users of this group|
 
-### Document ACL entity
+### Document ACL (Permission) entity
 
 | Field | Description |
 | ------- | ------- |
-| id | ID of the content document |
+| id | ID of the ACL document |
 | type_s | A document ACL is an access control too, but with type “acl”. |
-| label_s | Description of the document ACL |
+| label_s | Description of the ACL document |
 | outbound_ss | Outbound edges, not commonly used |
-| inbound_ss | Inbound edges, i.e. used for inheriting permissions |
+| inbound_ss | Inbound edges - points to the principals (e.g. users and groups) that have this permission |
 
 ### Sample
 #### Diagram representation
@@ -49,39 +49,33 @@
 ## Indexing time
 ### Contents / Documents indexing
 
-- Documents are indexed to the content collection. Note, there is no field ACLs field (`acl_ss`).
+- Documents are indexed to the content collection. The ACL list (Permission list) for this document is specified. 
 
 ```java
-    ctx.newContent(<DOCUMENT_ID>, <STREAM_SUPPLIER>)
-        .withFields(<FIELDS>)
+         fetchContext.Content(<DOCUMENT_ID>, <STREAM>)
+        .fields(...)
+        .withACLs(<list of ACL Ids>)
         .emit();
 ```
 
 ```java
-    ctx.newDocument(<DOCUMENT_ID>)
-        .withFields(<FIELDS>)
+         fetchContext.newDocument(<DOCUMENT_ID>)
+        .fields(...)
+        .withACLs(<list of ACL Ids>)
         .emit();
 ```
 
 ### Access controls / Document ACLs indexing
 
-- Normalized ACLs are stored in the access control collection. It is neccessary that the incoming user ID matches the case of the User ID stored in the access control collection in order for the query-time join to work properly.
+- Principals and ACLs are stored in the access control collection. Note that the user ID is case sensitive. The case must match for the query-time join to work properly.
 
 ```java
-    ctx.newAccessControlItem(<ACCESS_CONTROL_ID>, <TYPE>)
-        .withLabel(<LABEL>)
-        .withOutbound(<OUTBOUND_LIST>)
+    ctx.newAccessControlItem(...)
         .emit();
 ```
 
-- Only documents or contents can index their ACLs
+See [SecurityFilteringAccessControlFetcher](connectors/security-filtering-connector/src/main/java/com/lucidworks/connector/plugins/security/fetcher/SecurityFilteringAccessControlFetcher.java) for additional details.
 
-```java
-    ctx.newDocumentACL(<DOCUMENT_ID>)
-        .withLabel(<LABEL>)
-        .withInbound(<INBOUND_LIST>)
-        .emit();
-```
 
 ### Supported operations
 
