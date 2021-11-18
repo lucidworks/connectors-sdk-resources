@@ -125,7 +125,7 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
 See [SecurityFilteringAccessControlFetcher](connectors/security-filtering-connector/src/main/java/com/lucidworks/connector/plugins/security/fetcher/SecurityFilteringAccessControlFetcher.java) for additional details.
 
 
-Components must be registered in the plugin:
+- Components must be registered in the plugin:
 
 ```
        return ConnectorPlugin.builder(SecurityFilteringConfig.class)
