@@ -112,66 +112,32 @@
 ```
 ## Required components
 
-- Plugins requiring security filtering must implement the `AccessControlFetcher` component and `SecurityFilter` component.
+- Plugins requiring security filtering must implement an access control fetcher in addition to  the content fetcher. That fetcher emits users, groups and permissions.
 
 ### AccessControlFetcher sample component
 
 ```java
-public class SecurityFilteringAccessControlFetcher implements AccessControlFetcher {
+public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
   
-  private static final Logger logger = LogManager.getLogger(SecurityFilteringAccessControlFetcher.class);
-  
-  private final SecurityFilteringConfig config;
-  private final Random random;
-  
-  @Inject
-  public SecurityFilteringAccessControlFetcher(
-      SecurityFilteringConfig config
-  ) {
-    this.config = config;
-    this.random = new Random();
-  }
-  
-  @Override
-  public FetchResult fetch(FetchContext ctx) {
-    ...
-  }
 }
 ```
 
-See [SecurityFilteringAccessControlFetcher](connectors/security-filtering-connector/src/main/java/com/lucidworks/fusion/connector/plugin/fetcher/SecurityFilteringAccessControlFetcher.java) for additional details.
-
-### SecurityFilter sample component
-
-```java
-public class SecurityFilteringSecurityFilterComponent implements SecurityFilterComponent {
-
-  private final GraphJoinSecurityFilterBuilder builder;
-
-  @Inject
-  public SecurityFilteringSecurityFilterComponent(GraphJoinSecurityFilterBuilder builder) {
-    this.builder = builder;
-  }
+See [SecurityFilteringAccessControlFetcher](connectors/security-filtering-connector/src/main/java/com/lucidworks/connector/plugins/security/fetcher/SecurityFilteringAccessControlFetcher.java) for additional details.
 
 
-  @Override
-  public SecurityFilter buildSecurityFilter(Subject subject) {
-    return builder.withAccessControl(subject.getPrincipal()).build();
-  }
-}
-```
-
-See [SecurityFilteringSecurityFilterComponent](connectors/security-filtering-connector/src/main/java/com/lucidworks/fusion/connector/plugin/security/SecurityFilteringSecurityFilterComponent.java) for additional details.
-
+``
 - Components must be registered in the plugin, i.e.
 
 ```
-    return builder(SecurityFilteringConfig.class)
-        .withFetcher(CONTENT, SecurityFilteringContentFetcher.class, nonGenModule)
-        .withFetcher(ACCESS_CONTROL, SecurityFilteringAccessControlFetcher.class, nonGenModule)
-        .withSecurityFilter(SecurityFilteringSecurityFilterComponent.class, nonGenModule)
+       return ConnectorPlugin.builder(SecurityFilteringConfig.class)
+        .withFetcher(CONTENT, SecurityFilteringContentFetcher.class, fetchModule)
+        .withFetcher(ACCESS_CONTROL, SecurityFilteringAccessControlFetcher.class, fetchModule)
+        .withSecuritySpec(sf -> sf
+            .staticSpec(spec -> spec
+                .withPrincipal("fullName_s")))
+        .withValidator(SecurityFilteringValidationComponent.class, fetchModule)
         .build();
 
 ```
 
-See [SecurityFilteringPlugin](connectors/security-filtering-connector/src/main/java/com/lucidworks/fusion/connector/plugin/SecurityFilteringPlugin.java) for additional details.
+See [SecurityFilteringPlugin](connectors/security-filtering-connector/src/main/java/com/lucidworks/connector/plugins/security/SecurityFilteringPlugin.java) for additional details.
