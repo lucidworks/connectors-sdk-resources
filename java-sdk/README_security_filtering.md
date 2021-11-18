@@ -110,7 +110,7 @@
 ```
 {!join from=id to=id fromIndex=<DS_ID>_access_hierarchy}+{!graph from=inbound_ss to=outbound_ss}id:”user_2” +type_s:”acl”
 ```
-## Required components
+## Required control fetcher components
 
 - Plugins requiring security filtering must implement an access control fetcher in addition to  the content fetcher. That fetcher emits users, groups and permissions.
 
@@ -125,8 +125,7 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
 See [SecurityFilteringAccessControlFetcher](connectors/security-filtering-connector/src/main/java/com/lucidworks/connector/plugins/security/fetcher/SecurityFilteringAccessControlFetcher.java) for additional details.
 
 
-``
-- Components must be registered in the plugin, i.e.
+Components must be registered in the plugin:
 
 ```
        return ConnectorPlugin.builder(SecurityFilteringConfig.class)
