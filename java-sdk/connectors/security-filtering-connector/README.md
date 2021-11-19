@@ -107,7 +107,7 @@ to list the documents and see how the field values correspond to the code that e
 - Observe the permission, user and group documents.
 - Show all the document's fields and see how inbound permission fields point to users and groups.
 - Observe how the outbound field of users with group memeberships point to the group(s).
-- Observe fullName_s field of users and groups that correlate it to the logged-in principal at search time.
+- Observe the fullName_s field of users and groups that correlate it to the logged-in principal at search time.
 
 ## Security trimming stage (Query time)
 
