@@ -1,4 +1,7 @@
 # SDK Security filtering
+This document privides an overview of security trimming and how it changed from previous versions. A detailed hands-on 
+example can be found here: [Security Filtering Connector README](connectors/security-filtering-connector/README.md).
+
 ## Storage changes
 ![Storage changes](security_filtering_resources/storage_changes.png)
 
