@@ -86,7 +86,7 @@ public class IncrementalContentFetcher implements ContentFetcher {
           fetchContext.newError(input.getId(), "Expected exception")
               .emit();
         }
-        throw npe;
+        
       }
     }
     return fetchContext.newResult();
