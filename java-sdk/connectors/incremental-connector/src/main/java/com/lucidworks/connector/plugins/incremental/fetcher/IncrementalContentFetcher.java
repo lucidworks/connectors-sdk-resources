@@ -85,8 +85,9 @@ public class IncrementalContentFetcher implements ContentFetcher {
           logger.error("The following error is expected, as means to demonstrate how errors are emitted");
           fetchContext.newError(input.getId(), "Expected exception")
               .emit();
+          return fetchContext.newResult();
         }
-        
+        throw npe;
       }
     }
     return fetchContext.newResult();
