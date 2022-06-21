@@ -8,13 +8,14 @@ import com.lucidworks.fusion.connector.plugin.api.exceptions.ContentEmitExceptio
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.FetchInput;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.stream.IntStream;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RandomContentFetcher implements ContentFetcher {
 
@@ -23,10 +24,12 @@ public class RandomContentFetcher implements ContentFetcher {
   private static final String CONTENT_ID = "content-example";
   private static final String ERROR_ID = "no-number-this-should-fail";
   private static final String COUNTER_FIELD = "number";
+  private static final String CANDIDATE_NUMBER = "candidate-number";
 
   private final RandomContentGenerator generator;
   private final RandomContentProperties randomContentProperties;
   private final String hostname;
+  private final long numberOfCandidates;
 
   @Inject
   public RandomContentFetcher(
@@ -37,6 +40,7 @@ public class RandomContentFetcher implements ContentFetcher {
     this.randomContentProperties = randomContentConfig.properties().getRandomContentProperties();
     this.generator = generator;
     this.hostname = hostnameProvider.get();
+    this.numberOfCandidates = randomContentConfig.properties().numberOfCandidates();
   }
 
   @Override
@@ -48,12 +52,7 @@ public class RandomContentFetcher implements ContentFetcher {
       int totalNumberOfDocs = randomContentProperties.totalNumDocs();
       IntStream.range(0, totalNumberOfDocs)
           .asLongStream()
-          .forEach(i -> {
-            logger.info("Emitting candidate -> number {}", i);
-            fetchContext.newCandidate(String.valueOf(i))
-                .metadata(m -> m.setLong(COUNTER_FIELD, i))
-                .emit();
-          });
+          .forEach(index -> emitCandidate(fetchContext, index, 0));
       // Simulating an error item here... because we're emitting an item without a "number",
       // the fetch() call will attempt to convert the number into a long and throw an exception.
       // The item should be recorded as an error in the ConnectorJobStatus.
@@ -65,11 +64,31 @@ public class RandomContentFetcher implements ContentFetcher {
 
     if (CONTENT_ID.equals(fetchContext.getFetchInput().getId())) {
       emitContent(fetchContext, input);
+    } else if (input.getMetadata().get(CANDIDATE_NUMBER) != null) {
+      long candidate = Integer.valueOf(input.getMetadata().get(CANDIDATE_NUMBER).toString());
+      if (candidate < numberOfCandidates) {
+        long num = (Long) input.getMetadata().get(COUNTER_FIELD);
+        emitCandidate(fetchContext, num, candidate);
+        return fetchContext.newResult();
+      }
+      emitDocument(fetchContext, input);
     } else {
       emitDocument(fetchContext, input);
     }
-
     return fetchContext.newResult();
+  }
+
+  private void emitCandidate(FetchContext fetchContext, long num, long candidate) {
+    String id = num + "-" + candidate;
+    long incCandidate = candidate + 1;
+    logger.info("Emitting candidate for item {} - number of candidate {}", num, incCandidate);
+    fetchContext
+        .newCandidate(id)
+        .metadata(m -> {
+          m.setLong(COUNTER_FIELD, num);
+          m.setLong(CANDIDATE_NUMBER, incCandidate);
+        })
+        .emit();
   }
 
   private void emitDocument(FetchContext fetchContext, FetchInput input) {
@@ -80,7 +99,7 @@ public class RandomContentFetcher implements ContentFetcher {
           .forEach(
               (k, v) -> logger.info("Input [{}:{}[{}]]", k, v, v.getClass())
           );
-      logger.info("Emitting Document -> number {}", num);
+      logger.info("Emitting Document -> id {} - {}", num, input.getMetadata());
 
       int min = randomContentProperties.minimumNumberSentences();
       int max = randomContentProperties.maximumNumberSentences();
@@ -121,7 +140,7 @@ public class RandomContentFetcher implements ContentFetcher {
             f.setLocalDateTime("crawl_date", LocalDateTime.now());
           })
           .emit();
-    } catch(ContentEmitException e) {
+    } catch (ContentEmitException e) {
       logger.error("Failed to emit content", e);
       fetchContext.newError(input.getId(), e.toString())
           .emit();
