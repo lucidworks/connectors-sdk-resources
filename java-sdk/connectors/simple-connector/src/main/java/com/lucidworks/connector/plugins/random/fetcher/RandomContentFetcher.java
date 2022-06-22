@@ -52,7 +52,10 @@ public class RandomContentFetcher implements ContentFetcher {
       int totalNumberOfDocs = randomContentProperties.totalNumDocs();
       IntStream.range(0, totalNumberOfDocs)
           .asLongStream()
-          .forEach(index -> emitCandidate(fetchContext, index, 0));
+          .forEach(index -> {
+            logger.info("Emitting candidate for item {}", index);
+            emitCandidate(fetchContext, index, 1);
+          });
       // Simulating an error item here... because we're emitting an item without a "number",
       // the fetch() call will attempt to convert the number into a long and throw an exception.
       // The item should be recorded as an error in the ConnectorJobStatus.
@@ -65,8 +68,8 @@ public class RandomContentFetcher implements ContentFetcher {
     if (CONTENT_ID.equals(fetchContext.getFetchInput().getId())) {
       emitContent(fetchContext, input);
     } else if (input.getMetadata().get(CANDIDATE_NUMBER) != null) {
-      long candidate = Integer.valueOf(input.getMetadata().get(CANDIDATE_NUMBER).toString());
-      if (candidate < numberOfCandidates) {
+      long candidate = Integer.valueOf(input.getMetadata().get(CANDIDATE_NUMBER).toString()) + 1;
+      if (candidate <= numberOfCandidates) {
         long num = (Long) input.getMetadata().get(COUNTER_FIELD);
         emitCandidate(fetchContext, num, candidate);
         return fetchContext.newResult();
@@ -79,15 +82,14 @@ public class RandomContentFetcher implements ContentFetcher {
   }
 
   private void emitCandidate(FetchContext fetchContext, long num, long candidate) {
-    String id = num + "-" + candidate;
-    long incCandidate = candidate + 1;
-    logger.info("Emitting candidate for item {} - number of candidate {}", num, incCandidate);
+    boolean latestCandidate = candidate == numberOfCandidates;
     fetchContext
-        .newCandidate(id)
+        .newCandidate(latestCandidate ? String.valueOf(num) : num + "-" + candidate)
         .metadata(m -> {
           m.setLong(COUNTER_FIELD, num);
-          m.setLong(CANDIDATE_NUMBER, incCandidate);
+          m.setLong(CANDIDATE_NUMBER, candidate);
         })
+        .withTransient(latestCandidate ? false : true) // not need to save candidates that will not be indexed
         .emit();
   }
 
