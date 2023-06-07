@@ -2,25 +2,24 @@
 
 ## Connector Description
 
-- This connector generates a configurable number of content collection documents and a static ACL hierarchy. The Static hierarchy means that all the information needed for security filtering (a.k.a security trimming) is stored in Fusion a collection. Fusion doesn't need to call connector plugin code at search time.
-- The ACL Documents fetcher is implemented in `SecurityFilteringAccessControlFetcher` class. This fetcher retrieves permission documents, groups and users.
-- The documents indexed by the access control fetcher are stored by default in the collection: `{DATASOURCE_ID}_access_control_hierarchy` where the `DATASOURCE_ID` is the id of the configuration.
+The connector uses the connectors SDK to generate Access Control hierarchy and documents in order to demonstrate the 
+Graph Security Trimming functionality.
+The following steps are described below:
+- How to build and deploy the security trimming connector.
+- How to run the connector to generate Access Control documents and content documents.
+- How to add the Graph Security Trimming stage to the Query Workbench to test security trimming.
 
+## Background
+The Graph Security Trimming SDK methods generate the security hierarchy used by the Graph Security Trimming (SGT)
+stage of the query pipeline. In particular, for optimal efficiency, the SGT stage uses only top level filtering queries -
+cross collections joins are not supported. To facilitate that, access control documents are created in the same collection where content
+documents are created and a copy of each access control document is created on every active collection shard.
+
+## The Access Control Hierarchy
+ 
 ### Access Control Fetcher behavior
 
 Access control hierarchy used here is static and structured in the following way:
-
-![ACL hierarchy](docs/acl_hierarchy.png)
-
-Every content document consists of fields (your regular data) and permissions (ACL information).
-
-![Document structure](docs/document_structure.png)
-
-Every permission is emitted as a separate ACL document which connects content documents to access control hierarchy.
-Note that the content document ACL field can point directly to a principal document (user/group) rather than an ACL document -
-that can work for simple cases. But typically, the more complex permission hierarchy requires ACL documents. 
-
-![ACL final hierarchy](docs/acl_final_hierarchy.png)
 
 
 ## Quick start
