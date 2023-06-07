@@ -16,6 +16,7 @@ cross collections joins are not supported. To facilitate that, access control do
 documents are created and a copy of each access control document is created on every active collection shard.
 
 ## The Access Control Hierarchy
+![Document structure](docs/png2.png)
  
 ### Access Control Fetcher behavior
 
