@@ -1,6 +1,6 @@
 package com.lucidworks.connector.plugins.security.fetcher;
 
-import com.lucidworks.connector.plugins.security.TestConfig;
+import com.lucidworks.connector.plugins.security.SecurityConfig;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
 import com.lucidworks.fusion.connector.plugin.api.resource.BlobResourceClient;
@@ -35,10 +35,10 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
   private final static String ACL_FIELD = "_lw_acl_ss";
 
   private static final Logger logger = LoggerFactory.getLogger(SecurityFilteringAccessControlFetcher.class);
-  private TestConfig testPluginConfig;
+  private SecurityConfig testPluginConfig;
 
   @Inject
-  public SecurityFilteringAccessControlFetcher(TestConfig testPluginConfig, BlobResourceClient blobResourceClient) {
+  public SecurityFilteringAccessControlFetcher(SecurityConfig testPluginConfig, BlobResourceClient blobResourceClient) {
     this.testPluginConfig = testPluginConfig;
   }
 

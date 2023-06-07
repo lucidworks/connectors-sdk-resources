@@ -6,7 +6,7 @@ import com.lucidworks.connector.plugins.security.fetcher.SecurityFilteringAccess
 import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPlugin;
 import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPluginProvider;
 
-public class TestPlugin implements ConnectorPluginProvider {
+public class SecurityPlugin implements ConnectorPluginProvider {
 
   @Override
   public ConnectorPlugin get() {
@@ -16,7 +16,7 @@ public class TestPlugin implements ConnectorPluginProvider {
       }
     };
 
-    return ConnectorPlugin.builder(TestConfig.class)
+    return ConnectorPlugin.builder(SecurityConfig.class)
         .withFetcher("access-control", SecurityFilteringAccessControlFetcher.class, fetchModule)
         .withSecuritySpec(sf -> sf
             .staticSpec(spec -> spec
