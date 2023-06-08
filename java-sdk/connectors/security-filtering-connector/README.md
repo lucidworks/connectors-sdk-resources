@@ -71,11 +71,27 @@ Create a data source with this configuration:
 When the collection has a single shard, N will be 0 e.g. _user1___0_.**
 
 ## Security trimming stage (Query time)
-After the connector run, the documents are ready for testing query security trimming.
+After the connector run, the documents are ready for testing query security trimming. Configure the GST stage at the 
+ `Query Workbench -> Add a Stage` tab:
+
+Add the Graph Security Trimming stage and configure as the following:
+- Set _Join Field_ to _lw_acl_ss.
+- Set _Join Method_ to topLevelDV.
+
+Test which documents _user2_ have access to:
+- Add a parameter to the Query Workbench (in the upper right corner of the Query Workbench screen): {username,user2}
+- Run the query _id:doc*_ and verify that only _doc2_ is retrieved since only group1 (which doesn’t include user2) is granted to see doc1.
+
+Test which documents _user1_ have access to:
+- Change the username parameter of the Query Workbench to _user1_.
+- Run the query _id:doc*_ and verify that both _doc1_ and _doc2_ are retrieved because _doc2_ is permitted to _group2_ which 
+includes _user1_ and _doc1_ is permitted to _group1_ which also includes user1.
+
+
 
 ## Multiple Shard Collections
 
-## Deleting Access Documents
+## Deleting Control Access Documents
 
 ## Code Observations
 
