@@ -38,25 +38,22 @@ and 2 content documents.
 This hierarchy means that _user1_ has access to both documents and _user2_ has access only to _doc2_.
 
 ![Document structure](docs/png2.png)
- 
-### Access Control Fetcher behavior
-
-Access control hierarchy used here is static and structured in the following way:
 
 
-## Quick start
+## Building and Deploying the Connector Plugin
 
 1. Clone the repo:
 ```
 git clone https://github.com/lucidworks/connectors-sdk-resources.git
-cd connectors-sdk-resources/java-sdk/connectors/
-./gradlew assemblePlugins
+cd connectors-sdk-resources/java-sdk/connectors/security-filtering-connector
+../gradlew assemblePlugin
 ```
 
 2. This produces one zip file, named `security-filtering-connector.zip`, located in the `security-filtering-connector/build/plugins` directory.
 This artifact is now ready to be uploaded directly to Fusion as a connector plugin.
 
-3. See the following [instructions](../README.md) on how to build, deploy, and run the plugin.
+3. Use Fusion admin `System -> Blobs` tab to upload and deploy the connector's zip file.
+   Or see the following [instructions](../README.md) on how to build and deploy the plugin.
 
 
 ## Connector properties

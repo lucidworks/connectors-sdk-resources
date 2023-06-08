@@ -12,19 +12,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/* - Run the connector with CRUD Operation set to "create" and acId set to N.A. (or any other values)
-   - In the Query Work Bench, add a Graph Security Trimming stage with:
-       - "ACL Solr Collection" set to the same as the
-       - Keep "User ID Source" and "User ID Key" as the default
-       - Set "Join Field" to _lw_acl_ss
-       - Set Join Method to topLevelDV
-   - Edit Query Work Bench parameters and add {username, user1}
-   - run the query id:doc* - you should get doc1 and doc2 because user1 is in group1 and group2
-   - Edit Query Work Bench parameters and change {username, user2}
-   - run the query id:doc* - you should get only doc2 because user2 is only in group2
-   - Remove the Graph Security Trimming stage and run the connector with CRUD Operation set to "delete" and acId set to "group1" and see group1 deleted
-   - Run the connector with CRUD Operation set to "update" and acId set to "user1___0" and see user1 deleted
- */
 public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
   private final static String USER1 = "user1";
   private final static String USER2 = "user2";
