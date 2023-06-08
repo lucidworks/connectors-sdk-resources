@@ -8,7 +8,7 @@ import com.lucidworks.fusion.schema.SchemaAnnotations.Property;
 import com.lucidworks.fusion.schema.SchemaAnnotations.RootSchema;
 
 @RootSchema(
-    title = "Test Security Connector",
+    title = "Security Connector Demo",
     description = "A test connector for integration tests.",
     category = "Test connector"
 )
