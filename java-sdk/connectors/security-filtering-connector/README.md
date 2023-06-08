@@ -16,6 +16,27 @@ cross collections joins are not supported. To facilitate that, access control do
 documents are created and a copy of each access control document is created on every active collection shard.
 
 ## The Access Control Hierarchy
+The SGT SDK methods facilitate the creation of a hierarchy of _principals_. A _principal_ is an entity that has
+certain access permissions to resources. In the context of Fusion, the most common entities are _users_ and _groups_ and 
+the typical access permission is the document _read_ permission. The SGT SDK methods are abstract - they support
+any _principal_ type and any permission. But this example demonstrate _users_, _groups_ and document _read_ permissions.
+
+When security the SGT query pipeline stage is configured, documents are accessible only by principals who are specified
+in the document's `_lw_acl_ss` list field. `user1` will be able to see the document only if it's specified 
+in the `_lw_acl_ss` field, or if a group `user1` belongs to is specified in the `_lw_acl_ss` field. This access
+authorization is transitive through group nesting.
+
+When the sample connector populates a single shard collections it creates 6 documents:  2 users, 2 groups 
+and 2 content documents.
+- _user1_
+- _user2_
+- _group1_ with _user1_ as a member
+- _group2_ with _user1_ and _user2_ as members.
+- _doc1_ with _group1_ in its `_lw_acl_ss` permissions list.
+- _doc2_ with _group2_ in its `_lw_acl_ss` permissions list.
+
+This hierarchy means that _user1_ has access to both documents and _user2_ has access only to _doc2_.
+
 ![Document structure](docs/png2.png)
  
 ### Access Control Fetcher behavior
