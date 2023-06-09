@@ -17,10 +17,6 @@ public class SecurityPlugin implements ConnectorPluginProvider {
     };
 
     return ConnectorPlugin.builder(SecurityConfig.class)
-        .withFetcher("access-control", SecurityFilteringAccessControlFetcher.class, fetchModule)
-        .withSecuritySpec(sf -> sf
-            .staticSpec(spec -> spec
-                .withPrincipal("fullName_s")))
-        .build();
+        .withFetcher("access-control", SecurityFilteringAccessControlFetcher.class, fetchModule).build();
   }
 }

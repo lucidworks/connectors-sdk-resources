@@ -57,11 +57,11 @@ This artifact is now ready to be uploaded directly to Fusion as a connector plug
 
 
 ## Configuring and Running the Connector
-- After deploying the plugin zip, wait for `Security Connector Demo` to be under the _Installed_ list of the `Indexing -> Datasources-> Add+` tab.
+- After deploying the plugin zip, wait for `Security Demo Connector` to be under the _Installed_ list of the `Indexing -> Datasources-> Add+` tab.
   It could take about a minute.
 
 Create a data source with this configuration:
-
+- Enable security trimming under GRAPH SECURITY FILTERING CONFIGURATION
 - set to _create_ the CRUD OPERATION option under CRAWL PROPERTIES.
 - set to _NA_ the AC ID option under CRAWL PROPERTIES.
 - Run the connector and wait for it to finish successfully. 
@@ -113,8 +113,8 @@ To test the deletion of an Access Control document configure the connector as th
 Note that in the case of multiple shard collections, the SDK implementation deletes all the copies of the document across shards.
 
 ## SDK Code Observations
-Hre are some useful observations of the security sample connector
-- x
+Here are some interesting observations about the code of the security sample connector:
+- The *SecurityConfig* interface must extend the *GraphSecurityConfig* interface
 - z
 - y
 - 
