@@ -37,8 +37,6 @@ and 2 content documents.
 
 This hierarchy means that _user1_ has access to both documents and _user2_ has access only to _doc2_.
 
-![Document structure](docs/png2.png)
-
 
 ## Building and Deploying the Connector Plugin
 
