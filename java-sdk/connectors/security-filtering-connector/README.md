@@ -70,6 +70,15 @@ Create a data source with this configuration:
 **Note the SOME-NAME___N document id naming convention of Access Control documents. N represents the shard#.
 When the collection has a single shard, N will be 0 e.g. _user1___0_.**
 
+##  Fields of Access Control Documents
+Observe the following fields of groups and users:
+- Since there are copies of each Access control object per shard, they each have different doc-id. The values of *_lw_acl_ss* is
+  the logical id which represents all the copies as a single entity.
+- The *inbound_ss* value is the hierarchy graph edge - it points to the children nodes in the hierarchy. Look, for example at the *_lw_acl_ss* value of
+  _group2_. It contains _user1_, _user2_ and group2. As you can see, the group points to its members and to itself
+  in order to make trimming function work correctly.
+- shard_s points to the shard id of this copy.
+
 ## Security trimming stage (Query time)
 After the connector run, the documents are ready for testing query security trimming. Configure the GST stage at the 
  `Query Workbench -> Add a Stage` tab:
@@ -103,9 +112,12 @@ To test the deletion of an Access Control document configure the connector as th
 
 Note that in the case of multiple shard collections, the SDK implementation deletes all the copies of the document across shards.
 
-## Access Control Document Fields
-
 ## SDK Code Observations
+Hre are some useful observations of the security sample connector
+- x
+- z
+- y
+- 
 
 
 
