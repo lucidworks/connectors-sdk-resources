@@ -50,11 +50,11 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
   private void createDocsAndAcs(FetchContext context) {
     context.newGraphAccessControl(USER1).metadata(m -> m.setString("type", "user")).addAllInbound(Collections.singletonList(USER1)).emit();
     context.newGraphAccessControl(USER2).metadata(m -> m.setString("type", "user")).addAllInbound(Collections.singletonList(USER2)).emit();
-    context.newGraphAccessControl(GROUP1).metadata(m -> m.setString("type", "group")).addAllInbound(Collections.singletonList(USER1)).addAllOutbound(Collections.singletonList(GROUP1)).emit();
+    context.newGraphAccessControl(GROUP1).metadata(m -> m.setString("type", "group")).addAllInbound(Collections.singletonList(USER1)).emit();
     List<String> users = new ArrayList();
     users.add(USER1);
     users.add(USER2);
-    context.newGraphAccessControl(GROUP2).metadata(m -> m.setString("type", "group")).addAllInbound(users).addAllOutbound(Collections.singletonList(GROUP2)).emit();
+    context.newGraphAccessControl(GROUP2).metadata(m -> m.setString("type", "group")).addAllInbound(users).emit();
     createDocuments(context);
     logger.info("Fetch created 2 users 2 groups and 2 documents");
   }

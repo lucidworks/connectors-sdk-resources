@@ -74,10 +74,12 @@ When the collection has a single shard, N will be 0 e.g. _user1___0_.**
 Observe the following fields of groups and users:
 - Since there are copies of each Access control object per shard, they each have different doc-id. The values of *_lw_acl_ss* is
   the logical id which represents all the copies as a single entity.
-- The *inbound_ss* value is the hierarchy graph edge - it points to the children nodes in the hierarchy. Look, for example at the *_lw_acl_ss* value of
+- The _inbound_ss_ value is the hierarchy graph edge - it points to the children nodes in the hierarchy. Look, for example at the *_lw_acl_ss* value of
   _group2_. It contains _user1_, _user2_ and group2. As you can see, the group points to its members and to itself
   in order to make trimming function work correctly.
 - shard_s points to the shard id of this copy.
+- The _outbound_ss_ field is not used explicitly in this example since we use the _inbound_ss_
+  field to describe the hierarchy. It is set automatically to point to itself.
 
 ## Security trimming stage (Query time)
 After the connector run, the documents are ready for testing query security trimming. Configure the GST stage at the 
@@ -86,6 +88,7 @@ After the connector run, the documents are ready for testing query security trim
 Add the Graph Security Trimming stage and configure as the following:
 - Set _Join Field_ to _lw_acl_ss.
 - Set _Join Method_ to topLevelDV.
+- Set the _ACL Solr Collection_ to your content collection (by default, the same name as your app).
 
 Test which documents _user2_ have access to:
 - Add a parameter to the Query Workbench (in the upper right corner of the Query Workbench screen): {username,user2}
@@ -114,10 +117,10 @@ Note that in the case of multiple shard collections, the SDK implementation dele
 
 ## SDK Code Observations
 Here are some interesting observations about the code of the security sample connector:
-- The *SecurityConfig* interface must extend the *GraphSecurityConfig* interface
-- z
-- y
-- 
+- The `SecurityConfig` interface must extend the `GraphSecurityConfig` interface.
+- Observe how `context.newGraphAccessControl(...)` is called to create users and groups in `SecurityFilteringAccessControlFetcher`.
+- Observe how the `createDocuments(...)` method update _lw_acl_ss to determine who has access to the document in `SecurityFilteringAccessControlFetcher`.
+
 
 
 
