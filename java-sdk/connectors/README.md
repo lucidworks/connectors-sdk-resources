@@ -95,7 +95,8 @@ The steps to use the `connect` tasks are the following:
 
 ## Java version
 
-Since Fusion 5.2 connectors services use java 11.
+- Since Fusion 5.2 connectors services use java 11.
+- The new connectorsSDK 4.2.0 use java 11.
 
 ## Upgrade Connector implementation to Fusion 5
 
