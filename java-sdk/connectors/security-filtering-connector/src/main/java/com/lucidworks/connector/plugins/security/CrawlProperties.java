@@ -6,17 +6,17 @@ import com.lucidworks.fusion.schema.SchemaAnnotations.StringSchema;
 
 public interface CrawlProperties extends Model {
   @Property(
-      title = "AC Id",
-      description = "AC Id for update or delete"
+      title = "Acl Document Id",
+      description = "Valid Acl document Id for update or delete"
   )
-  @StringSchema
+  @StringSchema(defaultValue = "NA")
   String acId();
 
   @Property(
       title = "CRUD Operation",
       description = "Create, Update or Delete"
   )
-  @StringSchema
+  @StringSchema(defaultValue = "create")
   String crudOperation();
 
 }

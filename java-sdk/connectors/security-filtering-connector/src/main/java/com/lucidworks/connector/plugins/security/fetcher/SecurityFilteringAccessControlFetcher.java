@@ -65,12 +65,18 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
   }
 
   private void updateACs(FetchContext context, String id) {
-    logger.info("Updating {} id {} ", USER1, id);
+    logger.info("Updating Acl with document id {} ", id);
+    if (id == null) {
+      throw new RuntimeException("Document id for update cannot be null");
+    }
     context.newUpdateGraphAccessControlItem(id, "updateValue").emit();
   }
 
   private void deleteACs(FetchContext context, String id) {
-    logger.info("Deleting {}  id {} ", GROUP1, id);
+    logger.info("Deleting Acl id {} ",  id);
+    if (id == null) {
+      throw new RuntimeException("Document id for delete cannot be null");
+    }
     context.newDeleteGraphAccessControlItem(id).emit();
   }
 }
