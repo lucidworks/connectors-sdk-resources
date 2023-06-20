@@ -14,10 +14,13 @@ import java.util.List;
 public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
   private final static String USER1 = "user1";
   private final static String USER2 = "user2";
+  private final static String USER3 = "user3";
   private final static String GROUP1 = "group1";
   private final static String GROUP2 = "group2";
+  private final static String GROUP3 = "group3";
   private final static String DOC1 = "doc1";
   private final static String DOC2 = "doc2";
+  private final static String DOC3 = "doc3";
   private final static String ACL_FIELD = "_lw_acl_ss";
 
   private static final Logger logger = LoggerFactory.getLogger(SecurityFilteringAccessControlFetcher.class);
@@ -49,18 +52,21 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
   private void createDocsAndAcs(FetchContext context) {
     context.newGraphAccessControl(USER1).metadata(m -> m.setString("type", "user")).addAllInbound(Collections.singletonList(USER1)).emit();
     context.newGraphAccessControl(USER2).metadata(m -> m.setString("type", "user")).addAllInbound(Collections.singletonList(USER2)).emit();
+    context.newGraphAccessControl(USER3).metadata(m -> m.setString("type", "user")).addAllInbound(Collections.singletonList(USER3)).emit();
     context.newGraphAccessControl(GROUP1).metadata(m -> m.setString("type", "group")).addAllInbound(Collections.singletonList(USER1)).emit();
     List<String> users = new ArrayList<>();
     users.add(USER1);
     users.add(USER2);
     context.newGraphAccessControl(GROUP2).metadata(m -> m.setString("type", "group")).addAllInbound(users).emit();
     createDocuments(context);
-    logger.info("Fetch created 2 users 2 groups and 2 documents");
+    context.newGraphAccessControl(GROUP3).metadata(m -> m.setString("type", "group")).addAllInbound(Collections.singletonList(USER3)).emit();
+    logger.info("Fetch created 3 users 3 groups and 3 documents");
   }
 
   private void createDocuments(FetchContext context) {
     context.newDocument(DOC1).fields(f -> f.setStrings(ACL_FIELD, Collections.singletonList(GROUP1))).emit();
     context.newDocument(DOC2).fields(f -> f.setStrings(ACL_FIELD, Collections.singletonList(GROUP2))).emit();
+    context.newDocument(DOC3).fields(f -> f.setStrings(ACL_FIELD, Collections.singletonList(GROUP3))).emit();
   }
 
   private void updateACs(FetchContext context, String id) {

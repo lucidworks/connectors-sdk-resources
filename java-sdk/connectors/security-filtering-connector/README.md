@@ -27,14 +27,17 @@ in the document's `_lw_acl_ss` list field. `user1` will be able to see the docum
 in the document's `_lw_acl_ss` field, or if a group `user1` belongs to is specified in the `_lw_acl_ss` field. This access
 authorization is transitive through group nesting.
 
-When the sample connector populates a single shard collection, it creates 6 documents:  2 users, 2 groups 
-and 2 content documents.
+When the sample connector populates a single shard collection, it creates 9 documents:  3 users, 3 groups 
+and 3 content documents.
 - _user1_
 - _user2_
+- _user3_
 - _group1_ with _user1_ as a member
 - _group2_ with _user1_ and _user2_ as members.
+- _group3_ with _user3_ as a member
 - _doc1_ with _group1_ in its `_lw_acl_ss` permissions list.
 - _doc2_ with _group2_ in its `_lw_acl_ss` permissions list.
+- _doc3_ with _group3_ in its `_lw_acl_ss` permissions list.
 
 This hierarchy means that _user1_ has access to both documents and _user2_ has access only to _doc2_.
 
@@ -64,7 +67,7 @@ Create a Security Demo Connector` datasource with this configuration:
 - set to _create_ the CRUD OPERATION option under CRAWL PROPERTIES.
 - set to _NA_ (or any other value) the AC ID option under CRAWL PROPERTIES.
 - Run the connector and wait for it to finish successfully. 
-- Use the Query Workbench to observe the 6 created documents.
+- Use the Query Workbench to observe the 9 created documents.
 
 **Note that the format of documents id is: SOME-NAME___N document. N represents the shard#.
 When the collection has a single shard, N will be 0 e.g. _user1___0_.**
@@ -96,6 +99,11 @@ Test which documents _user1_ have access to:
 - Change the username parameter of the Query Workbench to _user1_.
 - Run the query _id:doc*_ and verify that both _doc1_ and _doc2_ are retrieved because _doc2_ is permitted to _group2_ which 
 includes _user1_ and _doc1_ is permitted to _group1_ which also includes _user1_.
+
+Test which documents _user3_ have access to:
+- Change the username parameter of the Query Workbench to _user3_.
+- Run the query _id:doc*_ and verify that only _doc3_ is retrieved because _doc3_ is permitted only to _group3_ which
+  includes only _user3_.
 
 ## Multiple Shard Collections
 One way to test the GST sample connector with multiple shards is to split the collection before running the connector.
