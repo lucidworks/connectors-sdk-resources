@@ -3,7 +3,6 @@ package com.lucidworks.connector.plugins.security.fetcher;
 import com.lucidworks.connector.plugins.security.SecurityConfig;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.result.FetchResult;
 import com.lucidworks.fusion.connector.plugin.api.fetcher.type.content.ContentFetcher;
-import com.lucidworks.fusion.connector.plugin.api.resource.BlobResourceClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,10 +21,10 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
   private final static String ACL_FIELD = "_lw_acl_ss";
 
   private static final Logger logger = LoggerFactory.getLogger(SecurityFilteringAccessControlFetcher.class);
-  private SecurityConfig testPluginConfig;
+  private final SecurityConfig testPluginConfig;
 
   @Inject
-  public SecurityFilteringAccessControlFetcher(SecurityConfig testPluginConfig, BlobResourceClient blobResourceClient) {
+  public SecurityFilteringAccessControlFetcher(SecurityConfig testPluginConfig) {
     this.testPluginConfig = testPluginConfig;
   }
 
@@ -51,7 +50,7 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
     context.newGraphAccessControl(USER1).metadata(m -> m.setString("type", "user")).addAllInbound(Collections.singletonList(USER1)).emit();
     context.newGraphAccessControl(USER2).metadata(m -> m.setString("type", "user")).addAllInbound(Collections.singletonList(USER2)).emit();
     context.newGraphAccessControl(GROUP1).metadata(m -> m.setString("type", "group")).addAllInbound(Collections.singletonList(USER1)).emit();
-    List<String> users = new ArrayList();
+    List<String> users = new ArrayList<>();
     users.add(USER1);
     users.add(USER2);
     context.newGraphAccessControl(GROUP2).metadata(m -> m.setString("type", "group")).addAllInbound(users).emit();
@@ -66,7 +65,7 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
 
   private void updateACs(FetchContext context, String id) {
     logger.info("Updating Acl with document id {} ", id);
-    if (id == null) {
+    if (isBlank((id))) {
       throw new RuntimeException("Document id for update cannot be null");
     }
     context.newUpdateGraphAccessControlItem(id, "updateValue").emit();
@@ -74,9 +73,13 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
 
   private void deleteACs(FetchContext context, String id) {
     logger.info("Deleting Acl id {} ",  id);
-    if (id == null) {
+    if (isBlank((id))) {
       throw new RuntimeException("Document id for delete cannot be null");
     }
     context.newDeleteGraphAccessControlItem(id).emit();
+  }
+
+  private static boolean isBlank(String value) {
+    return value == null || value.length() == 0;
   }
 }
