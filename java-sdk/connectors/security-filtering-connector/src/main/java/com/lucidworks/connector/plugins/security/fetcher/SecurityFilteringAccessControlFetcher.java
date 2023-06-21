@@ -38,8 +38,6 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
     logger.info("Fetch called");
     if ("create".equalsIgnoreCase(op)) {
       createDocsAndAcs(context);
-    } else if ("update".equalsIgnoreCase(op)) {
-      updateACs(context, id);
     } else if ("delete".equalsIgnoreCase(op)) {
       deleteACs(context, id);
     } else {
@@ -67,14 +65,6 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
     context.newDocument(DOC1).fields(f -> f.setStrings(ACL_FIELD, Collections.singletonList(GROUP1))).emit();
     context.newDocument(DOC2).fields(f -> f.setStrings(ACL_FIELD, Collections.singletonList(GROUP2))).emit();
     context.newDocument(DOC3).fields(f -> f.setStrings(ACL_FIELD, Collections.singletonList(GROUP3))).emit();
-  }
-
-  private void updateACs(FetchContext context, String id) {
-    logger.info("Updating Acl with document id {} ", id);
-    if (isBlank((id))) {
-      throw new RuntimeException("Document id for update cannot be null");
-    }
-    context.newUpdateGraphAccessControlItem(id, "updateValue").emit();
   }
 
   private void deleteACs(FetchContext context, String id) {
