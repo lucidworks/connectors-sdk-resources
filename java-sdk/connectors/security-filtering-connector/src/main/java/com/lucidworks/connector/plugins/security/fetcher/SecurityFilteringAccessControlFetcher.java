@@ -48,16 +48,16 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
   }
 
   private void createDocsAndAcs(FetchContext context) {
-    context.newGraphAccessControl(USER1).metadata(m -> m.setString("type", "user")).addAllInbound(Collections.singletonList(USER1)).emit();
-    context.newGraphAccessControl(USER2).metadata(m -> m.setString("type", "user")).addAllInbound(Collections.singletonList(USER2)).emit();
-    context.newGraphAccessControl(USER3).metadata(m -> m.setString("type", "user")).addAllInbound(Collections.singletonList(USER3)).emit();
-    context.newGraphAccessControl(GROUP1).metadata(m -> m.setString("type", "group")).addAllInbound(Collections.singletonList(USER1)).emit();
+    context.newGraphAccessControl(USER1).metadata(m -> m.setString("type", "user")).addToOutbound(USER1).addAllInbound(Collections.singletonList(USER1)).emit();
+    context.newGraphAccessControl(USER2).metadata(m -> m.setString("type", "user")).addToOutbound(USER2).addAllInbound(Collections.singletonList(USER2)).emit();
+    context.newGraphAccessControl(USER3).metadata(m -> m.setString("type", "user")).addToOutbound(USER3).addAllInbound(Collections.singletonList(USER3)).emit();
+    context.newGraphAccessControl(GROUP1).metadata(m -> m.setString("type", "group")).addToOutbound(GROUP1).addAllInbound(Collections.singletonList(USER1)).emit();
     List<String> users = new ArrayList<>();
     users.add(USER1);
     users.add(USER2);
-    context.newGraphAccessControl(GROUP2).metadata(m -> m.setString("type", "group")).addAllInbound(users).emit();
+    context.newGraphAccessControl(GROUP2).metadata(m -> m.setString("type", "group")).addToOutbound(GROUP2).addAllInbound(users).emit();
     createDocuments(context);
-    context.newGraphAccessControl(GROUP3).metadata(m -> m.setString("type", "group")).addAllInbound(Collections.singletonList(USER3)).emit();
+    context.newGraphAccessControl(GROUP3).metadata(m -> m.setString("type", "group")).addToOutbound(GROUP3).addAllInbound(Collections.singletonList(USER3)).emit();
     logger.info("Fetch created 3 users 3 groups and 3 documents");
   }
 
