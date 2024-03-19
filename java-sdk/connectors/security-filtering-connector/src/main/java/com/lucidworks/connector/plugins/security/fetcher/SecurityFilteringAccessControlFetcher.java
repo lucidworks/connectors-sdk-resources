@@ -12,12 +12,12 @@ import java.util.Collections;
 import java.util.List;
 
 public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
-  private final static String USER1 = "user1";
-  private final static String USER2 = "user2";
-  private final static String USER3 = "user3";
-  private final static String GROUP1 = "group1";
-  private final static String GROUP2 = "group2";
-  private final static String GROUP3 = "group3";
+  private final static String USER1 = "User1";
+  private final static String USER2 = "User2";
+  private final static String USER3 = "User3";
+  private final static String GROUP1 = "Group1";
+  private final static String GROUP2 = "Group2";
+  private final static String GROUP3 = "Group3";
   private final static String DOC1 = "doc1";
   private final static String DOC2 = "doc2";
   private final static String DOC3 = "doc3";
