@@ -18,6 +18,8 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
   private final static String GROUP1 = "group1";
   private final static String GROUP2 = "group2";
   private final static String GROUP3 = "group3";
+
+  private final static String GROUPCOMMON = "groupcommon";
   private final static String DOC1 = "doc1";
   private final static String DOC2 = "doc2";
   private final static String DOC3 = "doc3";
@@ -58,13 +60,15 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
     context.newGraphAccessControl(GROUP2).metadata(m -> m.setString("type", "group")).addToOutbound(GROUP2).addAllInbound(users).emit();
     createDocuments(context);
     context.newGraphAccessControl(GROUP3).metadata(m -> m.setString("type", "group")).addToOutbound(GROUP3).addAllInbound(Collections.singletonList(USER3)).emit();
+    context.newGraphAccessControl(GROUPCOMMON).metadata(m -> m.setString("type", "group")).addToOutbound(GROUPCOMMON).emit();
+
     logger.info("Fetch created 3 users 3 groups and 3 documents");
   }
 
   private void createDocuments(FetchContext context) {
-    context.newDocument(DOC1).fields(f -> f.setStrings(ACL_FIELD, Collections.singletonList(GROUP1))).emit();
-    context.newDocument(DOC2).fields(f -> f.setStrings(ACL_FIELD, Collections.singletonList(GROUP2))).emit();
-    context.newDocument(DOC3).fields(f -> f.setStrings(ACL_FIELD, Collections.singletonList(GROUP3))).emit();
+    context.newDocument(DOC1).fields(f -> f.setStrings(ACL_FIELD, List.of(GROUP1, GROUPCOMMON))).emit();
+    context.newDocument(DOC2).fields(f -> f.setStrings(ACL_FIELD, List.of(GROUP2, USER2, GROUPCOMMON))).emit();
+    context.newDocument(DOC3).fields(f -> f.setStrings(ACL_FIELD, List.of(GROUP3, GROUPCOMMON))).emit();
   }
 
   private void deleteACs(FetchContext context, String id) {
