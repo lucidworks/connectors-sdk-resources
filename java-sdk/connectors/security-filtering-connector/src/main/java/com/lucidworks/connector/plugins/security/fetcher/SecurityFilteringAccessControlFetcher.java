@@ -62,9 +62,15 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
   }
 
   private void createDocuments(FetchContext context) {
-    context.newDocument(DOC1).fields(f -> f.setStrings(ACL_FIELD, Collections.singletonList(GROUP1))).emit();
-    context.newDocument(DOC2).fields(f -> f.setStrings(ACL_FIELD, Collections.singletonList(GROUP2))).emit();
-    context.newDocument(DOC3).fields(f -> f.setStrings(ACL_FIELD, Collections.singletonList(GROUP3))).emit();
+    context.newDocument(DOC1)
+        .withACLs(Collections.singletonList(GROUP1))
+        .emit();
+    context.newDocument(DOC2)
+        .withACLs(Collections.singletonList(GROUP2))
+        .emit();
+    context.newDocument(DOC3)
+        .withACLs(Collections.singletonList(GROUP3))
+        .emit();
   }
 
   private void deleteACs(FetchContext context, String id) {
