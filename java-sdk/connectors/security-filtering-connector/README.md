@@ -27,19 +27,29 @@ in the document's `_lw_acl_ss` list field. `user1` will be able to see the docum
 in the document's `_lw_acl_ss` field, or if a group `user1` belongs to is specified in the `_lw_acl_ss` field. This access
 authorization is transitive through group nesting.
 
-When the sample connector populates a single shard collection, it creates 9 documents:  3 users, 3 groups 
-and 3 content documents.
+When the sample connector populates a single shard collection, it creates 11 documents:  3 users, 3 groups 
+and 5 content documents.
 - _user1_
 - _user2_
 - _user3_
+- _user4_
+- _user5_
 - _group1_ with _user1_ as a member
 - _group2_ with _user1_ and _user2_ as members.
 - _group3_ with _user3_ as a member
+- _group4_ with _user4_ and _user5_ as members
 - _doc1_ with _group1_ in its `_lw_acl_ss` permissions list.
 - _doc2_ with _group2_ in its `_lw_acl_ss` permissions list.
 - _doc3_ with _group3_ in its `_lw_acl_ss` permissions list.
+- _doc4_ with _group4_ in its `_lw_acl_ss` permissions list, and with _user5_ in its `_lw_deny_acl_ss` permissions list.
+- _doc5_ with _group4_ in its `_lw_acl_ss` permissions list, and with _user4_ in its `_lw_deny_acl_ss` permissions list.
 
-This hierarchy means that _user1_ has access to both documents and _user2_ has access only to _doc2_.
+This hierarchy means that:
+- _user1_ has access to both documents _doc1_ and _doc2_
+- _user2_ has access only to _doc2_
+- _user3_ has access only to _doc3_
+- _user4_ has access only to doc4
+- _user5_ has access only to doc5
 
 
 ## Building and Deploying the Connector Plugin
@@ -82,6 +92,11 @@ Observe the following fields of groups and users:
 - The _outbound_ss_ field is not used explicitly in this example since we use the _inbound_ss_
   field to define the hierarchy. It is set automatically to point to itself.
 
+##  Fields of Access Control Documents
+The content documents have the following acl fields:
+- _lw_acl_ss_ - the list of principals that have access to the document.
+- _lw_deny_acl_ss_ - the list of principals that are denied access to the document.
+
 ## Testing the Query Security Trimming Stage
 After the connector run, the documents are ready for testing GST at query time. Configure the GST stage at the 
  `Query Workbench -> Add a Stage` tab:
@@ -91,6 +106,8 @@ Add the Graph Security Trimming stage and configure as the following:
 - Set _Join Method_ to topLevelDV.
 - Set the _ACL Solr Collection_ to your content collection (by default, it is the same name as your Fusion app).
 
+### Test principals with allowed access
+The following cases, validate certain users have access to certain documents:
 Test which documents _user2_ have access to:
 - Add this parameter to the Query Workbench (in the upper right corner of the Query Workbench screen): `{username,user2}`
 - Run the query _id:doc*_ and verify that only _doc2_ is retrieved since only _group1_ (which doesn’t include _user2_) is granted permission to see _doc1_.
@@ -104,6 +121,23 @@ Test which documents _user3_ have access to:
 - Change the username parameter of the Query Workbench to _user3_.
 - Run the query _id:doc*_ and verify that only _doc3_ is retrieved because _doc3_ is permitted only to _group3_ which
   includes only _user3_.
+
+### Test principals with denied access
+**Note:** This cases will work with Fusion 5.9.4, and since Fusion 5.13.0
+
+The following cases, validate certain users do not have access to certain documents:
+
+Test which documents _user4_ have access to:
+- Change the username parameter of the Query Workbench to _user4_.
+- Run the query _id:doc*_ and verify that only _doc4_ is retrieved.
+   - _doc4_ and _doc5_ are permitted to _group4_, which includes _user4_ and _user5_.
+   - however, _doc5_ denied access to _user4_.
+
+Test which documents _user5_ have access to:
+- Change the username parameter of the Query Workbench to _user5_.
+- Run the query _id:doc*_ and verify that only _doc5_ is retrieved.
+    - _doc4_ and _doc5_ are permitted to _group4_, which includes _user4_ and _user5_.
+    - however, _doc4_ denied access to _user5_.
 
 ## Multiple Shard Collections
 One way to test the GST sample connector with multiple shards is to split the collection before running the connector.
