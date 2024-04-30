@@ -27,8 +27,7 @@ in the document's `_lw_acl_ss` list field. `user1` will be able to see the docum
 in the document's `_lw_acl_ss` field, or if a group `user1` belongs to is specified in the `_lw_acl_ss` field. This access
 authorization is transitive through group nesting.
 
-When the sample connector populates a single shard collection, it creates 11 documents:  3 users, 3 groups 
-and 5 content documents.
+When the sample connector populates a single shard collection, it creates 14 documents:  5 users, 4 groups and 5 content documents.
 - _user1_
 - _user2_
 - _user3_
