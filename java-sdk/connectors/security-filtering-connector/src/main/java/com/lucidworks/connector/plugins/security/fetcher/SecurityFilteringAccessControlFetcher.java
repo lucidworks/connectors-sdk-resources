@@ -40,9 +40,9 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
     String id = testPluginConfig.properties().crawlProperties().acId();
     logger.info("Fetch called");
     if ("create".equalsIgnoreCase(op)) {
-      createAclDocuments(context);
+      createDocsAndAcs(context);
     } else if ("delete".equalsIgnoreCase(op)) {
-      deleteAclDocuments(context, id);
+      deleteACs(context, id);
     } else {
       throw new IllegalArgumentException("Illegal operation: " + op);
     }
@@ -50,7 +50,7 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
     return context.newResult();
   }
 
-  private void createAclDocuments(FetchContext context) {
+  private void createDocsAndAcs(FetchContext context) {
 
     context.newGraphAccessControl(USER1)
         .metadata(m -> m.setString("type", "user"))
@@ -101,12 +101,12 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
         .addAllInbound(Arrays.asList(USER4, USER5))
         .emit();
 
-    createContentDocuments(context);
+    createDocuments(context);
 
     logger.info("Fetch created 3 users 3 groups and 3 documents");
   }
 
-  private void createContentDocuments(FetchContext context) {
+  private void createDocuments(FetchContext context) {
     context.newDocument(DOC1)
         .fields(f -> f.setString("description", "This is doc1"))
         .withACLs(GROUP1)
@@ -133,7 +133,7 @@ public class SecurityFilteringAccessControlFetcher implements ContentFetcher {
         .emit();
   }
 
-  private void deleteAclDocuments(FetchContext context, String id) {
+  private void deleteACs(FetchContext context, String id) {
     logger.info("Deleting Acl id {} ",  id);
     if (isBlank((id))) {
       throw new RuntimeException("Document id for delete cannot be null");
