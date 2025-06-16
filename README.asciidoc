@@ -9,7 +9,13 @@ For developing a Java SDK based connector, check out the link:java-sdk/README.as
 The repository includes https://github.com/lucidworks/connectors-sdk-resources/tree/master/java-sdk/connectors[a Gradle project^],
 which wraps each https://github.com/lucidworks/connectors-sdk-resources/blob/master/java-sdk/connectors/settings.gradle[known plugin^] with a common set of tasks and dependencies.
 
+ifdef::env-github[]
 See the link:java-sdk/connectors/simple-connector/README.asciidoc[Simple Connector] example for instructions on how to build, deploy and run.
+endif::[]
+
+ifndef::env-github[]
+See the link:/fusion/{version}/cbcyor/simple-demo-connector[Simple Connector] example for instructions on how to build, deploy and run.
+endif::[]
 
 == Fusion SDK Connectors Overview
 
