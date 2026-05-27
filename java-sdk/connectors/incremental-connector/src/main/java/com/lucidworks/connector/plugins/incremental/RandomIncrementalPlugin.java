@@ -7,7 +7,9 @@ import com.lucidworks.connector.components.generator.impl.DefaultRandomContentGe
 import com.lucidworks.connector.components.hostname.HostnameProvider;
 import com.lucidworks.connector.plugins.incremental.config.RandomIncrementalConfig;
 import com.lucidworks.connector.plugins.incremental.fetcher.IncrementalContentFetcher;
+import com.lucidworks.fusion.connector.plugin.api.fetcher.type.FetcherType;
 import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPlugin;
+import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPlugin.FetcherDef;
 import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPluginProvider;
 
 public class RandomIncrementalPlugin implements ConnectorPluginProvider {
@@ -25,7 +27,9 @@ public class RandomIncrementalPlugin implements ConnectorPluginProvider {
     };
 
     return ConnectorPlugin.builder(RandomIncrementalConfig.class)
-        .withFetcher("content", IncrementalContentFetcher.class, fetchModule)
+        .withFetcher(FetcherDef.builder("content", IncrementalContentFetcher.class, fetchModule)
+            .withFetcherType(FetcherType.INCREMENTAL)
+            .build())
         .build();
   }
 
