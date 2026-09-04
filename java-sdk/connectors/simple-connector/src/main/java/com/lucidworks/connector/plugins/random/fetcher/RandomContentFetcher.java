@@ -23,6 +23,7 @@ public class RandomContentFetcher implements ContentFetcher {
   private static final String CONTENT_ID = "content-example";
   private static final String ERROR_ID = "no-number-this-should-fail";
   private static final String COUNTER_FIELD = "number";
+  private static final String DOCUMENT_ID  = "document-direct-example";
 
   private final RandomContentGenerator generator;
   private final RandomContentProperties randomContentProperties;
@@ -60,9 +61,13 @@ public class RandomContentFetcher implements ContentFetcher {
       fetchContext.newCandidate(ERROR_ID).emit();
       // Emits an item indicating that will produce a Content Item
       fetchContext.newCandidate(CONTENT_ID).emit();
+
+      logger.info("Send the same document twice {}", DOCUMENT_ID);
+      emitDocumentDirect(fetchContext);
+      emitDocumentDirect(fetchContext);
+
       return fetchContext.newResult();
     }
-
     if (CONTENT_ID.equals(fetchContext.getFetchInput().getId())) {
       emitContent(fetchContext, input);
     } else {
@@ -107,6 +112,26 @@ public class RandomContentFetcher implements ContentFetcher {
       }
       throw npe;
     }
+  }
+
+  private void emitDocumentDirect(FetchContext fetchContext) {
+    logger.info("Emitting Document without candidate -> {}", DOCUMENT_ID);
+
+      int min = randomContentProperties.minimumNumberSentences();
+      int max = randomContentProperties.maximumNumberSentences();
+
+      String headline = generator.makeHeadline();
+      String txt = generator.makeRandomText(min, max);
+      fetchContext.newDocument(DOCUMENT_ID)
+          .fields(f -> {
+            f.setLong("timestamp", Instant.now().toEpochMilli());
+            f.setString("hostname", hostname);
+            f.setString("headline", headline);
+            f.setString("text", txt);
+            f.setLocalDateTime("crawl_date", LocalDateTime.now());
+          })
+          .emit();
+
   }
 
   private void emitContent(FetchContext fetchContext, FetchInput input) {
