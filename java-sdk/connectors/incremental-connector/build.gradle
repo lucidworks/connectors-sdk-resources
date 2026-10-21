@@ -2,3 +2,24 @@ dependencies {
   // Note: Fusion libraries are added by parent project.
   implementation project(":shared-lib")
 }
+
+// -PdemoFetcherType=incremental (default) builds the stock plugin. -PdemoFetcherType=crawler builds a variant
+// whose fetcher is not marked INCREMENTAL and whose Plugin-Id carries a "-crawler" suffix, so both can be
+// installed side by side.
+def demoFetcherType = (findProperty('demoFetcherType') ?: 'incremental').toString().toLowerCase()
+if (!['incremental', 'crawler'].contains(demoFetcherType)) {
+  throw new GradleException("demoFetcherType must be 'incremental' or 'crawler', got '${demoFetcherType}'")
+}
+
+processResources {
+  inputs.property('demoFetcherType', demoFetcherType)
+  expand(demoFetcherType: demoFetcherType)
+}
+
+if (demoFetcherType == 'crawler') {
+  plugin {
+    manifest {
+      attributes 'Plugin-Id': "${pluginId}-crawler"
+    }
+  }
+}

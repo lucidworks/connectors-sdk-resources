@@ -45,3 +45,14 @@ This artifact is now ready to be uploaded directly to Fusion as a connector plug
 - Create a configuration with the properties listed above.
 - After the first job is completed, the connector will index the same number of documents as defined in the `Random content generator properties.Total` property.
 - The second and subsesquen jobs will index new documents as set in the `Incremental total` property.
+
+## Build variants
+
+`-PdemoFetcherType` selects the fetcher type at build time:
+
+- `incremental` (default): stock plugin, fetcher marked `FetcherType.INCREMENTAL`, Plugin-Id `lucidworks.demo.incremental`.
+- `crawler`: fetcher not marked INCREMENTAL, Plugin-Id `lucidworks.demo.incremental-crawler`. Installs next to the stock plugin.
+
+```
+./gradlew :incremental-connector:assemblePlugin -Pversion=<version> -PdemoFetcherType=crawler
+```

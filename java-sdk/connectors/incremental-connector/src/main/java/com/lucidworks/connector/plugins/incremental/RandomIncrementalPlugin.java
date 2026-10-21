@@ -12,7 +12,14 @@ import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPlugin;
 import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPlugin.FetcherDef;
 import com.lucidworks.fusion.connector.plugin.api.plugin.ConnectorPluginProvider;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.util.Properties;
+
 public class RandomIncrementalPlugin implements ConnectorPluginProvider {
+
+  private static final String FETCHER_TYPE_RESOURCE = "/incremental-demo-fetcher-type.properties";
 
   @Override
   public ConnectorPlugin get() {
@@ -26,11 +33,28 @@ public class RandomIncrementalPlugin implements ConnectorPluginProvider {
       }
     };
 
+    FetcherDef.Builder fetcher = FetcherDef.builder("content", IncrementalContentFetcher.class, fetchModule);
+    if (isIncremental()) {
+      fetcher.withFetcherType(FetcherType.INCREMENTAL);
+    }
+
     return ConnectorPlugin.builder(RandomIncrementalConfig.class)
-        .withFetcher(FetcherDef.builder("content", IncrementalContentFetcher.class, fetchModule)
-            .withFetcherType(FetcherType.INCREMENTAL)
-            .build())
+        .withFetcher(fetcher.build())
         .build();
+  }
+
+  // Set at build time by -PdemoFetcherType; "crawler" leaves the fetcher without the INCREMENTAL marker.
+  private static boolean isIncremental() {
+    try (InputStream in = RandomIncrementalPlugin.class.getResourceAsStream(FETCHER_TYPE_RESOURCE)) {
+      if (in == null) {
+        return true;
+      }
+      Properties props = new Properties();
+      props.load(in);
+      return !"crawler".equals(props.getProperty("fetcherType"));
+    } catch (IOException e) {
+      throw new UncheckedIOException(e);
+    }
   }
 
 }
