@@ -1,0 +1,6 @@
+dependencies {
+  // Note: Fusion libraries are added by parent project.
+  implementation project(":shared-lib")
+  // Reuses the incremental connector's fetcher and config; the plugin zip bundles its jar.
+  implementation project(":incremental-connector")
+}

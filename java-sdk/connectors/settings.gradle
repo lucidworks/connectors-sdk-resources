@@ -1,5 +1,6 @@
 rootProject.name = 'example-connectors'
 
+include 'change-only-crawler-connector'
 include 'feed-connector'
 include 'imap-connector'
 include 'incremental-connector'
